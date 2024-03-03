@@ -1,0 +1,202 @@
+<Ads target="Avito.ru" formatVersion="3">
+    <Ad>
+        <Id>799852</Id>
+        <Category>Квартиры</Category>
+        <OperationType>Сдам</OperationType>
+        <DateBegin>2023-12-23</DateBegin>
+        <DateEnd>2024-01-21</DateEnd>
+        <Address>Россия, Волгоградская область, Волгоград, им. Мичурина ул, 19</Address>
+        <Description>
+    <![CDATA[ <em><strong>Сдается 1-к квартира по адресу: Мичурина 19</strong></em> в Краснооктябрьском районе<br /><br />Улучшенная планировка: общая 38/ жилая 16/ кухня 10<br /><br />Квартира сдаётся в свежем доме ЖК "Традиция". Просторная однокомнатная квартира, в квартире есть: кухонный гарнитур, плита, холодильник, стиральная машина, кухонный стол, шкаф. Есть большая застеклённая лоджия.<br /><br />​​​​​​​Закрытая дворовая территория под шлагбаум, большая парковка, большая детская площадка.<br /><br />Комиссия риелтору составляет 50% и оплачивается по факту заселения.<br /><br /><strong>Условия аренды: </strong>на длительный срок. Арендная плата + коммунальные платежи.<br /><br /><br /><br /> Объект №799852 ]]>
+    </Description>
+        <Price>16000</Price>
+        <Status>Квартира</Status>
+        <Renovation>Косметический</Renovation>
+        <RoomType>
+            <Option>Изолированные</Option>
+        </RoomType>
+        <ContactPhone>+7(937)732-36-04</ContactPhone>
+        <Images>
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/2b/5b/6530f8291fa07.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/4c/a1/6530f828ba5dd.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/c2/44/6530f829a4236.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/50/97/6530f828def76.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/51/2a/6530f850a484b.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/07/0b/6530f8504d144.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/34/fc/6530f8522934b.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/bf/03/6530f884a9a48.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/c9/7d/6530f884d5a10.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/bd/24/6530f884f18c9.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/d7/e2/6530f88697bce.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/91/da/6530f8a491f83.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/7c/d8/6530f8abec31c.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/af/a9/6530f8b950b50.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/5d/69/6530f8a511543.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/0f/c2/6530f8a54062b.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/ab/1b/6530f929702ad.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/ae/01/6530f929c8690.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/43/bc/6530f92c4ef5c.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/7b/3b/6530f941be696.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/60/85/6530f9422d3e6.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/89/96/6530f94386817.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/54/d4/6530f92a20d2b.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/a8/b0/6530f9443b616.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/bf/9c/6530f92a4ba80.jpeg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/a0/41/6530f941bd928.jpeg" />
+        </Images>
+        <Rooms>1</Rooms>
+        <Square>38.00</Square>
+        <KitchenSpace>10</KitchenSpace>
+        <Floor>5</Floor>
+        <Floors>9</Floors>
+        <HouseType>Панельный</HouseType>
+        <PropertyRights>Посредник</PropertyRights>
+        <LeaseType>На длительный срок</LeaseType>
+        <LeaseAdditionally>
+            <Option>Можно с детьми</Option>
+        </LeaseAdditionally>
+        <ChildrenAllowed>Да</ChildrenAllowed>
+        <PetsAllowed>Нет</PetsAllowed>
+        <SmokingAllowed>Нет</SmokingAllowed>
+        <PartiesAllowed>Нет</PartiesAllowed>
+        <Documents>Да</Documents>
+        <LeaseCommissionSize>50</LeaseCommissionSize>
+        <LeaseDeposit>Без залога</LeaseDeposit>
+        <UtilityMeters>Оплачивается арендатором</UtilityMeters>
+        <OtherUtilities>Оплачивается арендатором</OtherUtilities>
+        <OtherUtilitiesPayment>3500</OtherUtilitiesPayment>
+    </Ad>
+    <Ad>
+        <Id>777749</Id>
+        <Category>Коммерческая недвижимость</Category>
+        <OperationType>Сдам</OperationType>
+        <DateBegin>2023-12-23</DateBegin>
+        <DateEnd>2024-01-21</DateEnd>
+        <Address>Россия, Волгоградская область, Волгоград, Краснооктябрьский, им. В.И. Ленина пр-кт</Address>
+        <Latitude>48.745145</Latitude>
+        <Longitude>44.549925</Longitude>
+        <Title>Ленина 92 (5 этаж)</Title>
+        <Description> <![CDATA[ <em><strong>Сдаются офисы в Краснооктябрьском р-не рядом с первой продольной магистралью в здании офисного центра по улице: Ленина 92</strong></em><br /><br /> Оживленное место, высокий пешеходный и автомобильный трафик. Удобно добираться на всех видах общественного транспорта.<br /><br />Состояние офисов отличное, свежий ремонт. Подойдет для организаций и учреждений.<br /><br />​​​​​​​Помещения расположены на 5 этаже. Площади сдаваемых помещений: 31,6; 26,9; 30,2; 87 м.кв. Офисы сдаются по отдельности. Объект №777749 ]]> </Description>
+        <Price>600</Price>
+        <PriceType>в месяц за м2</PriceType>
+        <CompanyName>АН Живем дома</CompanyName>
+        <ManagerName>Живем Дома</ManagerName>
+        <Entrance>С улицы</Entrance>
+        <Layout>
+            <option>Кабинетная </option>
+        </Layout>
+        <BuildingType>Другой</BuildingType>
+        <ContactPhone>+7(927)521-93-19</ContactPhone>
+        <Images>
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/d3/61/647f26da3b06e.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/da/4f/647f26da0da37.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/26/21/647f26da2f03e.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/f8/7b/647f26da3e3c2.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/0b/3c/647f26da4b6f9.jpeg" />
+        </Images>
+        <Square>175.70</Square>
+        <Floor>5</Floor>
+        <Floors>5</Floors>
+        <ObjectType>Офисное помещение </ObjectType>
+        <ParkingType>На улице</ParkingType>
+        <PropertyRights>Посредник</PropertyRights>
+        <LeaseCommissionSize>0</LeaseCommissionSize>
+        <LeaseDeposit>Без залога </LeaseDeposit>
+        <RentalType>Прямая</RentalType>
+        <Decoration>Офисная</Decoration>
+    </Ad>
+    <Ad>
+        <Id>780007</Id>
+        <Category>Земельные участки</Category>
+        <OperationType>Продам</OperationType>
+        <DateBegin>2023-12-23</DateBegin>
+        <DateEnd>2024-01-21</DateEnd>
+        <Address>Россия, Волгоградская область, Волгоград, Красноармейский, 2-я Динамовская ул</Address>
+        <Latitude>48.517746</Latitude>
+        <Longitude>44.576399</Longitude>
+        <Description> <![CDATA[ <em><strong>Коммерческая земля по адресу: 2-я Динамовская 1Б в Красноармейском районе <br /><br />Общая площадь 2 708 кв.м.<br /><br /></strong></em>Р<em></em>овный асфальтированный участок, подойдет под автостоянку.<em><strong></strong></em><br /> Объект №780007 ]]> </Description>
+        <Price>5500000</Price>
+        <CompanyName>АН Живем дома</CompanyName>
+        <ManagerName>Живем Дома</ManagerName>
+        <ContactPhone>+7(927)521-93-19</ContactPhone>
+        <Images>
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/e9/82/64902899c3561.jpg" />
+            <URL
+                изображения="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/ea/f9/648efb61c2441.jpeg" />
+            <URL
+                изображения="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/6e/09/648efb61ddd34.jpeg" />
+            <URL
+                изображения="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/7a/1d/648efb61f4222.jpeg" />
+            <URL
+                изображения="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/69/fd/648efb62031fe.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/56/58/648efb6202969.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/66/d8/648efb620cca4.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/91/a2/648efb62b74ae.jpeg" />
+            <Image
+                url="http://jivemdoma.intrumnet.com/files/crm/product/resized800x600/06/2f/648efb62bae64.jpeg" />
+        </Images>
+        <LandArea>27.08</LandArea>
+        <ObjectType>Поселений (ИЖС)</ObjectType>
+        <PropertyRights>Посредник</PropertyRights>
+    </Ad>
+    <Ad>
+        <Id>807852</Id>
+        <Category>Дома, дачи, коттеджи</Category>
+        <OperationType>Продам</OperationType>
+        <DateBegin>2023-12-23</DateBegin>
+        <DateEnd>2024-01-21</DateEnd>
+        <Address>Россия, Волгоградская область, Городищенский р-н, Царицын, Пихтовая</Address>
+        <Latitude>48.75231</Latitude>
+        <Longitude>44.394256</Longitude>
+        <Description>
+        <![CDATA[ <em><strong>Дом по улице: Пихтовая</strong></em> в п. Царицын в Городищенском районе<br /><br />Площадь дома: 74 метра<br />​​​​​​​<br />Площадь участка: 10 соток<br /><br />Количество комнат: 4<br /><br />Дом кирпичный, двухэтажный, 4 комнаты, кухня. Назначение - жилое. Возможна прописка. Хорошие соседи. Участок ровный, ухоженный, с плодовыми деревьями. Экологически чистое место. Улица засыпана щебнем. Рядом остановка, школа в поселке.<br /><br />Коммуникации: электричество, водопровод, канализация септик.<br /><br /><strong>Категория земли</strong> - Земли с/х назначения - индивидуальное жилищное строительство.<br /><br />Остановка: Дачи-1, рядом проходят улицы Тополевая, Кленовая, Сосновая, Дачная<br /><br /><br /><br /><br /><br /><br /><br /><br /> Объект №807852 ]]>
+        </Description>
+        <Price>1300000</Price>
+        <CompanyName>Агентство "Партнер"</CompanyName>
+        <ManagerName>Агентство "Партнер"</ManagerName>
+        <BuiltYear>2022</BuiltYear>
+        <Renovation>Требуется</Renovation>
+        <LandStatus>Индивидуальное жилищное строительство (ИЖС)</LandStatus>
+        <SaleOptions>
+            <Option>Можно в ипотеку</Option>
+        </SaleOptions>
+        <ContactPhone>+7(937)104-38-66</ContactPhone>
+        <Images>
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/d8/f9/65855fed75e46.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/22/f7/65855fdd86ba8.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/c1/b6/65855fdd0f923.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/b7/48/65855fe91d028.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/ee/81/65855fe6b09af.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/31/29/65855fd9b6929.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/63/d8/65855fdfabbaf.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/85/d9/65855fdfa1436.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/61/5d/65855fd905078.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/31/59/65855fde29550.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/5d/6c/65855fded2c54.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/ca/1d/65855fe2f3655.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/a8/a0/65855fe6f37ed.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/a6/0c/65855fe602b5b.jpg" />
+            <Image url="http://jivemdoma.intrumnet.com/files/crm/product/e4/72/65855ff4bb130.mp4" />
+        </Images>
+        <Rooms>4</Rooms>
+        <Square>74.00</Square>
+        <LandArea>10.00</LandArea>
+        <Floors>2</Floors>
+        <WallsType>Кирпич</WallsType>
+        <ObjectType>Дача</ObjectType>
+        <HouseServices>
+            <Option>Электричество</Option>
+            <Option>Канализация</Option>
+        </HouseServices>
+        <PropertyRights>Посредник</PropertyRights>
+    </Ad>
+</Ads>

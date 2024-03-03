@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ObjectIntrum {
+  id                String   @id @default(cuid())
+  id_intrum         String   @unique
+  category          String // категория  - Квартиры, дома и тп 
+  operationType     String // тип продам 
+  state             String? // Область
+  city              String? // Волгоград или Волжский
+  street            String? // улица и номер дома 
+  price             Float? // цена
+  companyName       String //АН Живем дома или какая то другая 
+  managerName       String?
+  description       String? //Описание
+  balconyOrLoggia   String? //Значение будет Балкон или Лоджия
+  passengerElevator String? //Пассажирский лифт кол-во или нет
+  freightElevator   String? //Грузовой лифт  кол-во или нет
+  ceilingHeight     String? //ВЫсота потолков
+  renovation        String? //Ремонт косметический или еще какой-то
+  bathroomMulti     String? //Ванна раздельная с туалетом или нет
+  dealType          String? //Тип сделки
+  roomType          String[] //Тип комнат
+  saleOptions       String[] //Опции продажи , например можно в Ипотеку
+  phone             String? //Контактный телефон
+  img               String[] //Фото квартиры 
+  rooms             String? //Кол-во комнат
+  square            String? //Площадь
+  landArea          String? //Земельный участок
+  floors            String? //Этажей
+  floor             String? // Этаж если квартира или офис
+  wallsType         String? //тип стен дома
+  propertyRights    String? //Право собственности 
+  transactionType   String?
+  objectType        String?
+
+  //Если дом
+  houseServices   String[] // отопления, газ и Электричество
+  cadastralNumber String? // кадастровый номер
+
+  //Для коммерческой
+
+  parkingType         String?
+  rentalType          String?
+  decoration          String?
+  leaseCommissionSize String?
+  leaseDeposit        String?
+
+  active             Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ExchangeRate {
+  id        String   @id @default(cuid())
+  name      String
+  value     String
+  nominal   String
+  charCode  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

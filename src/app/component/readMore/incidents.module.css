@@ -1,0 +1,203 @@
+.background {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 360px;
+    background-color: transparent;
+    border-radius: 12px;
+}
+
+.title {
+    display: flex;
+    padding-left: 32px;
+    justify-content: start;
+    color: #262626;
+    font-size: 28px;
+    align-items: center;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.cards {
+    display: flex;
+    justify-content: start;
+    gap: 12px;
+    height: 151px;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.card {
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    border-radius: 12px;
+    background-color: #F2F2F2;
+    height: auto;
+    width: calc((100% - 36px) / 4);
+    /* Рассчитываем ширину карточки */
+    padding-bottom: 12px;
+}
+
+.img {
+    display: flex;
+    width: 100%;
+    height: 164px;
+    border-radius: 12px;
+}
+
+.content {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.cardHeader {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+
+.newsType {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    padding: 4px 8px;
+    background-color: #FF6B00;
+    color: white;
+    font-size: 10px;
+    font-family: var(--font-roboto);
+    text-align: center;
+}
+
+
+.newsDate {
+    display: flex;
+    color: #474747;
+    font-size: 12px;
+    font-family: var(--font-roboto);
+    font-weight: 400;
+    word-wrap: break-word;
+}
+
+.cardTitle {
+    display: flex;
+    flex-grow: 1;
+    height: 57px;
+    color: #333333;
+    font-size: 15px;
+    font-family: var(--font-roboto);
+    font-weight: bold;
+    text-align: start;
+    margin-top: 8px;
+
+}
+
+.reaction {
+    display: flex;
+    gap: 8px;
+    font-size: 14px;
+    font-family: var(--font-roboto);
+    color: #474747;
+    font-weight: 400;
+    word-wrap: break-word;
+    margin-top: 16px;
+    align-items: center;
+}
+
+.emotion {
+    display: flex;
+    align-items: center;
+    color: #474747;
+    font-size: 14px;
+    font-family: var(--font-roboto);
+
+}
+
+.interactions {
+    display: flex;
+    color: #848484;
+    font-size: 12px;
+    font-weight: 400;
+    word-wrap: break-word;
+    align-items: center;
+    font-family: var(--font-roboto);
+}
+
+
+.coruselBg {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    display: none;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 1440px) {
+    .background {
+        height: auto;
+    }
+
+    .cards {
+        flex-wrap: wrap;
+        height: auto;
+    }
+
+    .cardTitle {
+        height: auto;
+    }
+
+    .img {
+        height: 60%;
+        max-height: 146px;
+    }
+
+    .card {
+        width: calc((100% - 48px) / 3);
+        /* Рассчитываем ширину карточки */
+    }
+}
+
+@media (max-width: 1024px) {
+
+    .cards {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card {
+        width: calc((100% - 48px) / 2);
+        /* Рассчитываем ширину карточки */
+    }
+
+}
+
+@media (max-width: 640px) {
+
+    .background {
+        height: auto;
+    }
+
+    #desktop {
+        display: none;
+    }
+
+    .coruselBg {
+        display: flex;
+    }
+
+    .card {
+        width: calc((100%) / 1);
+        /* Рассчитываем ширину карточки */
+    }
+
+    .img {
+        height: 60%;
+        max-height: none;
+    }
+}

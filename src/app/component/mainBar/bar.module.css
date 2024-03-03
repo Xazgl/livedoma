@@ -1,0 +1,97 @@
+.bar {
+  display:  flex;
+  width: 100%;
+  background-color: white;
+  padding: 20px 36px;
+  height: 76px;
+  padding-left: 36px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 7.29%;
+}
+
+.logo {
+  text-align: center;
+  color: black;
+  font-size: 28px;
+  font-family: Inter;
+  font-weight: 500;
+  word-wrap: break-word;
+  cursor: pointer;
+}
+
+.content {
+  height: 36px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 605px;
+  display: flex;
+  
+}
+
+.contentRow {
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.inputDiv {
+  width: auto; 
+  padding: 12px; 
+  background: #F2F2F2; 
+  border-radius: 40px;
+  align-items: center; 
+  display: flex;
+  align-items: center;
+  height: 30px;
+
+}
+
+
+.inputDivDisc {
+  width:auto;
+  height: 10px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  align-items: center;
+
+}
+
+
+
+.inputDesc {
+  display: flex;
+  text-align: center;
+  color: black;
+  font-size: 14px;
+  font-family: var(--font-roboto);
+  font-weight: 400;
+  word-wrap: break-word;
+  align-items: center;
+  font-weight: 400;
+}
+
+.valuteSymbol {
+  display: flex;
+  text-align: center;
+  font-weight: medium;
+  font-size: 20px;
+  color: black;
+  font-weight: 500;
+  align-items: center;
+  margin-right: 8px; /* Добавляем небольшой отступ справа */
+}
+
+
+
+@media (max-width: 1024px) {
+    
+  .bar { 
+    gap: 50%;
+  }
+}

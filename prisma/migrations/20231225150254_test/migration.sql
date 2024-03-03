@@ -1,0 +1,48 @@
+-- CreateTable
+CREATE TABLE "ObjectAvito" (
+    "id" TEXT NOT NULL,
+    "id_intrum" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "operationType" TEXT NOT NULL,
+    "state" TEXT,
+    "city" TEXT,
+    "street" TEXT,
+    "price" DOUBLE PRECISION,
+    "companyName" TEXT NOT NULL,
+    "managerName" TEXT,
+    "description" TEXT,
+    "balconyOrLoggia" TEXT,
+    "passengerElevator" TEXT,
+    "freightElevator" TEXT,
+    "ceilingHeight" TEXT,
+    "renovation" TEXT,
+    "bathroomMulti" TEXT,
+    "dealType" TEXT,
+    "roomType" TEXT[],
+    "saleOptions" TEXT[],
+    "phone" TEXT,
+    "img" TEXT[],
+    "rooms" TEXT,
+    "square" TEXT,
+    "landArea" TEXT,
+    "floors" TEXT,
+    "floor" TEXT,
+    "wallsType" TEXT,
+    "propertyRights" TEXT,
+    "transactionType" TEXT,
+    "objectType" TEXT,
+    "houseServices" TEXT[],
+    "cadastralNumber" TEXT,
+    "parkingType" TEXT,
+    "rentalType" TEXT,
+    "decoration" TEXT,
+    "leaseCommissionSize" TEXT,
+    "leaseDeposit" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ObjectAvito_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ObjectAvito_id_intrum_key" ON "ObjectAvito"("id_intrum");

@@ -1,0 +1,23 @@
+
+
+#main::-webkit-scrollbar {
+  width: 7px;
+  /* Ширина скроллбара */
+  cursor: pointer;
+}
+
+#main::-webkit-scrollbar-track {
+  background-color:   #3C3C3D;
+  /* Цвет фона трека скроллбара */
+}
+
+#main::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: #f15282cc;
+  /* Цвет ползунка скроллбара */
+}
+
+#main::-webkit-scrollbar-thumb:hover {
+  background-color: #F15281;
+  /* Цвет ползунка скроллбара при наведении */
+}

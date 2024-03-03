@@ -1,0 +1,48 @@
+-- CreateTable
+CREATE TABLE "ObjectIntrum" (
+    "id" TEXT NOT NULL,
+    "id_intrum" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "operationType" TEXT NOT NULL,
+    "state" TEXT,
+    "city" TEXT,
+    "street" TEXT,
+    "price" DOUBLE PRECISION,
+    "companyName" TEXT NOT NULL,
+    "managerName" TEXT,
+    "description" TEXT,
+    "balconyOrLoggia" TEXT,
+    "passengerElevator" TEXT,
+    "freightElevator" TEXT,
+    "ceilingHeight" TEXT,
+    "renovation" TEXT,
+    "bathroomMulti" TEXT,
+    "dealType" TEXT,
+    "roomType" TEXT[],
+    "saleOptions" TEXT[],
+    "phone" TEXT,
+    "img" TEXT[],
+    "rooms" TEXT,
+    "square" TEXT,
+    "landArea" TEXT,
+    "floors" TEXT,
+    "floor" INTEGER,
+    "wallsType" TEXT,
+    "propertyRights" TEXT,
+    "transactionType" TEXT,
+    "objectType" TEXT,
+    "houseServices" TEXT[],
+    "cadastralNumber" TEXT,
+    "parkingType" TEXT,
+    "rentalType" TEXT,
+    "decoration" TEXT,
+    "leaseCommissionSize" INTEGER,
+    "leaseDeposit" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ObjectIntrum_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ObjectIntrum_id_intrum_key" ON "ObjectIntrum"("id_intrum");

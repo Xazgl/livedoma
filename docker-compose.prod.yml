@@ -1,0 +1,87 @@
+version: '3.4'
+
+services:
+  app:
+    # image: testapp
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
+    image: registry.gitlab.com/my9322429/livedoma:latest
+    container_name: app-livedomaDeploy
+    restart: always
+    environment:
+      NODE_ENV: production
+    networks:
+      - livedomaDeploy-net
+    env_file: .env.prod
+    ports:
+      - 8000:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    # command: sh -c "./wait-for-it.sh db:5432 && npx prisma migrate deploy && npm start"
+    # command: "sleep 3 && npx prisma migrate deploy && npm start"
+    command: sh -c "/usr/sbin/crond && npx prisma migrate deploy && npm start"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Добавляем контейнер Redis
+  # redis:
+  #   container_name: redis-livedoma
+  #   image: redis:latest
+  #   restart: always
+  #   ports:
+  #     - 6379:6379
+  #   networks:
+  #     - livedomaDeploy-net
+
+  autoheal:
+    image: willfarrell/autoheal
+    container_name: autoheal
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - livedomaDeploy-net
+    environment:
+      - AUTOHEAL_INTERVAL=30
+      - AUTOHEAL_START_PERIOD=60
+      - DOCKER_SOCK=/var/run/docker.sock
+
+  db:
+    env_file:
+      - .env.prod
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - "db-data-deploy:/var/lib/postgresql/data:rw"
+    networks:
+      - livedomaDeploy-net
+    healthcheck:
+      test: ['CMD', 'pg_isready']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - livedomaDeploy-net
+
+volumes:
+  db-data-deploy: {}
+
+networks:
+  livedomaDeploy-net:
+    name: livedomaDeploy-net
