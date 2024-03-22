@@ -13,14 +13,14 @@ export type LogoArr = {
 export const LogoList: LogoArr[] = [
     {
         name: 'АН Живем дома',
-        img: `${jd.src}`
+        img: `${jd.src}`,
     },
     {
-        name: 'Агенство "Партнер"',
+        name: 'Агентство "Партнер"',
         img: `${part.src}`
     },
     {
-        name: 'Агенство "Метры"',
+        name: 'Метры',
         img: `${metr.src}`
     },
     {

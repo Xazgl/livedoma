@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+xmlTasks/node_modules
 
 # testing
 /coverage
@@ -33,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+/public/objects

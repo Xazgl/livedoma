@@ -2,10 +2,6 @@ version: '3.4'
 
 services:
   app:
-    # image: testapp
-    # build:
-    #   context: .
-    #   dockerfile: ./Dockerfile
     image: registry.gitlab.com/my9322429/livedoma:latest
     container_name: app-livedomaDeploy
     restart: always
@@ -19,8 +15,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    # command: sh -c "./wait-for-it.sh db:5432 && npx prisma migrate deploy && npm start"
-    # command: "sleep 3 && npx prisma migrate deploy && npm start"
     command: sh -c "/usr/sbin/crond && npx prisma migrate deploy && npm start"
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1

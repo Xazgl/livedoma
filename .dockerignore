@@ -1,0 +1,15 @@
+/node_modules
+/.next
+/.vscode
+
+docker-compose.dev.yml
+docker-compose.prod.yml
+docker-compose.test.yml
+Dockerfile
+.env
+.env.example
+.gitignore
+.env.prod
+/scripts
+**/public/objects
+README.md

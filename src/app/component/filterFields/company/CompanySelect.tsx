@@ -13,7 +13,7 @@ type Props = {
 export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter }: Props) {
 
     return <>
-        <Accordion defaultExpanded={true} sx={{ width: '100%' }}>
+        <Accordion sx={{ width: '100%' }}>
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

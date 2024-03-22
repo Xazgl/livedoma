@@ -20,6 +20,7 @@ type Props = {
     currentPage: number,
     setCurrentPage: Dispatch<SetStateAction<number>>,
     handlePageChange: (page: number) => void;
+    
 }
 
 export function ObjectsCardsTest({ filteredHouse, loading, allPages, currentPage, setCurrentPage, handlePageChange }: Props) {
@@ -105,7 +106,10 @@ export function ObjectsCardsTest({ filteredHouse, loading, allPages, currentPage
                                                     <PropertyInfo icon={size} label="Высота потолков" value={`${object.ceilingHeight ? parseInt(object.ceilingHeight) : ''} м`} />
                                                 }
                                                 {object.floor &&
-                                                    <PropertyInfo icon={floor} label="Этаж" value={`${object.floor ? Math.round(parseInt(object.floor)) : ''} из ${object.floors ? Math.round(parseInt(object.floors)) : ''}`} />
+                                                    object.category =='Квартиры' || object.category =='Комнаты'   ?
+                                                      <PropertyInfo icon={floor} label="Этаж" value={`${object.floor ? Math.round(parseInt(object.floor)) : ''} из ${object.floors ? Math.round(parseInt(object.floors)) : ''}`} />
+                                                    :
+                                                      <PropertyInfo icon={floor}  label={object.floors? +object.floors < 5 ? 'Этажа' : 'Этажей' : '' } value={`${object.floors ? Math.round(parseInt(object.floors)) : ''}  `} />
                                                 }
                                             </div>
 

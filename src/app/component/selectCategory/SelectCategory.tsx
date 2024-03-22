@@ -19,12 +19,11 @@ type Props = {
     currentFilter: FilterUserOptions,
     setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>,
     setFilteredHouse: Dispatch<SetStateAction<ObjectIntrum[]>>,
-    filteredHouse: ObjectIntrum[]
 }
 
 
 
-export function SelectCategory({ objects, currentFilter, filteredHouse, setCurrentFilter, setFilteredHouse }: Props) {
+export function SelectCategory({ objects, currentFilter, setCurrentFilter, setFilteredHouse }: Props) {
 
 
     const changeFilter = (filter: FilterUserOptions) => {
@@ -58,83 +57,7 @@ export function SelectCategory({ objects, currentFilter, filteredHouse, setCurre
 
 
 
-    //filteblackProps выводит все возможные фильтры для выбора по данным из БД
-    const filteblackProps = useMemo(() => {
-        let filteredObjectProps = {
-            categories: [],
-            operationTypes: [],
-            states: [],
-            cities: [],
-            streets: [],
-            companyNames: [],
-            price: [],
-            passengerElevators: [],
-            freightElevators: [],
-            ceilingHeight: [],
-            renovationTypes: [],
-            rooms: [],
-            square: [],
-            floors: [],
-            floor: [],
-            wallsTypes: [],
-        } as {
-            categories: string[],
-            operationTypes: string[],
-            states: string[],
-            cities: string[],
-            streets: string[],
-            companyNames: string[],
-            price: number[],
-            passengerElevators: string[],
-            freightElevators: string[],
-            ceilingHeight: string[],
-            renovationTypes: string[],
-            rooms: string[],
-            square: string[],
-            floors: string[],
-            floor: string[],
-            wallsTypes: string[]
-        }
-
-        filteredHouse.forEach(object => {
-            filteredObjectProps.categories.push(object.category)
-            filteredObjectProps.operationTypes.push(object.operationType)
-            filteredObjectProps.states.push(object.state ? object.state : '')
-            filteredObjectProps.cities.push(object.city ? object.city : '')
-            filteredObjectProps.streets.push(object.street ? object.street : '')
-            filteredObjectProps.companyNames.push(object.companyName ? object.companyName : '')
-            filteredObjectProps.passengerElevators.push(object.passengerElevator ? object.passengerElevator : '')
-            filteredObjectProps.freightElevators.push(object.freightElevator ? object.freightElevator : '')
-            filteredObjectProps.ceilingHeight.push(object.ceilingHeight ? object.ceilingHeight : '')
-            filteredObjectProps.renovationTypes.push(object.renovation ? object.renovation : '')
-            filteredObjectProps.rooms.push(object.rooms ? object.rooms : '')
-            filteredObjectProps.square.push(object.square ? object.square : '')
-            filteredObjectProps.floors.push(object.floors ? object.floors : '')
-            filteredObjectProps.floor.push(object.floor ? object.floor : '')
-            filteredObjectProps.wallsTypes.push(object.wallsType ? object.wallsType : '')
-
-        })
-
-        return {
-            categories: [...new Set(filteredObjectProps.categories)],
-            operationTypes: [...new Set(filteredObjectProps.operationTypes)], // TODO es6-set polyfill
-            states: [...new Set(filteredObjectProps.states)],
-            cities: [...new Set(filteredObjectProps.cities)],
-            streets: [...new Set(filteredObjectProps.streets)],
-            companyNames: [...new Set(filteredObjectProps.companyNames)],
-            passengerElevators: [...new Set(filteredObjectProps.passengerElevators)],
-            freightElevators: [...new Set(filteredObjectProps.passengerElevators)],
-            ceilingHeight: [...new Set(filteredObjectProps.ceilingHeight)],
-            renovationTypes: [...new Set(filteredObjectProps.renovationTypes)],
-            rooms: [...new Set(filteredObjectProps.rooms)],
-            square: [...new Set(filteredObjectProps.square)],
-            floors: [...new Set(filteredObjectProps.floors)],
-            floor: [...new Set(filteredObjectProps.floor)],
-            wallsTypes: [...new Set(filteredObjectProps.wallsTypes)],
-        }
-
-    }, [filteredHouse])
-
+   
 
 
     //функция изменения состояния по клику на картинку

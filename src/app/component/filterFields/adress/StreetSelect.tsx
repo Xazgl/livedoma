@@ -9,7 +9,7 @@ type Props = {
     setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
 };
 
-export function StreetSelect({ filteblackProps, currentFilter, setCurrentFilter, }: Props) {
+export function StreetSelect({ filteblackProps, currentFilter, setCurrentFilter }: Props) {
 
     const handleChange = (
         event: React.ChangeEvent<{}>,
@@ -43,7 +43,7 @@ export function StreetSelect({ filteblackProps, currentFilter, setCurrentFilter,
         <Autocomplete
             sx={{ width: "100%", background:'white', border:'none'}}
             id="street-autocomplete"
-            options={filteblackProps.streets}
+            options={filteblackProps.streets || []}
             value={currentFilter.street ? currentFilter.street[0] : null}
             onChange={handleChange}
             renderInput={renderInput}
@@ -52,7 +52,7 @@ export function StreetSelect({ filteblackProps, currentFilter, setCurrentFilter,
                 option.toLowerCase() === (value || "").toLowerCase()
             }
             getOptionLabel={getOptionLabel}
-            noOptionsText={currentFilter.street && currentFilter.street.length === 0 ? "Вводите" : "Нет вариантов"}
+            noOptionsText={currentFilter.street && currentFilter.street.length === 0 ? "внесите адрес" : "Нет вариантов"}
         />
 
     );
