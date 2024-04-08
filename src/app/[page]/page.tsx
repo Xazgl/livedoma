@@ -17,6 +17,7 @@ async function getObjects(page?: string, filter?: FilterUserOptions) {
     const objects = await db.objectIntrum.findMany({
       where: {
         active: true,
+        operationType:'Продам'
       },
       orderBy: {
         createdAt: "desc",

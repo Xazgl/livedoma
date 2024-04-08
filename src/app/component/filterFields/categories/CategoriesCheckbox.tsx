@@ -38,6 +38,7 @@ export function CategoriesCheckbox({
         
         <div className="flex  flex-col  w-full  justify-start ">
           {filteblackProps.categories.map((category) => (
+            category !=='' ?
             <FormControlLabel
               key={category}
               control={
@@ -59,7 +60,12 @@ export function CategoriesCheckbox({
                                                     /> */}
                 </Box>
               }
-              label={category == "Гаражи и машиноместа" ? "Гаражи" : category}
+              label={ 
+                category === "Гаражи и машиноместа" ?
+                "Гаражи" 
+                :
+               (category === "Коммерческая недвижимость" ? "Коммерческая" : category) 
+              }
               onClick={() => {
                 setCurrentFilter((prevFilterState) => {
                   return {
@@ -86,6 +92,8 @@ export function CategoriesCheckbox({
                 // });
               }}
             />
+            : null 
+
           ))}
         </div>
       </AccordionDetails>

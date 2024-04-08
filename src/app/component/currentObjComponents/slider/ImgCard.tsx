@@ -32,10 +32,10 @@ export function ImgCard({ img, setShowModalImg, setHouseStepImg }: Props) {
                                 src={img}
                                 alt={img}
                                 layout="fill"
-                                sizes="(max-width: 750px) 50vw,
-                                            (max-width: 828px) 40vw,
-                                            (max-width: 1080px) 33vw,
-                                            20vw"
+                                sizes="(max-width: 750px) 80vw,
+                                            (max-width: 828px) 70vw,
+                                            (max-width: 1080px) 73vw,
+                                            80vw"
                                 loading="lazy"
                                 style={{ cursor: 'zoom-in' }}
                                 onClick={() => showModalImgFunction(img)}

@@ -1,8 +1,13 @@
-import jd from "/public/images/logo/jd.png"
-import metr from "/public/images/logo/metr.png"
-import part from "/public/images/logo/part.png"
-import vladis from "/public/images/logo/vladis.webp"
+// import jd from "/public/images/logo/jd.png"
+// import metr from "/public/images/logo/metr.png"
+// import part from "/public/images/logo/part.png"
+// import vladis from "/public/images/logo/vladis.webp"
 
+
+import jd from "/public/images/cardLogo/card_jd.png"
+import metr from "/public/images/cardLogo/card_metrs.png"
+import part from "/public/images/cardLogo/card_partner.png"
+import vladis from "/public/images/cardLogo/card_vladis.png"
 
 
 export type LogoArr = {
@@ -12,7 +17,7 @@ export type LogoArr = {
 
 export const LogoList: LogoArr[] = [
     {
-        name: 'АН Живем дома',
+        name: 'Живем дома',
         img: `${jd.src}`,
     },
     {
@@ -42,6 +47,41 @@ export function logoFind(str:string) {
 
 export function numberWithSpaces(x:number | string) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+export function getRoomsEnding(roomsStr: string ): string {
+
+    const rooms:number = parseInt(roomsStr, 10); // Преобразование строки в число
+    if (isNaN(rooms)) {
+        return '';
+    }
+    // Последняя цифра числа комнат
+    const lastDigit = rooms % 10;
+    
+    // Предпоследняя цифра числа комнат
+    const penultimateDigit = Math.floor(rooms / 10) % 10;
+  
+    // Правила для окончаний
+    const endings: { [key: number]: string } = {
+      1: 'комната',
+      2: 'комнаты',
+      3: 'комнаты',
+      4: 'комнаты',
+      5: 'комнат',
+      6: 'комнат',
+      7: 'комнат',
+      8: 'комнат',
+      9: 'комнат',
+      0: 'комнат'
+    };
+  
+    // Особое правило для чисел, оканчивающихся на 11-19
+    if (penultimateDigit === 1) {
+      return 'комнат';
+    }
+  
+    // Возвращаем правильное окончание
+    return endings[lastDigit];
 }
 
 

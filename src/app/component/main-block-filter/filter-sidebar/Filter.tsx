@@ -78,8 +78,8 @@ export function Filter({ filteblackProps,objects, currentFilter, setCurrentFilte
   return (
     <>
       <aside
-        className={`hidden md:flex  flex-col  w-[20%]   h-[80vh]  items-center 
-             sticky  top-0  right-0    rounded overflow-auto `}
+        className={`hidden md:flex  flex-col  w-[20%]  h-[full] md:h-[80vh]  items-center 
+            sticky  top-0  right-0    rounded  overflow-auto`}
         id={styles.aside}
       >
         <div className={filterRow}>

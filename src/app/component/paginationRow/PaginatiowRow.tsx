@@ -54,7 +54,7 @@ export function PaginationRow({ currentPage, totalPages, handlePageChange }: Pro
        bg-[#F15281]   transition  duration-150  ease-out  cursor-pointer 
        hover:ease-in  hover:bg-[black] `
 
-    const styleArrow = `flex  rounded w-[90px] h-[40px] justify-center  items-center text-white 
+    const styleArrow = `hidden sm:flex  rounded w-[90px] h-[40px] justify-center  items-center text-white 
        bg-[#F15281]   transition  duration-150  ease-out  cursor-pointer
        hover:ease-in  hover:bg-[black]  text-xs  gap-[5px]`
 

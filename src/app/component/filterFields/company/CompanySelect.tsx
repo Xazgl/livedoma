@@ -44,7 +44,7 @@ export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter
                                             }}
                                         />
                                     }
-                                    label={companyName}
+                                    label={companyName == 'Агентство "Партнер"'? 'Партнер' : companyName}
                                 />
                             ))}
                         </FormGroup>

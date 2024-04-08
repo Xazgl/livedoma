@@ -59,11 +59,11 @@ async function start() {
                     const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
                     // console.log(JSON.stringify(cleanLinks))
 
-                    const roomArr = adObject.RoomType? adObject.RoomType.map(room => room.Option[0]): []
+                    const roomArr = adObject.RoomType ? adObject.RoomType.map(room => room.Option[0]) : []
                     console.log(roomArr)
-                    const saleArr =  adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
+                    const saleArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
                     console.log(JSON.stringify(saleArr))
-                    const houseServicesArr = adObject.SaleOptions? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]): []
+                    const houseServicesArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
                     console.log(JSON.stringify(houseServicesArr))
 
 
@@ -77,7 +77,11 @@ async function start() {
                             city: city ? city : 'Не указан',
                             street: street ? street : 'Не указана',
                             price: adObject.Price ? Number(adObject.Price[0]) : 0,
-                            companyName: adObject.CompanyName ? String(adObject.CompanyName[0]) : "Владис",
+                            companyName: adObject.CompanyName ?
+                                (adObject.CompanyName[0] === "Живем дома" || adObject.CompanyName[0] === "АН Живем дома" ? "Живем дома" : adObject.CompanyName[0])
+                                : "Владис",
+
+                            // companyName: adObject.CompanyName ? String(adObject.CompanyName[0]) : "Владис",
                             managerName: adObject.ManagerName ? String(adObject.ManagerName[0]) : "Живем Дома",
                             description: adObject.Description ? String(adObject.Description[0]) : '',
                             balconyOrLoggia: adObject.BalconyOrLoggia && adObject.BalconyOrLoggia.length > 0 ? String(adObject.BalconyOrLoggia[0]) : "Без балкона и лоджий",
@@ -88,7 +92,7 @@ async function start() {
                             bathroomMulti: adObject.BathroomMulti ? String(adObject.BathroomMulti[0].Option[0]) : '',
                             dealType: adObject.DealType ? String(adObject.DealType[0]) : '',
                             roomType: roomArr,
-                            saleOptions: saleArr ,
+                            saleOptions: saleArr,
                             phone: adObject.ContactPhone ? String(adObject.ContactPhone[0]) : "",
                             img: {
                                 set: cleanLinks

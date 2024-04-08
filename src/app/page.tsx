@@ -2,6 +2,7 @@ import "server-only";
 import { Header } from "./component/header/Header";
 import { ParentFilterBlock } from "./component/main-block-filter/ParentFilterBlock";
 import db from "../../prisma";
+import { MobileHeader } from "./component/mainBarMobile/MobileBar";
 
 
 export const dynamic = 'force-dynamic'
@@ -16,6 +17,7 @@ async function getObjects(page?: string) {
     const objects = await db.objectIntrum.findMany({
       where: {
         active: true,
+        operationType:'Продам'
       },
       orderBy: {
         createdAt: "desc",
@@ -27,13 +29,6 @@ async function getObjects(page?: string) {
     return { objects: objects, pages: Math.ceil(objectsNum / 10), page: curPage };
    
 
-    // const res = await fetch(`http://91.107.120.55:8000/api/objects/`);
-    //   // const res = await fetch(`http://${process.env.NEXT_PUBLIC_HOST}/api/objects/`);
-    //   if (res.ok) {
-    //       return res.json();
-    //   } else {
-    //       throw new Error(`Ошибка загрузки данных: ${res.status} ${res.statusText}`);
-    //   }
   } catch (error) {
     console.error(error);
     return { objects: [], pages: 1, page:1 };
@@ -41,14 +36,16 @@ async function getObjects(page?: string) {
   }
 }
 
+
+
 export default async function Home() {
 
    const {objects, pages, page}  = await getObjects('1');
 
-
   return (
     <>
       <Header />
+      <MobileHeader/>
       {objects && objects.length > 0 && 
         <ParentFilterBlock objects={objects}  pages={pages} page={page} />
       }

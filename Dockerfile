@@ -53,4 +53,7 @@ ENV NODE_ENV=production
 # RUN echo "* * * * * /usr/local/bin/node /app/xmlTasks/index.js" >> /etc/crontab
 RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
 
+RUN (crontab -u $(whoami) -l; echo "*/30 * * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
+
+
 EXPOSE 3000

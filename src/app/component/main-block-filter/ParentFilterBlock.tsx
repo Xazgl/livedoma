@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
@@ -6,73 +6,91 @@ import { Filter } from "./filter-sidebar/Filter";
 import { ObjectsCardsTest } from "./objectsCards/ObjectsCardsTest";
 import { FilterMobile } from "./filter-sidebar/FilterMobile";
 import { SelectCategory } from "../selectCategory/SelectCategory";
-import { categoryFilter, ceilingHeightFilter, cityFilter, companyNameFilter, floorFilter, floorsFilter, freightElevatorFilter, operationTypeFilter, passengerElevatorFilter, priceFilter, renovationFilter, roomsFilter, squareFilter, stateFilter, streetFilter, wallsTypeFilter } from "./filter-sidebar/myFilters";
+import {
+  categoryFilter,
+  ceilingHeightFilter,
+  cityFilter,
+  companyNameFilter,
+  floorFilter,
+  floorsFilter,
+  freightElevatorFilter,
+  operationTypeFilter,
+  passengerElevatorFilter,
+  priceFilter,
+  renovationFilter,
+  roomsFilter,
+  squareFilter,
+  stateFilter,
+  streetFilter,
+  wallsTypeFilter,
+} from "./filter-sidebar/myFilters";
 
 type Props = {
-    objects: ObjectIntrum[],
-    pages:number,
-    page:number
-}
+  objects: ObjectIntrum[];
+  pages: number;
+  page: number;
+};
 
+export function ParentFilterBlock({ objects, pages, page }: Props) {
+  //Отфильтрованные Квартиры, по умолчанию все квартиры
+  const [filteredHouse, setFilteredHouse] = useState<ObjectIntrum[]>(
+    objects.length > 0 ? objects.slice(0, 30) : []
+  );
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(
+    Math.max(...objects.map((object) => (object.price ? object.price : 0)))
+  );
+  const [loading, setLoading] = useState<boolean>(true); // загрузка при фильтрации
 
+  /////// Состояния для паганации
+  const [currentPage, setCurrentPage] = useState(page); // текущая страница
 
-export function ParentFilterBlock({ objects,pages, page }: Props) {
+  const [allPages, setAllPages] = useState<number>(pages); //Всего страниц
 
-    //Отфильтрованные Квартиры, по умолчанию все квартиры
-    const [filteredHouse, setFilteredHouse] = useState<ObjectIntrum[]>(objects.length > 0 ? objects.slice(0, 30) : [])
-    const [minPrice, setMinPrice] = useState<number>(0)
-    const [maxPrice, setMaxPrice] = useState<number>(Math.max(...objects.map(object => object.price ? object.price : 0)))
-    const [loading, setLoading] = useState<boolean>(true);// загрузка при фильтрации
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
 
-    /////// Состояния для паганации 
-    const [currentPage, setCurrentPage] = useState(page); // текущая страница
- 
-    const [allPages, setAllPages] = useState<number>(pages) //Всего страниц
+  //Конкретные выбранные фильтры
+  const [currentFilter, setCurrentFilter] = useState<FilterUserOptions>({
+    category: [],
+    operationType: [],
+    state: [],
+    city: [],
+    street: [],
+    minPrice: minPrice,
+    maxPrice: maxPrice,
+    companyName: [],
+    passengerElevator: [],
+    freightElevator: [],
+    ceilingHeight: [],
+    renovation: [],
+    rooms: [],
+    square: [],
+    floors: [],
+    floor: [],
+    wallsType: [],
+  });
 
-    const handlePageChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000);
-    };
+  //Загрузка при изменении фильтра и сброс страницы на 1
+  useEffect(() => {
+    setLoading(true);
+    setCurrentPage(1);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, [currentFilter]);
 
-    //Конкретные выбранные фильтры 
-    const [currentFilter, setCurrentFilter] = useState<FilterUserOptions>({
-        category: [],
-        operationType: [],
-        state: [],
-        city: [],
-        street: [],
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        companyName: [],
-        passengerElevator: [],
-        freightElevator: [],
-        ceilingHeight: [],
-        renovation: [],
-        rooms: [],
-        square: [],
-        floors: [],
-        floor: [],
-        wallsType: [],
-    })
-
-    //Загрузка при изменении фильтра и сброс страницы на 1
-    useEffect(() => {
-        setLoading(true);
-        setCurrentPage(1);
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000);
-    }, [currentFilter]);
- 
   const [valueSliderPrice, setValueSliderPrice] = useState<[number, number]>([
     minPrice,
     maxPrice,
   ]);
 
-  const [countObjects, setCountObjects] = useState(0)
+  const [countObjects, setCountObjects] = useState(0);
 
   const changeFilter = (filter: FilterUserOptions) => {
     setCurrentFilter((prevFilterState) => {
@@ -142,8 +160,8 @@ export function ParentFilterBlock({ objects,pages, page }: Props) {
     fetch("/api/objects/?" + params)
       .then((res) => res.json())
       .then((el) => {
-        setCountObjects(el.countObjects)
-        setAllPages(el.totalPages)
+        setCountObjects(el.countObjects);
+        setAllPages(el.totalPages);
         setFilteredHouse(el.allObjects);
         setFilteblackProps((prevFilterState) => {
           return {
@@ -152,7 +170,7 @@ export function ParentFilterBlock({ objects,pages, page }: Props) {
             rooms: el.filter.rooms,
             streets: el.filter.street,
             companyNames: el.filter.companyName,
-            price:[el.filter.minPrice,el.filter.maxPrice]
+            price: [el.filter.minPrice, el.filter.maxPrice],
           };
         });
       });
@@ -196,7 +214,6 @@ export function ParentFilterBlock({ objects,pages, page }: Props) {
     wallsTypes: string[];
   });
 
-
   useEffect(() => {
     changeFilter({
       minPrice: valueSliderPrice[0],
@@ -204,54 +221,77 @@ export function ParentFilterBlock({ objects,pages, page }: Props) {
     });
   }, [valueSliderPrice]);
 
-    return <div className="flex  flex-col  w-full  h-auto  justify-center">
 
-        <SelectCategory
-            objects={objects}
-            currentFilter={currentFilter} setCurrentFilter={setCurrentFilter}
-            setFilteredHouse={setFilteredHouse}
+  
+
+  return (
+    <div className="flex  flex-col  w-full  h-auto  justify-center">
+      <SelectCategory
+        objects={objects}
+        currentFilter={currentFilter}
+        setCurrentFilter={setCurrentFilter}
+        setFilteredHouse={setFilteredHouse}
+      />
+
+      <div className="flex flex-col items-center lg:items-start lg:w-full justify-center">
+        <h1 className=" w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] text-black mt-[50px] font-semibold">
+          Лучшие предложения для
+          <span className="text-[#F15281] border-b-2 lg:border-b-3    xl:border-b-4  border-[#F15281]">
+            <br />
+            ВАШИХ КЛИЕНТОВ НА ОДНОМ САЙТЕ
+          </span>
+        </h1>
+      </div>   
+
+      <section className="flex  flex-col  md:flex-row w-full  h-full  relative   mt-[50px]">
+        
+        <FilterMobile
+          objects={objects}
+          currentFilter={currentFilter}
+          setCurrentFilter={setCurrentFilter}
+          filteredHouse={filteredHouse}
+          setFilteredHouse={setFilteredHouse}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          setMinPrice={setMinPrice}
+          setMaxPrice={setMaxPrice}
+          currentPage={currentPage}
+          setAllPages={setAllPages}
+          setCurrentPage={setCurrentPage}
+          filteblackProps={filteblackProps}
+          valueSliderPrice={valueSliderPrice}
+          setValueSliderPrice={setValueSliderPrice}
+          countObjects={countObjects}
         />
 
-        <section className="flex  flex-col  md:flex-row w-full  h-full  relative   mt-[50px]">
-            <FilterMobile
-                objects={objects}
-                currentFilter={currentFilter} setCurrentFilter={setCurrentFilter}
-                filteredHouse={filteredHouse} setFilteredHouse={setFilteredHouse}
-                minPrice={minPrice} maxPrice={maxPrice}
-                setMinPrice={setMinPrice} setMaxPrice={setMaxPrice}
-                currentPage={currentPage} setAllPages={setAllPages} 
-                setCurrentPage={setCurrentPage}
-                filteblackProps={filteblackProps}
-                valueSliderPrice={valueSliderPrice}
-                setValueSliderPrice={setValueSliderPrice}
-                countObjects={countObjects}
-            />
+        <ObjectsCardsTest
+          setCurrentPage={setCurrentPage}
+          allPages={allPages}
+          currentPage={currentPage}
+          loading={loading}
+          filteredHouse={filteredHouse}
+          handlePageChange={handlePageChange}
+        />
 
-            <ObjectsCardsTest
-                setCurrentPage={setCurrentPage}
-                allPages={allPages}
-                currentPage={currentPage}
-                loading={loading}
-                filteredHouse={filteredHouse}
-                handlePageChange={handlePageChange}
-            />
-
-            <Filter
-                 objects={objects}
-                 currentFilter={currentFilter} setCurrentFilter={setCurrentFilter}
-                 filteredHouse={filteredHouse} setFilteredHouse={setFilteredHouse}
-                 minPrice={minPrice} maxPrice={maxPrice}
-                 setMinPrice={setMinPrice} setMaxPrice={setMaxPrice}
-                 currentPage={currentPage} setAllPages={setAllPages} 
-                 setCurrentPage={setCurrentPage}
-                 filteblackProps={filteblackProps}
-                 valueSliderPrice={valueSliderPrice}
-                 setValueSliderPrice={setValueSliderPrice}
-                 countObjects={countObjects}
-            />
-        </section>
+        <Filter
+          objects={objects}
+          currentFilter={currentFilter}
+          setCurrentFilter={setCurrentFilter}
+          filteredHouse={filteredHouse}
+          setFilteredHouse={setFilteredHouse}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          setMinPrice={setMinPrice}
+          setMaxPrice={setMaxPrice}
+          currentPage={currentPage}
+          setAllPages={setAllPages}
+          setCurrentPage={setCurrentPage}
+          filteblackProps={filteblackProps}
+          valueSliderPrice={valueSliderPrice}
+          setValueSliderPrice={setValueSliderPrice}
+          countObjects={countObjects}
+        />
+      </section>
     </div>
+  );
 }
-
-
-

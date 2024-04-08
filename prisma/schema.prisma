@@ -55,9 +55,28 @@ model ObjectIntrum {
   leaseCommissionSize String?
   leaseDeposit        String?
 
-  active             Boolean @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  FavoriteObjectsToObj FavoriteObjectsToObj[]
+  active               Boolean                @default(true)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+}
+
+model SessionClient {
+  id              String                 @id @default(cuid())
+  sessionToken    String                 @unique
+  expires         DateTime
+  favoriteObjects FavoriteObjectsToObj[]
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+}
+
+model FavoriteObjectsToObj {
+  session   SessionClient @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+  object    ObjectIntrum  @relation(fields: [objectId], references: [id], onDelete: Cascade)
+  objectId  String
+
+  @@id([sessionId, objectId])
 }
 
 model ExchangeRate {
@@ -70,9 +89,7 @@ model ExchangeRate {
   updatedAt DateTime @updatedAt
 }
 
-
-
-model Wazzup{
+model Wazzup {
   id        String   @id @default(cuid())
   name      String?
   phone     String
@@ -83,3 +100,18 @@ model Wazzup{
   updatedAt DateTime @updatedAt
 }
 
+model Tilda {
+  id           String   @id @default(cuid())
+  name         String?
+  phone        String
+  typeSend     String?
+  formid       String?
+  utm_medium   String?
+  utm_campaign String?
+  utm_content  String?
+  utm_term     String?
+  sendCrm      Boolean
+  answers      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

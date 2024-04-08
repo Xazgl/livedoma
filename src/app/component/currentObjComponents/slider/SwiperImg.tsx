@@ -42,7 +42,7 @@ export function SwiperImg({ showModalImg, img, setShowModalImg, setHouseStepImg 
                 setItemsPerPage(3);
             } else if (window.innerWidth > 1200) {
                 setItemsPerPage(4);
-            } else if (window.innerWidth < 450) {
+            } else if (window.innerWidth < 550) {
                 setItemsPerPage(1);
             }
         }
