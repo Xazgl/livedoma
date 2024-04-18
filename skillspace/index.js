@@ -1,7 +1,7 @@
 //@ts-check
 
 const axios = require('axios').default
-
+const { sendEmail } = require("./lib");
 
 
 async function fetchData() {
@@ -25,8 +25,8 @@ async function fetchData() {
         });
       }
     }
+    console.log(emails.length); // Выводим массив email на консоль
     return emails;
-    //console.log(emails); // Выводим массив email на консоль
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);
     throw error; // Пробрасываем ошибку выше для обработки
@@ -66,8 +66,8 @@ async function fetchObject(){
         }
       });
     });
+    console.log(emails.length); // Выводим массив email на консоль
     return emails;
- //   console.log(emails); // Выводим массив email на консоль
   } catch (error) {
     console.error("Ошибка при выполнении запроса:", error);
   }
@@ -102,9 +102,6 @@ async function main() {
  
     const oldEmployee = oldEmployeeStr ? oldEmployeeStr.map(email => email.toLowerCase()) : []; // Преобразуем в массив
 
-    // const oldEmployee= oldEmployeeStr ? oldEmployeeStr.map(email => email.toLowerCase()).join(',') : [''];
-    
-  
     const emailActual = idActualRaw.filter(email => email !== null).map(email => email.toLowerCase());
 
     const deletedEmployee =  oldEmployee.filter(email => !emailActual.includes(email)) ;
@@ -119,18 +116,26 @@ async function main() {
       "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1898%5D=14800",
       "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1968%5D=14801",
       "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1901%5D=2421",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1970%5D=2427"
+      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1970%5D=2427",
+       //этот тестовый 
+      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B32298%5D=48552"
     ];
+    
+    const emailWithError = []
 
     for (const email of newEmployee) {
+      console.log(email)
       for (const link of links) {
-        try {
-          const response = await axios.get(`${link}&email=${email}`);
-          console.log(`Email ${email} успешно отправлен на курс.`);
-          console.log(response.data);
-        } catch (error) {
-          console.error(`Ошибка при отправке email ${email}: ${error}`);
-        }
+      sendEmail(email, link,  emailWithError);
+      }
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    for (const email of emailWithError) {
+      console.log({emailWithError:emailWithError, status:'Массив ошибочных повторная отправка пошла'})
+      for (const link of links) {
+      sendEmail(email, link,  emailWithError);
       }
     }
 
@@ -143,7 +148,9 @@ async function main() {
       "https://skillspace.ru/api/open/v1/course/1898/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
       "https://skillspace.ru/api/open/v1/course/1968/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
       "https://skillspace.ru/api/open/v1/course/1901/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/1970/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d"
+      "https://skillspace.ru/api/open/v1/course/1970/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      //этот тестовый 
+      "https://skillspace.ru/api/open/v1/course/32298/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d"
     ];
 
     for (const email of deletedEmployee) {

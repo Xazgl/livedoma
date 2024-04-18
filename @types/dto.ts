@@ -203,7 +203,11 @@ export type MessagesResponse = {
 
 export type crmAnswer = {
   status: string;
-  data: [];
+  data: {
+    customer:string,
+    request: string
+  }
+  ;
 };
 
 export type FavoriteObj = {
@@ -252,3 +256,23 @@ export type FavoriteObj = {
 //       },
 //     ],
 //   }
+
+
+
+export type Transaction = {
+  id: string ,
+  idSalesIntrum:           string,  
+  responsibleMain:         string, //Главный отвественный 
+  partCommissionSeller:     string, //Часть комиссии, которую отдаем с комиссии продавца 1383
+  sumCommissionBuyer:     string ,//Сумма которую отдаем с комиссии покупателя 3187
+  agentSellerName:         string, //Агент продавца  3190
+  agentSellerCommission:   string,  //Комиссия продавца 3364
+  lawyerName:         string,  //3096
+  lawyerCommission:     string, //Комиссия юриста СД 4616
+  agentBuyerName:       string, // Агент покупателя 3350
+  agentBuyerCommission:  string,  //Коммиссия  покупателя  3365
+  lawyerCommission2:    string, //Юрист Сумма к выдаче  3363
+  adress:               string, //1321
+  dateStage:            string, //3415
+  column: string
+}

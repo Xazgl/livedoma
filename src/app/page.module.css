@@ -16,7 +16,6 @@
   width: 1440px;
   height: 100%;
   position: relative;
-  overflow: hidden;
 }
 
 .title {
@@ -35,9 +34,9 @@
   }
 }
 
-@media(max-width: 1100px) {
+@media(max-width: 1180px) {
   .content {
-    width: 100%;
+    width: 99%;
   }
 
   .title {

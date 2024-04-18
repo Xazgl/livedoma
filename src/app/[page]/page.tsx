@@ -3,6 +3,7 @@ import { Header } from "./../component/header/Header";
 import { ParentFilterBlock } from "./../component/main-block-filter/ParentFilterBlock";
 import { FilterUserOptions } from "../../../@types/dto";
 import db from "../../../prisma";
+import { MobileHeader } from "../component/mainBarMobile/MobileBar";
 
 
  export const dynamic = 'force-dynamic'
@@ -48,6 +49,7 @@ export default async function Home({
   return (
     <>
       <Header />
+      <MobileHeader />
       {objects && objects.length > 0 && 
         <ParentFilterBlock objects={objects} pages={pages} page={page} />
       }

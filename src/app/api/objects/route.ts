@@ -14,7 +14,7 @@ export async function GET(
   const companyName = searchParams.get("companyName");
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
-
+  const renovation = searchParams.get("renovation");
   const sPage = searchParams.get("page");
   const page = sPage ? +sPage : 1;
 
@@ -38,6 +38,14 @@ export async function GET(
       },
     });
 
+    const countRenovation = await db.objectIntrum.groupBy({
+      by: ["renovation"],
+      _count: true,
+      where: {
+        ...(renovation ? { renovation: { contains: renovation } } : {}),
+      },
+    });
+
     const countStreet = await db.objectIntrum.groupBy({
       by: ["street"],
       _count: true,
@@ -55,10 +63,11 @@ export async function GET(
     });
 
     //Если фильтры не выбраны, то отсылаем все доступные значения для филтра по умолчанию
-    if (!category && !rooms && !street && !companyName) {
+    if (!category && !rooms && !street && !companyName && !renovation) {
       filter = {
         category: countCategory.map((el) => el.category),
         rooms: countRooms.map((el) => el.rooms),
+        renovation: countRenovation.map((el) => el.renovation),
         //@ts-ignore
         street: countStreet.map((el) => el.street),
         companyName: countCompanyName.map((el) => el.companyName),
@@ -71,6 +80,7 @@ export async function GET(
         active: true,
         ...(category ? { category: { contains: category } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
+        ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(street ? { street: { contains: street } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(minPrice && maxPrice
@@ -91,6 +101,7 @@ export async function GET(
         active: true,
         ...(category ? { category: { contains: category } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
+        ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(street ? { street: { contains: street } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(minPrice && maxPrice
@@ -100,6 +111,7 @@ export async function GET(
       select: {
         category: true,
         rooms: true,
+        renovation:true,
         street: true,
         companyName: true,
         price: true,
@@ -108,10 +120,11 @@ export async function GET(
 
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if (category || rooms || street || companyName) {
+    if (category || rooms || street || companyName || renovation ) {
       filter = {
         category: [...new Set(allFilteredObject.map((el) => el.category))],
         rooms: [...new Set(allFilteredObject.map((el) => el.rooms))],
+        renovation: [...new Set(allFilteredObject.map((el) => el.renovation))],
         //@ts-ignore
         street: [...new Set(allFilteredObject.map((el) => el.street))],
         companyName: [

@@ -1,7 +1,7 @@
 import "server-only";
-import { Header } from "./component/header/Header";
 import { ParentFilterBlock } from "./component/main-block-filter/ParentFilterBlock";
 import db from "../../prisma";
+import { Header } from "./component/header/Header";
 import { MobileHeader } from "./component/mainBarMobile/MobileBar";
 
 
@@ -45,7 +45,7 @@ export default async function Home() {
   return (
     <>
       <Header />
-      <MobileHeader/>
+      <MobileHeader />
       {objects && objects.length > 0 && 
         <ParentFilterBlock objects={objects}  pages={pages} page={page} />
       }

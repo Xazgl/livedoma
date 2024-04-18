@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Marquiz, crmAnswer } from "../../../../@types/dto";
-import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
       let crmAnswer: crmAnswer = {
         status: "no",
-        data: [],
+        data: {
+           customer:'',
+           request:''
+        }
       };
 
       const answer: Marquiz = await req.json();
-      console.log(answer);
+      // console.log(answer);
 
       //@ts-ignore
       if (answer) {
@@ -47,6 +50,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const textAnswers = formatQuestionsAndAnswers(answer);
 
         try {
+
+          const manager = await managerFind()
           const newContact = await db.tilda.create({
             data: {
               name: name,
@@ -59,6 +64,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               utm_term: utm_term,
               sendCrm: false,
               answers: textAnswers,
+              managerId: manager && manager !==''? manager : "Ошибка в выборе менеджера"
             },
           });
 
@@ -71,6 +77,19 @@ export async function POST(req: NextRequest, res: NextResponse) {
               },
               data: {
                 sendCrm: true,
+                intrumId: crmAnswer.data.request.toString(),
+                intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+              },
+            });
+
+            const queue = await db.wazzup.create({
+              data: {
+                name: '',
+                phone: '',
+                text: '',
+                typeSend: 'Очередь',
+                sendCrm: false,
+                managerId: manager && manager !==''? manager : "Ошибка в выборе менеджера"
               },
             });
           }

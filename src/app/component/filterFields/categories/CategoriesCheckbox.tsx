@@ -24,7 +24,7 @@ export function CategoriesCheckbox({
   setCurrentFilter,
 }: Props) {
   return (
-    <Accordion defaultExpanded={true} sx={{ width: "100%" }}>
+    <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"

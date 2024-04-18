@@ -2,6 +2,7 @@
 
 import { ObjectIntrum } from "@prisma/client";
 import {
+  FavoriteObj,
   FilteblackProps,
   FilterUserOptions,
   allObjects,
@@ -11,6 +12,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Link,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -20,6 +22,7 @@ import { StreetSelect } from "../../filterFields/adress/StreetSelect";
 import styles from "./Filter.module.css";
 import { CompanySelect } from "../../filterFields/company/CompanySelect";
 import TuneIcon from "@mui/icons-material/Tune";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 type Props = {
   objects: allObjects;
@@ -38,6 +41,8 @@ type Props = {
   valueSliderPrice: [number, number];
   setValueSliderPrice: Dispatch<SetStateAction<[number, number]>>;
   countObjects: number;
+  setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
+  favArr: FavoriteObj[];
 };
 
 const filterRow = "flex  w-full  p-4  h-auto";
@@ -55,6 +60,8 @@ export function FilterMobile({
   valueSliderPrice,
   setValueSliderPrice,
   countObjects,
+  favArr,
+  setFavArr,
 }: Props) {
   //функция для сброса фильтров
   function resetFilteblackCars() {
@@ -99,6 +106,7 @@ export function FilterMobile({
             color: "white",
             margin: "1px",
             width: "100%",
+            position:'relative'
           }}
         >
           <AccordionSummary
@@ -106,11 +114,22 @@ export function FilterMobile({
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >
-            <h1 className="w-[100%] text-[14px] s:text-[16px]">
+            <h1 className="flex w-[100%] text-[14px] s:text-[16px]">
               Параметры поиска
+              {favArr && favArr.length > 0 ? (
+                <div className="flex pl-[10%] md:pl-[50%] items-center gap-[3px]">
+                  <FavoriteBorderIcon sx={{ fontSize: "18px" }} />{" "}
+                  {favArr.length}
+                </div>
+              ) : (
+                ""
+              )}
             </h1>
           </AccordionSummary>
-          <AccordionDetails sx={{ backgroundColor: "#f2f2f2", width: "100%" }}>
+          <AccordionDetails
+            sx={{  backgroundColor: "#f2f2f21a", width: "100%"  }}
+            // sx={{zIndex:'999', backgroundColor: "#f2f2f21a", width: "100%",position:`${expanded ? ' absolute' : 'relative'}`    }}
+          >
             <div
               className={`flex  flex-col w-full  md:w-[20%]   h-[100%]  items-center 
                                     sticky  top-0  right-0`}
@@ -123,7 +142,7 @@ export function FilterMobile({
                   setCurrentFilter={setCurrentFilter}
                 />
               </div>
-              
+
               <div className={filterRow}>
                 <CategoriesCheckbox
                   filteblackProps={filteblackProps}
@@ -170,10 +189,39 @@ export function FilterMobile({
                 </Accordion>
               </div>
 
+              {favArr && favArr.length > 0 && (
+                <div className={filterRow}>
+                  {favArr && favArr.length > 0 ? (
+                    <Link
+                      href={`/cart/${favArr[0].sessionId}`}
+                      className="w-[100%] h-[100%] text-white"
+                      style={{textDecoration:'none'}}
+                    >
+                      <a rel="noopener noreferrer">
+                        <button
+                          className={`flex justify-center  gap-[5px] items-center w-[100%]  h-[40px] rounded
+                 bg-[#54529F] #54529F  hover:bg-[#F15281]  cursor-pointer 
+                       transition  duration-700  ease-in-out 
+                 `}
+                        >
+                          <>
+                            Избранное
+                            <FavoriteBorderIcon sx={{ fontSize: "15px" }} />
+                            <span className="text-sm">{favArr.length}</span>
+                          </>
+                        </button>
+                      </a>
+                    </Link>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              )}
+
               <div className={filterRow}>
                 <button
                   className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded color-[white] 
-                     bg-[#F15281]  hover:bg-[#3C3C3D]  cursor-pointer 
+                     bg-[#F15281]  hover:bg-[#54529F]  cursor-pointer 
                        transition  duration-700  ease-in-out "
                   onClick={resetFilteblackCars}
                 >

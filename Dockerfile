@@ -55,5 +55,12 @@ RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/xmlTasks/
 
 RUN (crontab -u $(whoami) -l; echo "*/30 * * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
 
+RUN (crontab -u $(whoami) -l; echo "*/50 * * * * /usr/local/bin/node /app/report/index.js" ) | crontab -u $(whoami) -
+
+# RUN (crontab -u $(whoami) -l; echo "*/50 * * * * /usr/local/bin/node /app/prisma/seed.js" ) | crontab -u $(whoami) -
+
+    
+# RUN /usr/local/bin/node /app/prisma/seed.js 
+
 
 EXPOSE 3000

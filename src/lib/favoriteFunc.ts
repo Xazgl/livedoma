@@ -22,7 +22,6 @@ export async function addToFavorite(id:string, setFavArr: (value: React.SetState
         'Content-Type': 'application/json'
       }
     })
-    return res
     if (res.ok) {
         getFavorite(setFavArr);
     }

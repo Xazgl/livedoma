@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Tilda, crmAnswer } from "../../../../@types/dto";
-import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
       let crmAnswer: crmAnswer = {
         status: "no",
-        data: [],
+        data: {
+           customer:'',
+           request:''
+        }
       };
     
       const answer: Tilda  = await req.json();
@@ -16,6 +19,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
       //@ts-ignore
       if (answer.test == null) {
+        const manager = await managerFind()
         const name = answer.name ? answer.name : "Нету";
         const phone = answer.Phone;
         const formid = answer.formid ? answer.formid : "Нету";
@@ -36,6 +40,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
               utm_content: utm_content,
               utm_term: utm_term,
               sendCrm: false,
+              managerId: manager && manager !==''? manager : "Ошибка в выборе менеджера"
+
             },
           });
 
@@ -48,10 +54,23 @@ export async function POST(req: NextRequest, res: NextResponse) {
               },
               data: {
                 sendCrm: true,
+                intrumId: crmAnswer.data.request.toString(),
+                intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
               },
             });
-          }
 
+            const queue =await db.wazzup.create({
+              data: {
+                name: '',
+                phone: '',
+                text: '',
+                typeSend: 'Очередь',
+                sendCrm: false,
+                managerId: manager && manager !==''? manager : "Ошибка в выборе менеджера"
+              },
+            });
+            
+          }
           return NextResponse.json(
             { crmStatus: crmAnswer, contacts: newContact },
             { status: 200 }

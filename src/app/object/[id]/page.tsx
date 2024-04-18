@@ -2,6 +2,7 @@
 import { DescriptionObj } from "@/app/component/currentObjComponents/description/DescriptionObj"
 import { SwiperImg } from "@/app/component/currentObjComponents/slider/SwiperImg"
 import { Header } from "@/app/component/header/Header"
+import { MobileHeader } from "@/app/component/mainBarMobile/MobileBar"
 import { ModalImg } from "@/app/component/modalWindow/ModalImg"
 import { ObjectIntrum } from "@prisma/client"
 import { useRouter } from 'next/navigation'
@@ -41,6 +42,7 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
 
     return <>
         <Header />
+        <MobileHeader />
         {object &&
             <>
                 <SwiperImg

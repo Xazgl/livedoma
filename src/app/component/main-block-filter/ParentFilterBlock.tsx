@@ -1,7 +1,7 @@
 "use client";
 import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
+import { FavoriteObj, FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
 import { Filter } from "./filter-sidebar/Filter";
 import { ObjectsCardsTest } from "./objectsCards/ObjectsCardsTest";
 import { FilterMobile } from "./filter-sidebar/FilterMobile";
@@ -41,6 +41,8 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     Math.max(...objects.map((object) => (object.price ? object.price : 0)))
   );
   const [loading, setLoading] = useState<boolean>(true); // загрузка при фильтрации
+  const [favArr, setFavArr] = useState<FavoriteObj[]>([]); //массив избранного из базы
+
 
   /////// Состояния для паганации
   const [currentPage, setCurrentPage] = useState(page); // текущая страница
@@ -136,6 +138,11 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
         params.append("rooms", room);
       });
     }
+    if (currentFilter.renovation) {
+      currentFilter.renovation.forEach((renovation) => {
+        params.append("renovation", renovation);
+      });
+    }
     if (currentFilter.street) {
       currentFilter.street.forEach((str) => {
         params.append("street", str);
@@ -168,6 +175,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
             ...prevFilterState,
             categories: el.filter.category,
             rooms: el.filter.rooms,
+            renovationTypes: el.filter.renovationTypes,
             streets: el.filter.street,
             companyNames: el.filter.companyName,
             price: [el.filter.minPrice, el.filter.maxPrice],
@@ -222,7 +230,22 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
   }, [valueSliderPrice]);
 
 
-  
+  useEffect(() => {
+    async function getFav() {
+     await new Promise((resolve) => setTimeout(resolve, 6000));
+     const res = await fetch("/api/favorite/all", {
+       method: "GET",
+       headers: {
+         "Content-Type": "application/json",
+       },
+     });
+     if (res.ok) {
+       const result = await res.json();
+       setFavArr(result.favoriteObjects);
+     }
+   }
+   getFav();
+ }, []);
 
   return (
     <div className="flex  flex-col  w-full  h-auto  justify-center">
@@ -262,6 +285,8 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           valueSliderPrice={valueSliderPrice}
           setValueSliderPrice={setValueSliderPrice}
           countObjects={countObjects}
+          favArr={favArr}
+          setFavArr={setFavArr}
         />
 
         <ObjectsCardsTest
@@ -271,6 +296,8 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           loading={loading}
           filteredHouse={filteredHouse}
           handlePageChange={handlePageChange}
+          favArr={favArr}
+          setFavArr={setFavArr}
         />
 
         <Filter
@@ -290,6 +317,8 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           valueSliderPrice={valueSliderPrice}
           setValueSliderPrice={setValueSliderPrice}
           countObjects={countObjects}
+          favArr={favArr}
+          setFavArr={setFavArr}
         />
       </section>
     </div>

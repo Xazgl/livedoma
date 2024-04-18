@@ -104,9 +104,11 @@ export function SelectCategory({
     },
   ];
 
-  const styleCard = `flex h-[95px] w-[250px] md:w-[300px] relative rounded-bl-lg  rounded-tr-lg
-   sm:after:rounded-t-lg after:duration-700 sm:h-full  after:ease-in-out  
-   after:w-full after:h-full hover:after:bg-[#0000003f] hover:after:absolute`;
+  const styleCard = `flex h-[95px] w-[250px] md:w-[300px] relative rounded-bl-[15px]  rounded-tr-[15px]
+   after:duration-[1000ms] sm:h-full  after:ease-in-out   overflow-hidden
+   after:w-full after:h-full hover:after:bg-[#0000003f] hover:after:absolute
+   hover:after:rounded-bl-[15px]   hover:after:rounded-tr-[15px]
+   `;
   
     const title = "flex mt-[5px] w-full text-black text-[14px] md:text-[20px]";
   

@@ -10,6 +10,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
+
+
 model ObjectIntrum {
   id                String   @id @default(cuid())
   id_intrum         String   @unique
@@ -90,18 +94,28 @@ model ExchangeRate {
 }
 
 model Wazzup {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   name      String?
   phone     String
   text      String?
   typeSend  String?
   sendCrm   Boolean
+  managerId String?
+
+  intrumId    String?
+  intrumUrl   String?
+  timeCall    String?
+  ok_cz       Boolean? @default(false)
+  timeManager String?
+  ok_manager  Boolean? @default(false)
+  status      String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Tilda {
-  id           String   @id @default(cuid())
+  id           String  @id @default(cuid())
   name         String?
   phone        String
   typeSend     String?
@@ -112,6 +126,64 @@ model Tilda {
   utm_term     String?
   sendCrm      Boolean
   answers      String?
+  managerId    String?
+
+  intrumId    String?
+  intrumUrl   String?
+  timeCall    String?
+  ok_cz       Boolean? @default(false)
+  timeManager String?
+  ok_manager  Boolean? @default(false)
+  status      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+
+model Sales {
+  id                       String  @id @default(cuid())
+  idSalesIntrum            String    @unique
+  responsibleMain          String //Главный отвественный 
+  partCommissionSeller     String //Часть комиссии, которую отдаем с комиссии продавца 1383
+  sumCommissionBuyer       String //Сумма которую отдаем с комиссии покупателя 3187
+  //агент продавца 1
+  agentSellerName         String? //Агент продавца  3190
+  agentSellerCommission   String?  //Комиссия продавца 3364
+  //Эл_комис
+  lawyerName           String?  //3096
+  lawyerCommission     String? //Комиссия юриста СД 4616
+  //Агент покупателя
+  agentBuyerName       String? // Агент покупателя 3350
+  agentBuyerCommission  String?  //Коммиссия  покупателя  3365
+  //Юрист
+  lawyerCommission2     String? //Юрист Сумма к выдаче  3363
+
+  adress               String? //1321
+  dateStage            String? //3415
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+model Admin {
+  id           String    @id @default(cuid())
+  login        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  sessions     Session[]
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  expires      DateTime
+  adminId      String
+  admin        Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
