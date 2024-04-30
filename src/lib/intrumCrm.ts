@@ -2,8 +2,8 @@ import { Tilda, Wazzup } from "@prisma/client";
 import axios from "axios";
 import db from "../../prisma";
 
+export default async function sendIntrumCrm(message: Wazzup, double:boolean) {
 //Создание заявки сразу с контактом
-export default async function sendIntrumCrm(message: Wazzup) {
   const obj = {
     apikey: "7917e0838a4d494b471ceb36d7e3a67b",
     params: [
@@ -54,6 +54,10 @@ export default async function sendIntrumCrm(message: Wazzup) {
     ],
   };
 
+  const doubleMessage = double;
+
+  console.log( doubleMessage)
+
   const managers = [
     { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
@@ -85,8 +89,12 @@ export default async function sendIntrumCrm(message: Wazzup) {
 
   params.append("params[request][request_type]", "23"); // Id типа заявка (тут строительство)
   params.append("params[request][status]", "unselected"); //статус сделки
-  params.append("params[request][request_name]","Получили каталог в Вотсапе ТОП-10 проектов домов"); //статус сделки
-  params.append("params[request][employee_id]", message.managerId == "Ошибка в выборе менеджера" ? managerIdRandom : message.managerId ? message.managerId :managerIdRandom ); //id главного отв заявки
+  params.append("params[request][request_name]", doubleMessage? "Повторное обращение(дубль) получили каталог в Вотсапе ТОП-10" : "Получили каталог в Вотсапе ТОП-10 проектов домов"); //статус сделки
+  if(doubleMessage){
+    params.append("params[request][employee_id]","4"); //id главного отв заявки
+  }else{
+    params.append("params[request][employee_id]", message.managerId == "Ошибка в выборе менеджера" ? managerIdRandom : message.managerId ? message.managerId :managerIdRandom ); //id главного отв заявки
+  }
   //колцентр 309 , 1584, 1693, 2220, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
@@ -95,7 +103,7 @@ export default async function sendIntrumCrm(message: Wazzup) {
   params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
   //доп поля заявки
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
-  params.append("params[request][fields][0][value]", "WhatsApp"); //доп поле 1
+  params.append("params[request][fields][0][value]", doubleMessage? "Дубль": "WhatsApp"); //доп поле 1
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append("params[request][fields][1][value]", "WhatsApp"); //доп поле 2
   
@@ -214,7 +222,9 @@ export default async function sendIntrumCrm(message: Wazzup) {
 
 
 
-export  async function sendIntrumCrmTilda(message: Tilda) {
+export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
+
+  const doubleMessage = double;
 
   const managers = [
     { name: "Политов", id: "391" },
@@ -245,8 +255,20 @@ export  async function sendIntrumCrmTilda(message: Tilda) {
 
   params.append("params[request][request_type]", "23"); // Id типа заявка (тут строительство)
   params.append("params[request][status]", "unselected"); //статус сделки
-  params.append("params[request][request_name]", message.answers ? message.answers  : "Заявка на строительство"); //статус сделки
-  params.append("params[request][employee_id]", message.managerId == "Ошибка в выборе менеджера" ? managerIdRandom : message.managerId ? message.managerId :managerIdRandom ); //id главного отв заявки
+  
+  if(doubleMessage) {
+     params.append("params[request][request_name]", message.answers ? 'ДУБЛЬ ПОВТРНОЕ ОБРАЩЕНИЕ!!!!! '+ message.answers   : "ПОВТОРНАЯ заявка на строительство (ДУБЛЬ)"); //статус сделки
+  } else{
+    params.append("params[request][request_name]", message.answers ? message.answers  : "Заявка на строительство"); //статус сделки
+
+  }
+
+ if(doubleMessage){
+    params.append("params[request][employee_id]","4")
+  } else{
+    params.append("params[request][employee_id]", message.managerId == "Ошибка в выборе менеджера" ? managerIdRandom : message.managerId ? message.managerId :managerIdRandom ); //id главного отв заявки
+
+  }
   //колцентр 309 , 1584, 1693, 2220, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
@@ -256,7 +278,7 @@ export  async function sendIntrumCrmTilda(message: Tilda) {
   
   //доп поля заявки
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
-  params.append("params[request][fields][0][value]", 'Заявка'); //доп поле 1
+  params.append("params[request][fields][0][value]", doubleMessage? 'Дубль' :'Заявка'); //доп поле 1
 
 
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2

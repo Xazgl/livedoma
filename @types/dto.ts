@@ -276,3 +276,31 @@ export type Transaction = {
   dateStage:            string, //3415
   column: string
 }
+
+
+export type RequestDataApplication = {
+  id: string;
+  idApplicationIntrum:string,
+  publish: string;
+  employee_id: string;
+  customer_id: string;
+  visit_id: string;
+  request_type_id: string;
+  request_type_name: string;
+  source: string;
+  date_create: string;
+  comment: string;
+  request_name: string;
+  status: string;
+  request_activity_type: string;
+  request_activity_date: string;
+  request_creator_id: string;
+  additional_employee_id: any[]; // Если возможны пустые массивы, их тип можно определить как any[]
+  fields: {
+    [key: string]: {
+      id: string;
+      datatype: string;
+      value: string;
+    };
+  };
+}

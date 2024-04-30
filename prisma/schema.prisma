@@ -10,10 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
-
-
 model ObjectIntrum {
   id                String   @id @default(cuid())
   id_intrum         String   @unique
@@ -140,34 +136,29 @@ model Tilda {
   updatedAt DateTime @updatedAt
 }
 
-
-
-
 model Sales {
-  id                       String  @id @default(cuid())
-  idSalesIntrum            String    @unique
-  responsibleMain          String //Главный отвественный 
-  partCommissionSeller     String //Часть комиссии, которую отдаем с комиссии продавца 1383
-  sumCommissionBuyer       String //Сумма которую отдаем с комиссии покупателя 3187
+  id                    String  @id @default(cuid())
+  idSalesIntrum         String  @unique
+  responsibleMain       String //Главный отвественный 
+  partCommissionSeller  String //Часть комиссии, которую отдаем с комиссии продавца 1383
+  sumCommissionBuyer    String //Сумма которую отдаем с комиссии покупателя 3187
   //агент продавца 1
-  agentSellerName         String? //Агент продавца  3190
-  agentSellerCommission   String?  //Комиссия продавца 3364
+  agentSellerName       String? //Агент продавца  3190
+  agentSellerCommission String? //Комиссия продавца 3364
   //Эл_комис
-  lawyerName           String?  //3096
-  lawyerCommission     String? //Комиссия юриста СД 4616
+  lawyerName            String? //3096
+  lawyerCommission      String? //Комиссия юриста СД 4616
   //Агент покупателя
-  agentBuyerName       String? // Агент покупателя 3350
-  agentBuyerCommission  String?  //Коммиссия  покупателя  3365
+  agentBuyerName        String? // Агент покупателя 3350
+  agentBuyerCommission  String? //Коммиссия  покупателя  3365
   //Юрист
   lawyerCommission2     String? //Юрист Сумма к выдаче  3363
 
-  adress               String? //1321
-  dateStage            String? //3415
+  adress    String? //1321
+  dateStage String? //3415
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-
 
 model Admin {
   id           String    @id @default(cuid())
@@ -186,4 +177,35 @@ model Session {
   admin        Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model constructionApplications {
+  id                  String  @id @default(cuid())
+  idApplicationIntrum String  @unique
+  translator          String? //Источник
+  responsibleMain     String //Главный отвественный 
+  status              String? //статус
+  postMeetingStage    String? //стадия после встречи
+  desc                String? //описание
+  typeApplication     String? //тип заявки
+  contactedClient     String? //специалист связался с клиентом
+  campaignUtm         String?
+  termUtm             String?
+  nextAction          String? //Дата следующего действия по заявки 
+
+  rejection          String? //Отклонения работы с заявкой
+  errorReejctionDone Boolean? // Ошибка исправлена?
+
+  datecallCenter String? //Дата обработки заявки колл центром
+  timecallCenter String? // Время обработки КЦ
+
+  timesaletCenter String? // Дата обработки ОП
+
+  dateFirstContact String? // Дата первого контакта
+
+  phone String?
+  url   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

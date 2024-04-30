@@ -8,7 +8,7 @@ const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату создания сообщения
-  const nextDay = new Date(currentDate.getTime() - (24 * 60 * 60 * 7000)); // Добавляем один день 1000
+  const nextDay = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000)); // Добавляем один день
   const formattedDate = nextDay.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
 
   const params = new URLSearchParams();
@@ -17,10 +17,11 @@ async function start() {
   params.append("params[publish]", "1");
   params.append("params[fields][0][id]", "3415");
   params.append("params[fields][0][value]", `>=${formattedDate}`);
+  // params.append("params[fields][0][value]", `>=2024-04-15`);
   params.append("params[fields][1][id]", "3379");
   params.append("params[fields][1][value]", "1"); //сделка проверяна = Да
 
-  try {
+  try {                                
     const response = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/sales/filter',
       params, {
       headers: {
@@ -29,22 +30,20 @@ async function start() {
     });
 
     const data = response.data.data.list;
-
+    console.log(data)
     const getField = (fields, id) => {
       return fields[id] ? fields[id].value : null;
     };
 
-
-
-
     // Перебор массива объектов с помощью метода map
     const mappedData = await Promise.all(data.map(async sale => {
-
       const existingSale = await db.sales.findUnique({
         where: {
           idSalesIntrum: sale.id,
         },
       });
+
+
 
       if (existingSale) {
         // Если сделка существует, обновляем ее поля
@@ -88,11 +87,12 @@ async function start() {
       }
     }));
 
+    console.log(mappedData)
     return mappedData;
 
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);
-    throw error; // Пробрасываем ошибку выше для обработки
+    throw error;
   }
 }
 

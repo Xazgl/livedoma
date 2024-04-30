@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Marquiz, crmAnswer } from "../../../../@types/dto";
 import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { doubleFind } from "@/lib/doubleFind";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -51,6 +52,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         try {
 
+          let double = await doubleFind(phone)
+
           const manager = await managerFind()
           const newContact = await db.tilda.create({
             data: {
@@ -68,7 +71,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             },
           });
 
-          crmAnswer = await sendIntrumCrmTilda(newContact);
+          crmAnswer = await sendIntrumCrmTilda(newContact, double);
 
           if (crmAnswer.status == "success") {
             const updateStatus = await db.tilda.update({

@@ -19,9 +19,30 @@ export async function generateExcel(transactions: Sales[]) {
     // Добавление заголовков столбцов для текущего набора
     const russianColumns = columns.map(col => col.headerName);
     worksheet.addRow(russianColumns);
-
+     
+    const transactionsNew = transactions.map((transaction) => ({
+      id: transaction.id,
+      idSalesIntrum: transaction.idSalesIntrum,
+      responsibleMain: transaction.responsibleMain,
+      partCommissionSeller: transaction.partCommissionSeller == '0' || transaction.partCommissionSeller == '' ? null : transaction.partCommissionSeller.split('.')[0],
+      sumCommissionBuyer: transaction.sumCommissionBuyer == '0' || transaction.sumCommissionBuyer == '' || transaction.sumCommissionBuyer == '0.00' ? null : transaction.sumCommissionBuyer.split('.')[0],
+      agentSellerName: transaction.agentSellerName ? transaction.agentSellerName.split(' ')[0] : '',
+      agentSellerCommission:  transaction.agentSellerCommission == '0' || transaction.agentSellerCommission == '' || transaction.agentSellerCommission == '0.00' ? null : transaction.agentSellerCommission ? transaction.agentSellerCommission.split('.')[0] : null,
+      lawyerName: transaction.lawyerName ? transaction.lawyerName.split(' ')[0] : '',
+      lawyerCommission:   transaction.lawyerCommission == '0' || transaction.lawyerCommission == ''|| transaction.lawyerCommission == '0.00' ? null : transaction.lawyerCommission? transaction.lawyerCommission.split('.')[0] : null,
+      agentBuyerName: transaction.agentBuyerName ? transaction.agentBuyerName.split(' ')[0] : '',
+      agentBuyerCommission:  transaction.agentBuyerCommission == '0' || transaction.agentBuyerCommission == '' || transaction.agentBuyerCommission == '0.00' ? null : transaction.agentBuyerCommission? transaction.agentBuyerCommission.split('.')[0] : null,
+      lawyerCommission2:   transaction.lawyerCommission2 == '0' || transaction.lawyerCommission2 == '' || transaction.lawyerCommission2 == '0.00' ? null : transaction.lawyerCommission2? transaction.lawyerCommission2.split('.')[0] : null,
+      adress: transaction.adress,
+      dateStage: transaction.dateStage,
+      createdAt: transaction.createdAt,
+      updatedAt: transaction.updatedAt
+    }));
+    
+    // console.log(transactionsNew);
+    
     // Добавление данных из transactions в таблицу для текущего набора
-    transactions.forEach((transaction) => {
+    transactionsNew.forEach((transaction) => {
       const row: Array<string | undefined> = [];
       columnFields.forEach((field) => {
         //@ts-ignore

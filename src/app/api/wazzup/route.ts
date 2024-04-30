@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Message, MessagesResponse, crmAnswer } from "../../../../@types/dto";
 import sendIntrumCrm, { managerFind } from "@/lib/intrumCrm";
+import { doubleFind } from "@/lib/doubleFind";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -28,6 +29,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
               const text = message.text ? message.text : "Нету";
               if (phone !== "Admin") {
                 try {
+                  
+                  let double = await doubleFind(phone)
+
                   const newContact = await db.wazzup.create({
                     data: {
                       name: name,
@@ -39,7 +43,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                     },
                   });
 
-                  crmAnswer = await sendIntrumCrm(newContact);
+                  crmAnswer = await sendIntrumCrm(newContact, double);
 
                   if (crmAnswer.status == "success") {
                     console.log(crmAnswer)
