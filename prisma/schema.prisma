@@ -33,6 +33,7 @@ model ObjectIntrum {
   saleOptions       String[] //Опции продажи , например можно в Ипотеку
   phone             String? //Контактный телефон
   img               String[] //Фото квартиры 
+  thubmnail         String[] //Превью квартиры 
   rooms             String? //Кол-во комнат
   square            String? //Площадь
   landArea          String? //Земельный участок
@@ -139,25 +140,74 @@ model Tilda {
 model Sales {
   id                    String  @id @default(cuid())
   idSalesIntrum         String  @unique
-  responsibleMain       String //Главный отвественный 
-  partCommissionSeller  String //Часть комиссии, которую отдаем с комиссии продавца 1383
-  sumCommissionBuyer    String //Сумма которую отдаем с комиссии покупателя 3187
+  responsibleMain       String? //Главный отвественный 
+  partCommissionSeller  String? //Часть комиссии, которую отдаем с комиссии продавца 1383
+  sumCommissionBuyer    String? //Сумма которую отдаем с комиссии покупателя 3187
   //агент продавца 1
   agentSellerName       String? //Агент продавца  3190
-  agentSellerCommission String? //Комиссия продавца 3364
+  agentSellerFormula    String? //Формула Агент продовца 3333
+  agentSellerCommission String? //Комиссия продавца 3364 или  Агент продавца сумма 1
+  agentSellerSalaryDone String? //  Агент продавца выдана зп?  3335 
   //Эл_комис
   lawyerName            String? //3096
   lawyerCommission      String? //Комиссия юриста СД 4616
   //Агент покупателя
   agentBuyerName        String? // Агент покупателя 3350
-  agentBuyerCommission  String? //Коммиссия  покупателя  3365
+  agentBuyerFormul      String? //Формула Агент покупателя 3337
+  agentBuyerCommission  String? //Коммиссия  покупателя  3365 или Агент покупателя к выдаче1
+  agentBuyerSalaryDone  String? //Агент покупателя была выдача?  3339  
   //Юрист
   lawyerCommission2     String? //Юрист Сумма к выдаче  3363
+  lawyerSalary          String? //Юрист(зп) 3352
+  lawyerFormula         String? //Формула Юрист 3329
+  lawyerSumm            String? //Юрист к выдаче 3330
+  lawyerSumm1           String? //Юрист к выдаче1 
+  lawyerSalaryDone      String? //Юрист Выдана зп?  
+  //Ипотека
+  mortageFormula        String? //Формула  Ипотека 3359
+  mortageSumm1          String? //Ипотека сумма 1  3367
+  mortageOtdel          String? //Привлечение ипотечного отдела 1203
 
   adress    String? //1321
   dateStage String? //3415
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model TransactionSellingInsurance {
+  id                                   String    @id @default(cuid())
+  idIntrum                             String    @unique
+  responsibleMain                      String? //Главный отвественный 
+  name                                 String? // ФИО 3313
+  phone                                String? // номер 3314
+  agreement                            String? // Подписание кредитного договора 3315
+  titleBorrower                        String? // Титульный заемщик 3316
+  profession                           String? // Профессия 3317
+  bank                                 String? // банк 3318
+  insuranceCompany                     String? // Страховая компания 3448
+  insuranceSum                         String? //Сумма страховки 3449
+  mortageSum                           String? //Сумма ипотеки 3319
+  commission                           String? //Комиссия 3413
+  lawler                               String? //Юрист 3320
+  dateNextClientContact                DateTime? //Дата следующего контакта с клиентом 3321
+  stageWorkWithClient                  String? //Этап работы с клиентом 3403
+  nextAction                           String? //Следующее действие 3376
+  dateBirthday                         DateTime? //Дата рождения 3324
+  address                              String? //Адрес объекта 3325
+  clientInform                         String? //Клиент проинформирован о возможности страхования 3326
+  insuranceCalc                        String? //Расчет страховки 3374
+  titleBorrowerPhone                   String? //Телефон Титульного заемщика 3375
+  extractInsurance                     String? //Выписка 3378
+  idTransitionSaleObject               String? //id сделки продажа объекта 3386
+  numberCadastral                      String? //Кадастровый номер 3388
+  extract                              String? //выписка 3394
+  dateTheStatusChanged                 DateTime? //Дата перехода статуса в "Оплата прошла" 3398
+  source                               String? // Источник 3402
+  theBuyerIMMEDIATELYRefusedInsurance  String? //покупатель СРАЗУ отказался от страховки 3488
+  transactionStageInTheTransactionSALE String? //Стадия сделки в сделке ПРОДАЖА ОБЪЕКТА и 3489
+  createdAt                            DateTime  @default(now())
+  updatedAt                            DateTime? @updatedAt
 }
 
 model Admin {

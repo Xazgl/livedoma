@@ -7,9 +7,10 @@ type Props = {
     filteblackProps: FilteblackProps;
     currentFilter: FilterUserOptions;
     setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
+    resetPageAndReloadData:() => void;
 };
 
-export function StreetSelect({ filteblackProps, currentFilter, setCurrentFilter }: Props) {
+export function StreetSelect({ filteblackProps, currentFilter, setCurrentFilter, resetPageAndReloadData}: Props) {
 
     const handleChange = (
         event: React.ChangeEvent<{}>,
@@ -19,6 +20,7 @@ export function StreetSelect({ filteblackProps, currentFilter, setCurrentFilter 
             ...prevFilterState,
             street: value ? [value] : undefined,
         }));
+        resetPageAndReloadData()
     };
 
     const filterOptions = (

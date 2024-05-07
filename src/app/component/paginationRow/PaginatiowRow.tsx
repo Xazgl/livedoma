@@ -1,72 +1,73 @@
-
-
-import { useEffect, useState } from "react";
+import { Pagination, Stack } from "@mui/material";
+// import { useEffect, useState } from "react";
 
 type Props = {
-    currentPage: number;
-    totalPages: number;
-    handlePageChange: (page: number) => void;
+  currentPage: number;
+  totalPages: number;
+  handlePageChange: (page: number) => void;
+//   handlePageChangeNew: (event: React.ChangeEvent<unknown>, value: number) => void;
 };
 
+export function PaginationRow({ currentPage,totalPages, handlePageChange,}: Props) {
 
+//   const [arrPages, setArrPages] = useState<number[]>([1, 2, 3, totalPages]);
 
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    handlePageChange(value)
+  };
 
-export function PaginationRow({ currentPage, totalPages, handlePageChange }: Props) {
+//   useEffect(() => {
+//       async function start() {
+//           if (totalPages > 5) {
+//               if (currentPage > 1) {
+//                   const newPages = [currentPage - 1, currentPage, currentPage + 1, totalPages];
+//                   setArrPages(newPages)
+//               }
+//           } else {
+//               const newPagesMini = [];
+//               for (let i = 1; i < totalPages - 3; i++) {
+//                   if (i >= 1 && i < totalPages) {
+//                       newPagesMini.push(i);
+//                   }
+//               }
+//               setArrPages(newPagesMini)
+//           }
+//       }
 
+//       if (totalPages !== currentPage &&  totalPages - 1 !== currentPage) {
+//           start()
+//       } else {
+//           if (totalPages == currentPage) {
+//               const newPagesMini = [currentPage - 1, currentPage,];
+//               setArrPages(newPagesMini)
+//           } else {
+//               const newPagesMini = [currentPage - 2,currentPage - 1, currentPage, currentPage + 1];
+//               setArrPages(newPagesMini)
+//           }
+//       }
 
-    const [arrPages, setArrPages] = useState<number[]>([1, 2, 3, totalPages]);
+//   }, [currentPage || totalPages])
 
-    useEffect(() => {
-        async function start() {
-            if (totalPages > 5) {
-                if (currentPage > 1) {
-                    const newPages = [currentPage - 1, currentPage, currentPage + 1, totalPages];
-                    setArrPages(newPages)
-                }
-            } else {
-                const newPagesMini = [];
-                for (let i = 1; i < totalPages - 3; i++) {
-                    if (i >= 1 && i < totalPages) {
-                        newPagesMini.push(i);
-                    }
-                }
-                setArrPages(newPagesMini)
-            }
-        }
+  const style = `flex  rounded w-[40px] h-[40px] justify-center  items-center text-white
+     bg-[#F15281]   transition  duration-150  ease-out  cursor-pointer
+     hover:ease-in  hover:bg-[black] `
 
-        if (totalPages !== currentPage &&  totalPages - 1 !== currentPage) {
-            start()
-        } else {
-            if (totalPages == currentPage) {
-                const newPagesMini = [currentPage - 1, currentPage,];
-                setArrPages(newPagesMini)
-            } else {
-                const newPagesMini = [currentPage - 2,currentPage - 1, currentPage, currentPage + 1];
-                setArrPages(newPagesMini)
-            }
-        }
+  const styleArrow = `hidden sm:flex  rounded w-[90px] h-[40px] justify-center  items-center text-white
+     bg-[#F15281]   transition  duration-150  ease-out  cursor-pointer
+     hover:ease-in  hover:bg-[black]  text-xs  gap-[5px]`
 
+  const styleCurrent = `flex  relative rounded w-[40px] h-[40px] justify-center  items-center
+      text-white  bg-[black]
+      after:absolute  after:w-[100%]  after:h-[1px]  after:bg-[black]  after:bottom-[-5px;]
+      after:ease-in-out   after:duration-300   after:delay-0  `
 
-    }, [currentPage || totalPages])
-
-
-    const style = `flex  rounded w-[40px] h-[40px] justify-center  items-center text-white 
-       bg-[#F15281]   transition  duration-150  ease-out  cursor-pointer 
-       hover:ease-in  hover:bg-[black] `
-
-    const styleArrow = `hidden sm:flex  rounded w-[90px] h-[40px] justify-center  items-center text-white 
-       bg-[#F15281]   transition  duration-150  ease-out  cursor-pointer
-       hover:ease-in  hover:bg-[black]  text-xs  gap-[5px]`
-
-    const styleCurrent = `flex  relative rounded w-[40px] h-[40px] justify-center  items-center 
-        text-white  bg-[black]   
-        after:absolute  after:w-[100%]  after:h-[1px]  after:bg-[black]  after:bottom-[-5px;] 
-        after:ease-in-out   after:duration-300   after:delay-0  `
-
-    return <>
-
-        <div className="flex  w-full  h-[40px]  justify-center  mt-[20px]">
-            <div className="flex   h-full  gap-[15px]">
+  return (
+    <>
+      <div className="flex  w-full  h-[40px]  justify-center  mt-[20px]">
+        {/* <div className="flex   h-full  gap-[15px]">
                 {currentPage > 1 &&
                     <button
                         className={styleArrow}
@@ -100,10 +101,15 @@ export function PaginationRow({ currentPage, totalPages, handlePageChange }: Pro
 
                     </button>
                 }
-            </div>
-
-        </div>
+            </div> */}
+        <Stack spacing={24} >
+          <Pagination
+            page={currentPage}
+            count={totalPages}
+            onChange={handleChangePage}
+          />
+        </Stack>
+      </div>
     </>
-
-
+  );
 }

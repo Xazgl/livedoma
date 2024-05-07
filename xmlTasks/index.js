@@ -35,6 +35,24 @@ async function start() {
             }
         }))).filter(ad => ad !== null).flat()
 
+         // Получаем все объекты из базы данных
+         const dbObjects = await db.objectIntrum.findMany();
+         // Получаем идентификаторы объектов из базы данных
+         const dbObjectIds = dbObjects.map(obj => obj.id_intrum);
+         // Получаем идентификаторы объектов из XML-файлов
+         const xmlObjectIds = adsObjects.map(obj => obj.Id[0]);
+ 
+         // Удаляем объекты из базы данных, которых нет в XML-файлах
+         const objectsToDelete = dbObjectIds.filter(id => !xmlObjectIds.includes(id));
+         await Promise.all(objectsToDelete.map(async (id) => {
+             await db.objectIntrum.delete({
+                 where: {
+                     id_intrum: id
+                 }
+             });
+             console.log(`Объект удален из базы с  ${id}  т.к. он не найден в фиде`);
+         }));
+
         for (const adObject of adsObjects) {
             let str = adObject.Address[0]
             // Разделяем строку по запятой и удаляем лишние пробелы
@@ -127,7 +145,18 @@ async function start() {
                     console.log(adObject.Id[0] + ' ' + parts)
                 }
             } else {
-                // console.log(car);
+                const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
+                const updateUser = await db.objectIntrum.update({
+                    where: {
+                        id_intrum: adObject.Id[0],
+                    },
+                    data: {
+                        img: {
+                            set: cleanLinks
+                        },
+                    },
+                })
+            
             }
         }
         // await wait(5000)

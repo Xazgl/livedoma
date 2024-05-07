@@ -24,6 +24,7 @@ import {
   streetFilter,
   wallsTypeFilter,
 } from "./filter-sidebar/myFilters";
+import { usePathname, useSearchParams } from "next/navigation";
 
 type Props = {
   objects: ObjectIntrum[];
@@ -42,9 +43,52 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
   );
   const [loading, setLoading] = useState<boolean>(true); // загрузка при фильтрации
   const [favArr, setFavArr] = useState<FavoriteObj[]>([]); //массив избранного из базы
+  
+  //search params url
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  
+
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+
+    // Получаем значения параметров из URL и устанавливаем их в состояние currentFilter
+    const filterFromParams: Partial<FilterUserOptions> = {};
+    if (params.has("category")) {
+      filterFromParams.category = params.getAll("category");
+    }
+    if (params.has("rooms")) {
+      filterFromParams.rooms = params.getAll("rooms");
+    }
+    if (params.has("renovation")) {
+      filterFromParams.renovation = params.getAll("renovation");
+    }
+    if (params.has("street")) {
+      filterFromParams.street = params.getAll("street");
+    }
+    if (params.has("companyName")) {
+      filterFromParams.companyName= params.getAll("companyName");
+    }
+    // if (params.has("minPrice")) {
+    //   filterFromParams.minPrice = params.getAll("minPrice");
+    // }
+    // if (params.has("maxPrice")) {
+    //   filterFromParams.rooms = params.getAll("maxPrice");
+    // }
+    if (params.has("page")) {
+      setCurrentPage(parseInt(params.getAll("page")[0], 10));
+    }
+    // Обновляем состояние текущего фильтра
+      setCurrentFilter((prevFilterState) => {
+        return { ...prevFilterState, ...filterFromParams };
+      });
+  }, []);
 
 
   /////// Состояния для паганации
+      const params = new URLSearchParams(searchParams);
+
   const [currentPage, setCurrentPage] = useState(page); // текущая страница
 
   const [allPages, setAllPages] = useState<number>(pages); //Всего страниц
@@ -81,11 +125,20 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
   //Загрузка при изменении фильтра и сброс страницы на 1
   useEffect(() => {
     setLoading(true);
-    setCurrentPage(1);
+  //  setCurrentPage(1);
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   }, [currentFilter]);
+
+
+  const resetPageAndReloadData = () => {
+    setLoading(true);
+    setCurrentPage(1);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
 
   const [valueSliderPrice, setValueSliderPrice] = useState<[number, number]>([
     minPrice,
@@ -162,6 +215,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     if (currentPage) {
       params.append("page", String(currentPage));
     }
+    window.history.replaceState(null, "", `${pathname}?${params}`);
 
     // params.append("page", page);
     fetch("/api/objects/?" + params)
@@ -287,6 +341,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           countObjects={countObjects}
           favArr={favArr}
           setFavArr={setFavArr}
+          resetPageAndReloadData={resetPageAndReloadData}
         />
 
         <ObjectsCardsTest
@@ -319,6 +374,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           countObjects={countObjects}
           favArr={favArr}
           setFavArr={setFavArr}
+          resetPageAndReloadData={resetPageAndReloadData}
         />
       </section>
     </div>

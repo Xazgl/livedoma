@@ -3,7 +3,12 @@ import { ParentFilterBlock } from "./component/main-block-filter/ParentFilterBlo
 import db from "../../prisma";
 import { Header } from "./component/header/Header";
 import { MobileHeader } from "./component/mainBarMobile/MobileBar";
-
+import { SuspenseFilter } from "./component/main-block-filter/SuspenseFilter";
+import { Metadata } from 'next'
+ 
+export const metadata: Metadata = {
+  title: 'Мультилистинг Волгоград',
+}
 
 export const dynamic = 'force-dynamic'
 
@@ -47,7 +52,8 @@ export default async function Home() {
       <Header />
       <MobileHeader />
       {objects && objects.length > 0 && 
-        <ParentFilterBlock objects={objects}  pages={pages} page={page} />
+        // <ParentFilterBlock objects={objects}  pages={pages} page={page} />
+        <SuspenseFilter  objects={objects}  pages={pages} page={page}/>
       }
       <div className="flex gap-2 text-black">
 

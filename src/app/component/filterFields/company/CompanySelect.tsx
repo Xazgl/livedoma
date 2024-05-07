@@ -8,9 +8,11 @@ type Props = {
     filteblackProps: FilteblackProps,
     currentFilter: FilterUserOptions,
     setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>,
+    resetPageAndReloadData:() => void
 }
 
-export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter }: Props) {
+export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter,
+ resetPageAndReloadData }: Props) {
 
     return <>
         <Accordion sx={{ width: '100%' }}>
@@ -41,6 +43,7 @@ export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter
                                                         : [companyName];
                                                     return { ...prevFilterState, companyName: updatedCompanies };
                                                 });
+                                                resetPageAndReloadData ()
                                             }}
                                         />
                                     }

@@ -17,8 +17,6 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
     const [houseImg, setHouseImg] = useState<string[]>([])
     const router = useRouter()
 
-
-
     useEffect(() => {
         async function start() {
             const res = await fetch('/api/object/' + params.id, {

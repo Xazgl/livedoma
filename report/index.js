@@ -8,7 +8,7 @@ const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату создания сообщения
-  const nextDay = new Date(currentDate.getTime() - (24 * 60 * 60 * 1000)); // Добавляем один день
+  const nextDay = new Date(currentDate.getTime() - (30 * 24 * 60 * 60 * 1000)); //за последние 30 дней
   const formattedDate = nextDay.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
 
   const params = new URLSearchParams();
@@ -17,9 +17,10 @@ async function start() {
   params.append("params[publish]", "1");
   params.append("params[fields][0][id]", "3415");
   params.append("params[fields][0][value]", `>=${formattedDate}`);
-  // params.append("params[fields][0][value]", `>=2024-04-15`);
+  //  params.append("params[fields][0][value]", `>=2024-04-27`);
   params.append("params[fields][1][id]", "3379");
   params.append("params[fields][1][value]", "1"); //сделка проверяна = Да
+  params.append("params[limit]", "499")
 
   try {                                
     const response = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/sales/filter',
@@ -52,15 +53,33 @@ async function start() {
             id: existingSale.id,
           },
           data: {
+            idSalesIntrum: sale.id,
             responsibleMain: await foundName(sale.employee_id ? sale.employee_id.toString() : '0'),
             partCommissionSeller: getField(sale.fields, "1383"),
             sumCommissionBuyer: getField(sale.fields, "3187"),
             agentSellerName: getField(sale.fields, "3190"),
+            agentSellerFormula: getField(sale.fields, "3333"),  
             agentSellerCommission: getField(sale.fields, "3364"),
+            agentSellerSalaryDone:getField(sale.fields, "3335"),
+
             lawyerName: getField(sale.fields, "3096"),
             lawyerCommission: getField(sale.fields, "4616"),
+            lawyerFormula: getField(sale.fields, "3329"),
+            lawyerSumm: getField(sale.fields, "3330"),
+            lawyerSumm1: getField(sale.fields, "3363"),
+            lawyerSalaryDone: getField(sale.fields, "3331"),
+            lawyerSalary: getField(sale.fields, "3352"),
+
             agentBuyerName: getField(sale.fields, "3350"),
+            agentBuyerFormul:getField(sale.fields, "3337"),
             agentBuyerCommission: getField(sale.fields, "3365"),
+            agentBuyerSalaryDone:getField(sale.fields, "3339"),
+ 
+            mortageFormula:getField(sale.fields, "3359"),
+            mortageSumm1:getField(sale.fields, "3367"),   
+            mortageOtdel:getField(sale.fields, "1203"),   
+
+
             lawyerCommission2: getField(sale.fields, "3363"),
             adress: getField(sale.fields, "1321"),
             dateStage: getField(sale.fields, "3415"),
@@ -74,11 +93,27 @@ async function start() {
             partCommissionSeller: getField(sale.fields, "1383"),
             sumCommissionBuyer: getField(sale.fields, "3187"),
             agentSellerName: getField(sale.fields, "3190"),
+            agentSellerFormula: getField(sale.fields, "3333"),  
             agentSellerCommission: getField(sale.fields, "3364"),
+            agentSellerSalaryDone:getField(sale.fields, "3335"),
+
             lawyerName: getField(sale.fields, "3096"),
             lawyerCommission: getField(sale.fields, "4616"),
+            lawyerFormula: getField(sale.fields, "3329"),
+            lawyerSumm: getField(sale.fields, "3330"),
+            lawyerSumm1: getField(sale.fields, "3363"),
+            lawyerSalaryDone: getField(sale.fields, "3331"),
+            lawyerSalary: getField(sale.fields, "3352"),
+
             agentBuyerName: getField(sale.fields, "3350"),
+            agentBuyerFormul:getField(sale.fields, "3337"),
             agentBuyerCommission: getField(sale.fields, "3365"),
+            agentBuyerSalaryDone:getField(sale.fields, "3339"),
+ 
+            mortageFormula:getField(sale.fields, "3359"),
+            mortageSumm1:getField(sale.fields, "3367"),    
+
+
             lawyerCommission2: getField(sale.fields, "3363"),
             adress: getField(sale.fields, "1321"),
             dateStage: getField(sale.fields, "3415"),

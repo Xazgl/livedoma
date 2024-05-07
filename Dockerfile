@@ -35,6 +35,7 @@ RUN npm run build
 # RUN npx prisma migrate deploy
 
 FROM node:lts-alpine 
+RUN apk add --update --no-cache imagemagick
 
 WORKDIR /app
 
@@ -47,8 +48,13 @@ COPY prisma ./prisma/
 COPY next.config.js ./
 
 COPY xmlTasks ./xmlTasks 
+# COPY static ./static/
+RUN mkdir -p static/images
 COPY skillspace ./skillspace 
 COPY report ./report
+COPY applications ./applications
+COPY insurance ./insurance
+
 # COPY .env.prod .env
 RUN npx prisma generate
 
@@ -56,11 +62,22 @@ ENV NODE_ENV=production
 # RUN echo "* * * * * /usr/local/bin/node /app/xmlTasks/index.js" >> /etc/crontab
 
 
-RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "*/60 * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/xmlTasks/testImg.js") | crontab -u $(whoami) -
+
+# RUN (crontab -u $(whoami) -l; echo "*/60 * * *  /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
+
+
+# RUN (crontab -l; echo "0 0,13 * * * /usr/local/bin/node /app/xmlTasks/index(forDownload).js") | crontab -
+
+# RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/xmlTasks/indexforDownload.js") | crontab -u $(whoami) -
 
 RUN (crontab -u $(whoami) -l; echo "*/30 * * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
 
-RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/report/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "*/40 * * * * /usr/local/bin/node /app/report/index.js" ) | crontab -u $(whoami) -
  
+RUN (crontab -u $(whoami) -l; echo "*/50 * * * * /usr/local/bin/node /app/applications/index.js" ) | crontab -u $(whoami) -
+
+RUN (crontab -u $(whoami) -l; echo "*/55 * * * * /usr/local/bin/node /app/insurance/index.js" ) | crontab -u $(whoami) -
 
 EXPOSE 3000

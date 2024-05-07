@@ -57,7 +57,7 @@ async function getObjects() {
     }
 
     return {
-      sales: sales,
+      sales: [],
       uniqueDateStages: uniqueDateStages,
       formattedYesterday: formattedYesterday,
     };

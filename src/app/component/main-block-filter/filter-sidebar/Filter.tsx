@@ -47,26 +47,15 @@ type Props = {
   countObjects: number;
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
+  resetPageAndReloadData:() => void;
 };
 
 const filterRow = "flex w-full p-4 h-auto ";
 
-export function Filter({
-  filteblackProps,
-  objects,
-  currentFilter,
-  setCurrentFilter,
-  setFilteredHouse,
-  maxPrice,
-  minPrice,
-  setMinPrice,
-  setMaxPrice,
-  valueSliderPrice,
-  setValueSliderPrice,
-  countObjects,
-  setFavArr,
-  favArr,
-}: Props) {
+export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,setFilteredHouse,
+  maxPrice,minPrice,setMinPrice,setMaxPrice,valueSliderPrice,setValueSliderPrice,
+  countObjects,setFavArr,favArr,resetPageAndReloadData}: Props) {
+
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -90,6 +79,7 @@ export function Filter({
       floor: [],
       wallsType: [],
     }));
+    resetPageAndReloadData()
   }
 
   return (
@@ -104,6 +94,7 @@ export function Filter({
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
+            resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
 
@@ -112,6 +103,7 @@ export function Filter({
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
+            resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
 
@@ -120,6 +112,7 @@ export function Filter({
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
+            resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
         
@@ -136,6 +129,7 @@ export function Filter({
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
+            resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
 
@@ -166,18 +160,14 @@ export function Filter({
                 setValueSliderPrice={setValueSliderPrice}
                 setMinPrice={setMinPrice}
                 setMaxPrice={setMaxPrice}
+                resetPageAndReloadData={resetPageAndReloadData}
+
               />
             </AccordionDetails>
           </Accordion>
         </div>
 
         <div className={filterRow}>
-          {/* <button
-            className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded color-[white] 
-                     bg-[#F15281]  hover:bg-[#3C3C3D]  cursor-pointer 
-                       transition  duration-700  ease-in-out "
-            onClick={resetFilteblackCars}
-          > */}
           <button
             id="button"
             type="button"

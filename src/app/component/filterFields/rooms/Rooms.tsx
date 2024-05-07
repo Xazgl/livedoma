@@ -9,9 +9,10 @@ type Props = {
   filteblackProps: FilteblackProps;
   currentFilter: FilterUserOptions;
   setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
+  resetPageAndReloadData:() => void;
 };
 
-export function RoomsSelector({filteblackProps,currentFilter,setCurrentFilter}: Props) {
+export function RoomsSelector({filteblackProps,currentFilter,setCurrentFilter, resetPageAndReloadData}: Props) {
 
   const roomOptions = filteblackProps.rooms
     .filter((room) => room.trim() !== "") // Exclude empty strings
@@ -66,6 +67,7 @@ export function RoomsSelector({filteblackProps,currentFilter,setCurrentFilter}: 
                   rooms: updatedRooms,
                 };
               });
+              resetPageAndReloadData()
             }}
           >
             {roomOptions.map((room) => (

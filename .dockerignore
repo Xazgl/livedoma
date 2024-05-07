@@ -12,4 +12,5 @@ Dockerfile
 .env.prod
 /scripts
 **/public/objects
+/static
 README.md

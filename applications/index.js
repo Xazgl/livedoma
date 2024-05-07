@@ -10,7 +10,7 @@ const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату
-  const prevDay = new Date(currentDate.getTime() - (30 * 24 * 60 * 60 * 1000)); // Вычитаем 30 дней
+  const prevDay = new Date(currentDate.getTime() - (60 * 24 * 60 * 60 * 1000)); // Вычитаем 60 дней
   const formattedPrevDate = prevDay.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
 
   const day = new Date(currentDate.getTime());
@@ -66,32 +66,34 @@ async function start() {
 
       if (existingSale) {
         // Если сделка существует, обновляем ее поля
-        return await db.constructionApplications.update({
-          where: {
-            id: existingSale.id,
-          },
-          data: {
-              idApplicationIntrum: application.id,
-              translator: getField(application.fields, "4056"),
-              responsibleMain: await foundName(application.employee_id ? application.employee_id.toString() : '0'),
-              status: translateStatus(application.status),
-              postMeetingStage: getField(application.fields, "4058"),
-              desc: application.request_name,
-              typeApplication: getField(application.fields, "4059"),
-              contactedClient: getField(application.fields, "4994"),
-              campaignUtm: getField(application.fields, "5001"),
-              termUtm: getField(application.fields, "5000"),
-              nextAction: getField(application.fields, "4057"),
-              rejection: getField(application.fields, "4992"),
-              errorReejctionDone: getField(application.fields, "4993"),
-              datecallCenter: getField(application.fields, "5002"),
-              timecallCenter: getField(application.fields, "5004"),
-              timesaletCenter: getField(application.fields, "4999"),
-              dateFirstContact: getField(application.fields, "4997"),
-              phone: getField(application.fields, "5033"),
-              url: getField(application.fields, "5032"),
-          },
-        });
+        // return await db.constructionApplications.update({
+        //   where: {
+        //     id: existingSale.id,
+        //   },
+        //   data: {
+        //       idApplicationIntrum: application.id,
+        //       translator: getField(application.fields, "4056"),
+        //       responsibleMain: await foundName(application.employee_id ? application.employee_id.toString() : '0'),
+        //       status: translateStatus(application.status),
+        //       postMeetingStage: getField(application.fields, "4058"),
+        //       desc: application.request_name,
+        //       typeApplication: getField(application.fields, "4059"),
+        //       contactedClient: getField(application.fields, "4994"),
+        //       campaignUtm: getField(application.fields, "5001"),
+        //       termUtm: getField(application.fields, "5000"),
+        //       nextAction: getField(application.fields, "4057"),
+        //       rejection: getField(application.fields, "4992"),
+        //       errorReejctionDone: getField(application.fields, "4993"),
+        //       datecallCenter: getField(application.fields, "5002"),
+        //       timecallCenter: getField(application.fields, "5004"),
+        //       timesaletCenter: getField(application.fields, "4999"),
+        //       dateFirstContact: getField(application.fields, "4997"),
+        //       phone: getField(application.fields, "5033"),
+        //       url: getField(application.fields, "5032"),
+        //       createdAt: new Date(`${application.date_create}`)
+        //     },
+        // });
+        return;
       } else {
         return await db.constructionApplications.create({
           data: {
@@ -114,13 +116,14 @@ async function start() {
             dateFirstContact: getField(application.fields, "4997"),
             phone: getField(application.fields, "5033"),
             url: getField(application.fields, "5032"),
+            createdAt: new Date(`${application.date_create}`)
           },
         });
       }
     }));
 
-    console.log(mappedData)
-    return mappedData;
+    // console.log(mappedData)
+    return 'Заявки успешно скачены';
 
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);

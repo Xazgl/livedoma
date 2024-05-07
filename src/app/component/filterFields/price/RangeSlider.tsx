@@ -9,6 +9,7 @@ type Props = {
   setMaxPrice: Dispatch<SetStateAction<number>>;
   valueSliderPrice: [number, number];
   setValueSliderPrice: React.Dispatch<React.SetStateAction<[number, number]>>;
+  resetPageAndReloadData:() => void;
 };
 
 interface SliderChangeHandler {
@@ -33,19 +34,16 @@ function debounce(wait: number) {
 let debounceHandler = debounce(800);
 
 export default function RangeSlider({minPrice,maxPrice,valueSliderPrice,setValueSliderPrice ,
-        setMinPrice, setMaxPrice}: Props) {
+ setMinPrice, setMaxPrice, resetPageAndReloadData}: Props) {
 
   const [value, setValue] = React.useState<[number, number]>([
     minPrice,
     maxPrice,
   ]);
 
-  // const handleChange = (event: Event, newValue: [number, number]) => {
-  //    setValue(newValue)
-  // };
-
   const handleChange: SliderChangeHandler = (event, newValue) => {
     setValue(newValue as [number, number]);
+    resetPageAndReloadData()
   };
 
   useEffect(() => {

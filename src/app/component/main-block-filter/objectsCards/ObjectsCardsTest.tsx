@@ -13,9 +13,9 @@ import styles from "./Object.module.css";
 // import { CardActions, IconButton } from "@mui/material";
 import { Circle } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { addToFavorite, deleteFavorite} from "@/lib/favoriteFunc";
+import { addToFavorite, deleteFavorite } from "@/lib/favoriteFunc";
 import { FavoriteObj } from "../../../../../@types/dto";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 // import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import Link from "next/link";
@@ -27,19 +27,28 @@ type Props = {
   currentPage: number;
   setCurrentPage: Dispatch<SetStateAction<number>>;
   handlePageChange: (page: number) => void;
+  // handlePageChangeNew:(event: React.ChangeEvent<unknown>, value: number) => void
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
 };
 
-export function ObjectsCardsTest({ filteredHouse, loading, allPages, currentPage,
-setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
+export function ObjectsCardsTest({
+  filteredHouse,
+  loading,
+  allPages,
+  currentPage,
+  setCurrentPage,
+  handlePageChange,
+  setFavArr,
+  favArr,
+}: Props) {
   const [loadingImg, setLoadingImg] = useState(true);
 
   let style = loading
     ? "flex-col items-center  h-[100vh]  justify-center  flex-nowrap"
     : "flex-row justify-center gap-[0px] sm:gap-[20px] lg:gap-[0px] md:items-center md:items-start   h-full  flex-wrap ";
-    //Если нужен скрол объектов
-    // : "flex-col  md:items-center md:items-start   h-full md:h-[100vh]  md:overflow-auto ";
+  //Если нужен скрол объектов
+  // : "flex-col  md:items-center md:items-start   h-full md:h-[100vh]  md:overflow-auto ";
 
   useEffect(() => {
     async function start() {
@@ -63,11 +72,17 @@ setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
     // console.log(favArr.length);
   }, [favArr]);
 
+  const  fetchData = async (id: string) => {
+    try {
+      const response = await fetch(`/api/${id}`);
+      const data = await response.json();
+      return data.imgSrc? data.imgSrc : '' ;
+    } catch (error) {
+      console.error('Ошибка при загрузке изображения:', error);
+    }
+  };
 
-
-
-
-
+ 
 
   return (
     <>
@@ -79,7 +94,7 @@ setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
           <ProgressBar />
         ) : (
           <>
-          {/* <div className="flex w-[100%] sticky">
+            {/* <div className="flex w-[100%] sticky">
           <ShoppingBagIcon sx={{color:"black"}}/>
           </div> */}
             {filteredHouse.map((object) => (
@@ -97,10 +112,13 @@ setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
                                 cursor-pointer md:hover:scale-[1.01]  md:duration-700   md:ease-in-out   md:hover:shadow-2xl"
                   >
                     <div className="flex  flex-col  w-[auto]  h-[100%]    md:justify-around">
-                      <div className="flex   w-[100%] h-[200px] sm:h-[250px]  md:w-[312px]  md:h-[70%]    relative">
-                        <Link href={`/object/${object.id}`} className="w-[100%] h-[100%]">
-                          <Image
-                            className=" rounded md:rounded-t-lg"
+                      <div className="flex   w-[100%] h-[200px] sm:w-[300px]  sm:h-[260px]   lg:w-[400px] lg:h-[98%]  relative">
+                        <Link
+                          href={`/object/${object.id}`}
+                          className="w-[100%] h-[100%]"
+                        >
+                          {/* <Image
+                            className=" rounded "
                             src={object.img[0]}
                             alt={object.category}
                             layout="fill"
@@ -109,9 +127,15 @@ setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
                                               (max-width: 1080px) 33vw,
                                                30vw"
                             loading="lazy"
-                            
+                          />   */}
+                          <img
+                            className="rounded w-full h-full   "
+                            src={object.img[0]}
+                            // src={fetchData(object.id_intrum)? fetchData(object.id_intrum) :'' }
+                            alt={object.category}
+                            loading="lazy"
                           />
-                        </Link>
+                         </Link> 
                         {loadingImg == false && (
                           <div className="flex absolute w-[100%] justify-end p-[4px]">
                             {favArr.find(
@@ -132,7 +156,8 @@ setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
                                   deleteFavorite(object.id, setFavArr)
                                 }
                               />
-                            ) : (<FavoriteBorderIcon
+                            ) : (
+                              <FavoriteBorderIcon
                                 sx={{
                                   display: "flex",
                                   justifyContent: "center",
@@ -151,7 +176,7 @@ setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
                           </div>
                         )}
                       </div>
-                      <Link href={`/object/${object.id}`} >
+                      {/* <Link href={`/object/${object.id}`} >
                         <div className="hidden md:flex  mt-[5px] w-[100%] md:w-[312px] h-[50px] md:h-[60px]  justify-between sm:mt-[5px] ">
                           {object.img.slice(1, 4).map((image, index) => (
                             <div
@@ -172,7 +197,7 @@ setCurrentPage, handlePageChange, setFavArr, favArr }: Props) {
                             </div>
                           ))}
                         </div>
-                      </Link>
+                      </Link> */}
                     </div>
 
                     <Link href={`/object/${object.id}`} className="w-[100%]">

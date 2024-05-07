@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import { Sales } from "@prisma/client";
 import { generateExcel } from "@/lib/excelFunc";
 import { columnsSets, titles } from "./myFilter";
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type Props = {
   sales: Sales[];
@@ -19,7 +24,14 @@ type FilterUserOptions = {
 
 export function TableFirst({sales,uniqueDateStages,formattedYesterday,}: Props) {
   const [transactions, setTransactions] = useState<Sales[]>(sales);
-
+  const [value, setValue] = useState<Dayjs | null>(dayjs());
+  const [valueEnd, setValueEnd] = useState<Dayjs | null>(dayjs());
+  
+  useEffect(() => {
+    setValue(dayjs().subtract(7, 'day'));
+  }, []);
+  
+   
   //Конкретные выбранные фильтры
   const [currentFilter, setCurrentFilter] = useState<FilterUserOptions>({
     dateStage: [],
@@ -36,20 +48,26 @@ export function TableFirst({sales,uniqueDateStages,formattedYesterday,}: Props) 
   useEffect(() => {
     const params = new URLSearchParams();
 
-    if (currentFilter.dateStage) {
-      currentFilter.dateStage.forEach((dateStage) => {
-        params.append("dateStage", dateStage);
-      });
+    // if (currentFilter.dateStage) {
+    //   currentFilter.dateStage.forEach((dateStage) => {
+    //     params.append("dateStage", dateStage);
+    //   });
+    // }
+    if (value) {
+      params.append("date", value.format("YYYY-MM-DD"));
+    }
+    if (valueEnd) {
+      params.append("dateEnd", valueEnd.format("YYYY-MM-DD"));
     }
 
-    fetch("/api/transactions?" + params)
+    fetch("/api/salary?" + params)
       .then((res) => res.json())
       .then((el) => {
         // setCountObjects(el.countObjects);
         // setAllPages(el.totalPages);
         setTransactions(el.allFilteredSales);
       });
-  }, [currentFilter]);
+  }, [value,valueEnd]);
 
   const options = currentFilter.dateStage;
   const columns = columnsSets[table - 1]; // Выбор набора столбцов по индексу
@@ -60,7 +78,26 @@ export function TableFirst({sales,uniqueDateStages,formattedYesterday,}: Props) 
       <div className="flex  md:items-start w-full  bg-white  mt-5 text-black">
         <div className="flex flex-col items-center md:items-start w-full  h-full md:w-[300px] gap-5 p-4">
          <h3 className="text-[12px] p-[0px]">Выберите дату от</h3>
-          <Select
+         <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DatePicker"]}>
+              <DatePicker
+                label="Дата от"
+                value={value}
+                onChange={(newValue) => setValue(newValue)}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DatePicker"]}>
+              <DatePicker
+                label="Дата до"
+                value={valueEnd}
+                onChange={(newValue) => setValueEnd(newValue)}
+              />
+            </DemoContainer>
+          </LocalizationProvider>
+          {/* <Select
             sx={{
               display: "flex",
               minWidth: "100%",
@@ -101,7 +138,7 @@ export function TableFirst({sales,uniqueDateStages,formattedYesterday,}: Props) 
                       {datStage ?? ""}
                     </MenuItem>
                   )))}
-          </Select>
+          </Select> */}
           <button
             className={`flex  justify-center  items-center  w-[100%]  
             h-[40px]   rounded  bg-[#f15282ca]

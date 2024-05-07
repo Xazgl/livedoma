@@ -43,26 +43,15 @@ type Props = {
   countObjects: number;
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
+  resetPageAndReloadData:() => void;
 };
 
 const filterRow = "flex  w-full  p-4  h-auto";
 
-export function FilterMobile({
-  filteblackProps,
-  objects,
-  currentFilter,
-  setCurrentFilter,
-  setFilteredHouse,
-  maxPrice,
-  minPrice,
-  setMinPrice,
-  setMaxPrice,
-  valueSliderPrice,
-  setValueSliderPrice,
-  countObjects,
-  favArr,
-  setFavArr,
-}: Props) {
+export function FilterMobile({filteblackProps,objects,currentFilter,setCurrentFilter,setFilteredHouse,
+maxPrice,minPrice,setMinPrice,setMaxPrice,valueSliderPrice,setValueSliderPrice,countObjects,
+favArr,setFavArr,resetPageAndReloadData}: Props) {
+
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -86,6 +75,7 @@ export function FilterMobile({
       floor: [],
       wallsType: [],
     }));
+    resetPageAndReloadData()
   }
 
   const [expanded, setExpanded] = useState<string | false>(false);
@@ -140,6 +130,8 @@ export function FilterMobile({
                   filteblackProps={filteblackProps}
                   currentFilter={currentFilter}
                   setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+
                 />
               </div>
 
@@ -148,6 +140,8 @@ export function FilterMobile({
                   filteblackProps={filteblackProps}
                   currentFilter={currentFilter}
                   setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+
                 />
               </div>
 
@@ -156,6 +150,7 @@ export function FilterMobile({
                   filteblackProps={filteblackProps}
                   currentFilter={currentFilter}
                   setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
                 />
               </div>
 
@@ -184,6 +179,7 @@ export function FilterMobile({
                       setValueSliderPrice={setValueSliderPrice}
                       setMinPrice={setMinPrice}
                       setMaxPrice={setMaxPrice}
+                      resetPageAndReloadData={resetPageAndReloadData}
                     />
                   </AccordionDetails>
                 </Accordion>

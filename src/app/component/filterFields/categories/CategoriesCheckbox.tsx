@@ -1,12 +1,4 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Checkbox,
-  FormControlLabel,
-  Typography,
-} from "@mui/material";
+import {Accordion,AccordionDetails,AccordionSummary,Box,Checkbox,FormControlLabel,Typography,} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {  FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
@@ -16,13 +8,10 @@ type Props = {
   filteblackProps: FilteblackProps;
   currentFilter: FilterUserOptions;
   setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
+  resetPageAndReloadData:() => void;
 };
 
-export function CategoriesCheckbox({
-  filteblackProps,
-  currentFilter,
-  setCurrentFilter,
-}: Props) {
+export function CategoriesCheckbox({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
   return (
     <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
       <AccordionSummary
@@ -79,6 +68,7 @@ export function CategoriesCheckbox({
                       : [category],
                   };
                 });
+                resetPageAndReloadData()
 
                 // setCurrentFilter(prevFilterState => {
                 //     if (prevFilterState.category ? prevFilterState.category.includes(category) : null) {
