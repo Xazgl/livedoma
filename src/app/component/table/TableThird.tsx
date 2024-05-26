@@ -26,10 +26,13 @@ export function TableThird({sales,uniqueDateStages,formattedYesterday,}: Props) 
   const [transactions, setTransactions] = useState<Sales[]>(sales);
   const [value, setValue] = useState<Dayjs | null>(dayjs());
   const [valueEnd, setValueEnd] = useState<Dayjs | null>(dayjs());
+  const [table, setTable] = useState(1);
 
   useEffect(() => {
     setValue(dayjs().subtract(30, 'day'));
   }, []);
+
+  
   
 
   //Конкретные выбранные фильтры
@@ -37,7 +40,6 @@ export function TableThird({sales,uniqueDateStages,formattedYesterday,}: Props) 
     dateStage: [],
   });
 
-  const [table, setTable] = useState(1);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,

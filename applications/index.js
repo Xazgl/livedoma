@@ -4,20 +4,23 @@ const axios = require('axios').default
 const { PrismaClient } = require("@prisma/client");
 const { AxiosError } = require("axios");
 const { foundName } = require("../report/lib");
+const { commentArr } = require("./funcComment");
+
+
 
 
 const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату
-  const prevDay = new Date(currentDate.getTime() - (60 * 24 * 60 * 60 * 1000)); // Вычитаем 60 дней
+  const prevDay = new Date(currentDate.getTime() - (30 * 24 * 60 * 60 * 1000)); // Вычитаем 30 дней
   const formattedPrevDate = prevDay.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
 
   const day = new Date(currentDate.getTime());
   const formattedDateCurrent = day.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
 
   const params = new URLSearchParams();
-  params.append("apikey", "8bba96b3d2e3bea9f3204e6e8bba3547");
+  params.append("apikey", "9a75fc323d968db797ec0ab848572aad");
   params.append("params[types][0]", "23");
   params.append("params[publish]", "1");
   params.append("params[limit]", "499")
@@ -62,38 +65,44 @@ async function start() {
         return statusMap[englishStatus] || 'Статус не найден';
       }
 
+      const addHours = (dateString, hours) => {
+        const date = new Date(dateString);
+        date.setHours(date.getHours() + hours);
+        return date;
+      };
 
 
       if (existingSale) {
         // Если сделка существует, обновляем ее поля
-        // return await db.constructionApplications.update({
-        //   where: {
-        //     id: existingSale.id,
-        //   },
-        //   data: {
-        //       idApplicationIntrum: application.id,
-        //       translator: getField(application.fields, "4056"),
-        //       responsibleMain: await foundName(application.employee_id ? application.employee_id.toString() : '0'),
-        //       status: translateStatus(application.status),
-        //       postMeetingStage: getField(application.fields, "4058"),
-        //       desc: application.request_name,
-        //       typeApplication: getField(application.fields, "4059"),
-        //       contactedClient: getField(application.fields, "4994"),
-        //       campaignUtm: getField(application.fields, "5001"),
-        //       termUtm: getField(application.fields, "5000"),
-        //       nextAction: getField(application.fields, "4057"),
-        //       rejection: getField(application.fields, "4992"),
-        //       errorReejctionDone: getField(application.fields, "4993"),
-        //       datecallCenter: getField(application.fields, "5002"),
-        //       timecallCenter: getField(application.fields, "5004"),
-        //       timesaletCenter: getField(application.fields, "4999"),
-        //       dateFirstContact: getField(application.fields, "4997"),
-        //       phone: getField(application.fields, "5033"),
-        //       url: getField(application.fields, "5032"),
-        //       createdAt: new Date(`${application.date_create}`)
-        //     },
-        // });
-        return;
+        return await db.constructionApplications.update({
+          where: {
+            id: existingSale.id
+          },
+          data: {
+            idApplicationIntrum: application.id,
+            translator: getField(application.fields, "4056") ? getField(application.fields, "4056") : '',
+            responsibleMain: await foundName(application.employee_id) !== '0' || await foundName(application.employee_id) !== 0 ? application.employee_id.toString() : '',
+            status: translateStatus(application.status),
+            postMeetingStage: getField(application.fields, "4058"),
+            desc: application.request_name,
+            typeApplication: getField(application.fields, "4059"),
+            contactedClient: getField(application.fields, "4994"),
+            campaignUtm: getField(application.fields, "5001"),
+            termUtm: getField(application.fields, "5000"),
+            nextAction: getField(application.fields, "4057"),
+            rejection: getField(application.fields, "4992"),
+            errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false,
+            datecallCenter: getField(application.fields, "5002"),
+            timecallCenter: getField(application.fields, "5003"),
+            timesaletCenter: getField(application.fields, "4999"),
+            dateFirstContact: getField(application.fields, "4997"),
+            phone: getField(application.fields, "5033"),
+            url: getField(application.fields, "5032"),
+            comment: await commentArr(application.id),
+            createdAtCrm: application.date_create,
+            createdAt: new Date(`${application.date_create}`)
+          },
+        });
       } else {
         return await db.constructionApplications.create({
           data: {
@@ -109,13 +118,15 @@ async function start() {
             termUtm: getField(application.fields, "5000"),
             nextAction: getField(application.fields, "4057"),
             rejection: getField(application.fields, "4992"),
-            errorReejctionDone: getField(application.fields, "4993") !== 0? true: false,
+            errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false,
             datecallCenter: getField(application.fields, "5002"),
-            timecallCenter: getField(application.fields, "5004"),
+            timecallCenter: getField(application.fields, "5003"),
             timesaletCenter: getField(application.fields, "4999"),
             dateFirstContact: getField(application.fields, "4997"),
             phone: getField(application.fields, "5033"),
             url: getField(application.fields, "5032"),
+            comment: await commentArr(application.id),
+            createdAtCrm: application.date_create,
             createdAt: new Date(`${application.date_create}`)
           },
         });

@@ -19,6 +19,9 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
           gte: date ? date : "2022-01-30",
         },
       },
+      orderBy: {
+        createdAt: 'asc'
+      }
     });
 
     return NextResponse.json({

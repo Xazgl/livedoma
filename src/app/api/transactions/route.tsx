@@ -32,6 +32,9 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       select: {
         dateStage : true,
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
 
@@ -52,6 +55,9 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         dateStage: {
           gte:  dateStage?  dateStage : '', 
         }
+      },
+      orderBy: {
+        createdAt: 'asc'
       }
     });
 

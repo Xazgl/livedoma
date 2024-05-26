@@ -3,6 +3,7 @@ import db from "../../../../prisma";
 import { Marquiz, crmAnswer } from "../../../../@types/dto";
 import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
+import { normalizePhoneNumber } from "@/lib/phoneMask";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       //@ts-ignore
       if (answer) {
         const name = answer.contacts.name;
-        const phone = answer.contacts.phone;
+        const phone = await normalizePhoneNumber(answer.contacts.phone);
         const formid = answer.form.id ? answer.form.id : "Нету";
         let utm_medium = "";
         let utm_campaign = "";

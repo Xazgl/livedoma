@@ -15,6 +15,9 @@ export  async function GET( request: NextRequest, { params }: { params: { id: st
             where: {
                 active: true,
             },
+            orderBy: {
+                createdAt: 'desc'
+            },
             take: pageSize,
             skip,
         });

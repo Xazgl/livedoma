@@ -33,13 +33,13 @@ async function downloadAndSaveImages(cleanLinks, folderPath) {
     }
     const downloadFolder = path.join(folderPath, `download`)
     try {
-        await fs.mkdir(downloadFolder, { recursive: true });
+        // await fs.mkdir(downloadFolder, { recursive: true });
         // const imagesDir = shell.pwd()
         // shell.mkdir('-p', folderPath)
         // shell.cd(folderPath)
-        await fs.mkdir(folderPath, { recursive: true });
-        shell.cd(folderPath)
-        let command = `cd ${folderPath} && curl `
+        await fs.mkdir(downloadFolder, { recursive: true });
+        // shell.cd(downloadFolder)
+        let command = `cd ${downloadFolder} && curl `
             + Array(cleanLinks.length).fill('-O').join(' ')
             + ' '
             + Array(cleanLinks.length).fill(null).map((_, i) => {
@@ -88,8 +88,8 @@ async function downloadAndSaveImages(cleanLinks, folderPath) {
             imgs.full.push(fullFilename.replace(/\\+/g, '/').replace(/.*?static/, '/static'))
             // exec(`magick convert .${img} -resize 800x ${thumbnailFilename}`)
             // exec(`magick convert .${img} -resize 1200x ${fullFilename}`)
-            command2.push(execPromise(`magick convert .${img} -resize 800x ${thumbnailFilename}`, { timeout: 5000 }))
-            command2.push(execPromise(`magick convert .${img} -resize 1200x ${fullFilename}`, { timeout: 5000 }))
+            command2.push(execPromise(`magick convert ${img} -resize 800x ${thumbnailFilename}`, { timeout: 5000 }))
+            command2.push(execPromise(`magick convert ${img} -resize 1200x ${fullFilename}`, { timeout: 5000 }))
         }
         // await execPromise(command2.join('&&'), { timeout: 5000 })
         await Promise.allSettled(command2)
@@ -138,7 +138,7 @@ async function start() {
         }));
 
         let batch = []
-        const batchSize = 11
+        const batchSize = 7
         // for (const adObject of adsObjects) {
         for (let i = 0; i < adsObjects.length; i++) {
             const adObject = adsObjects[i]
@@ -186,10 +186,11 @@ async function objHandler(adObject) {
             const houseServicesArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : [];
             console.log(JSON.stringify(houseServicesArr));
             // Путь для сохранения изображений
-            const photoFolderPath = path.resolve(__dirname, '../static/images/objects', adObject.Id[0]);
+            const photoFolderPath = path.join(__dirname, '..', 'static', 'images', 'objects', adObject.Id[0]);
+            // const photoFolderPath = path.resolve(__dirname, '../static/images/objects', adObject.Id[0]);
             // Загружаем и сохраняем изображения
-
             const cleanLinksNew = await downloadAndSaveImages(cleanLinks, photoFolderPath);
+
             // console.log(cleanLinksNew);
             const newAdObject = await db.objectIntrum.create({
                 data: {
@@ -245,7 +246,7 @@ async function objHandler(adObject) {
                 }
             });
 
-            console.log(newAdObject);
+            // console.log(newAdObject);
         } catch (error) {
             console.error(error);
             console.log(adObject.Id[0] + ' ' + parts);

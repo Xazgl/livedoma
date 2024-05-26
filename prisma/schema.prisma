@@ -253,9 +253,39 @@ model constructionApplications {
 
   dateFirstContact String? // Дата первого контакта
 
-  phone String?
-  url   String?
+  phone   String?
+  url     String?
+  comment String[]
+
+  createdAtCrm String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model InparseObjects {
+  id          String   @id @default(cuid())
+  idInparse   String   @unique
+  regionId    String
+  cityId      String
+  typeAd      String?
+  sectionId   String?
+  categoryId  String
+  title       String
+  address      String
+  floor       String?
+  floors      String?
+  sq          String?
+  sqLand      String?
+  price       String?
+  description String?
+  images      String[]
+  lat         String
+  lng         String
+  name        String
+  phones      String[]
+  url         String
+  agent       String?
+  source      String?
+  sourceId    String?
 }

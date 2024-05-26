@@ -1,4 +1,4 @@
-import { ObjectIntrum } from "@prisma/client";
+import { InparseObjects, ObjectIntrum } from "@prisma/client";
 import { number } from "zod";
 
 export type FilterUserOptions = {
@@ -218,6 +218,20 @@ export type FavoriteObj = {
 
 
 
+export type Coordinates = {
+  longitude: string,
+  latitude: string,
+}
+
+
+export type InparseAnswer = {
+  address: string,
+  objects: InparseObjects[]
+}
+
+
+
+
 //   {
 //     "status": "success",
 //     "data": [
@@ -304,3 +318,43 @@ export type RequestDataApplication = {
     };
   };
 }
+
+
+
+
+
+export type constructionApplicationsExcel = {
+  id:                string ,
+  idApplicationIntrum: string , 
+  translator:          string, //Источник
+  responsibleMain :    string, //Главный отвественный 
+  status :             string, //статус
+  postMeetingStage :   string, //стадия после встречи
+  desc :               string, //описание
+  typeApplication :    string, //тип заявки
+  contactedClient :    string, //специалист связался с клиентом
+  campaignUtm:         string,
+  termUtm :           string,
+  nextAction :         string, //Дата следующего действия по заявки 
+
+  rejection :         string, //Отклонения работы с заявкой
+  errorReejctionDone: string, // Ошибка исправлена?
+
+  datecallCenter: string, //Дата обработки заявки колл центром
+  timecallCenter: string, // Время обработки КЦ
+  okCallCenter: string,
+  timesaletCenter :string, // Дата обработки ОП
+  okSaleCenter:string,
+  
+
+  dateFirstContact :string, // Дата первого контакта
+
+  phone: string,
+  url :  string,
+  comment: string[],
+
+  createdAtCrm: string,
+  createdAt: string,
+
+}
+

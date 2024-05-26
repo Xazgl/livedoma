@@ -1,6 +1,7 @@
 import db from "../../prisma";
 
 export async function doubleFind(phone: string) {
+
   const doubleMessageOne = await db.tilda.findFirst({
     where: {
       phone: phone,
@@ -17,8 +18,10 @@ export async function doubleFind(phone: string) {
   
   if(!doubleMessageOne && !doubleMessageTwo) {
     return false;
-  }else {
+  } else {
     return true;
   }
 
 }
+
+

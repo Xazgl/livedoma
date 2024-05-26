@@ -14,33 +14,64 @@ export async function GET(
 
   try {
    
+    // const applicationsExcel = await db.constructionApplications.findMany({
+    //   where: {
+    //     createdAt: {
+    //       lte: new Date(dateEnd? dateEnd : "2022-01-30"),
+    //       gte: new Date(date ? date : "2022-01-30"),
+    //     },
+    //   },
+    //   orderBy: {
+    //     createdAt: 'asc'
+    //   }
+    // });
+
+
     const applicationsExcel = await db.constructionApplications.findMany({
       where: {
-        createdAt: {
-          lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-          gte: new Date(date ? date : "2022-01-30"),
+        createdAtCrm: {
+          lte: dateEnd? dateEnd : "2022-01-30",
+          gte: date ? date : "2022-01-30",
         },
       },
+      orderBy: {
+        createdAt: 'asc'
+      }
     });
 
     if (table) {
       applications = await db.constructionApplications.findMany({
         where: {
-          createdAt: {
-             lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-            gte: new Date(date ? date : "2022-01-30"),
-          }, 
+          // createdAt: {
+          //    lte: new Date(dateEnd? dateEnd : "2022-01-30"),
+          //   gte: new Date(date ? date : "2022-01-30"),
+          // }, 
+          createdAtCrm: {
+            lte: dateEnd? dateEnd : "2022-01-30",
+            gte: date ? date : "2022-01-30",
+          },
           translator: table === '1' ? { in: ['Наш сайт', 'лендинг'] } : 'WhatsApp'
         },
+        orderBy: {
+          createdAt: 'asc'
+        }
+        
       });
     } else {
       applications = await db.constructionApplications.findMany({
         where: {
-          createdAt: {
-            lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-            gte: new Date(date ? date : "2022-01-30"),
+          // createdAt: {
+          //   lte: new Date(dateEnd? dateEnd : "2022-01-30"),
+          //   gte: new Date(date ? date : "2022-01-30"),
+          // },
+          createdAtCrm: {
+            lte: dateEnd? dateEnd : "2022-01-30",
+            gte: date ? date : "2022-01-30",
           },
         },
+        orderBy: {
+          createdAt: 'asc'
+        }
       });
     }
 

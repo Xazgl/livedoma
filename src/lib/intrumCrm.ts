@@ -59,8 +59,9 @@ export default async function sendIntrumCrm(message: Wazzup, double:boolean) {
   console.log( doubleMessage)
 
   const managers = [
-    { name: "Политов", id: "391" },
+    // { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
+    { name: "Трофимов Николай", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
@@ -227,8 +228,9 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
   const doubleMessage = double;
 
   const managers = [
-    { name: "Политов", id: "391" },
+    // { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
+    { name: "Трофимов Николай", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
@@ -327,8 +329,9 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
 export async function managerFind() {
 
   const managers = [
-   { name: "Политов", id: "391" },
+  //  { name: "Политов", id: "391" },
    { name: "Максимова Людмила", id: "332" },
+   { name: "Трофимов Николай", id: "1140" },
    { name: "Исаева", id: "39" },
    { name: "Трубачева", id: "1460" },
    { name: "Бородина", id: "353" },

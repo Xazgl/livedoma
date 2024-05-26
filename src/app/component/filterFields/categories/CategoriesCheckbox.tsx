@@ -91,4 +91,8 @@ export function CategoriesCheckbox({filteblackProps,currentFilter,setCurrentFilt
   );
 
   // logoFind(object.companyName)
+
+
+
+  
 }

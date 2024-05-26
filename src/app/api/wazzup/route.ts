@@ -3,6 +3,7 @@ import db from "../../../../prisma";
 import { Message, MessagesResponse, crmAnswer } from "../../../../@types/dto";
 import sendIntrumCrm, { managerFind } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
+import { normalizeWazzupNumber } from "@/lib/phoneMask";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -24,7 +25,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
               const manager = await managerFind()
               console.log({managerid:manager} )
               const name = message.contact.name ? message.contact.name : "Нету";
-              const phone = message.authorName;
+              // const phone = message.authorName;
+              const phone = await normalizeWazzupNumber(message.authorName);
               const chatType = message.chatType ? message.chatType : "Нету";
               const text = message.text ? message.text : "Нету";
               if (phone !== "Admin") {

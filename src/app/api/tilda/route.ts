@@ -3,6 +3,7 @@ import db from "../../../../prisma";
 import { Tilda, crmAnswer } from "../../../../@types/dto";
 import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
+import { normalizePhoneNumber } from "@/lib/phoneMask";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       if (answer.test == null) {
         const manager = await managerFind();
         const name = answer.name ? answer.name : "Нету";
-        const phone = answer.Phone;
+        const phone = await normalizePhoneNumber(answer.Phone);
         const formid = answer.formid ? answer.formid : "Нету";
         const utm_medium = answer.utm_medium ? answer.utm_medium : "";
         const utm_campaign = answer.utm_campaign ? answer.utm_campaign : "";

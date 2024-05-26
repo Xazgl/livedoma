@@ -4,14 +4,14 @@ FROM node:lts-alpine as node_modules_dev
 WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
-RUN npm ci
+RUN --mount=type=cache,target=~/.npm npm ci
 
 FROM node:lts-alpine as node_modules_prod
 # Create app directory
 WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN --mount=type=cache,target=~/.npm npm ci --omit=dev
 
 FROM node:lts-alpine AS builder
 
@@ -30,12 +30,18 @@ COPY . .
 
 ENV NODE_ENV=production
 
-RUN npm run build
+# RUN npm run build
+RUN --mount=type=cache,target=/app/.next/cache --mount=type=cache,target=~/.npm npm run build
 
 # RUN npx prisma migrate deploy
 
 FROM node:lts-alpine 
+# RUN imagemagick with format
 RUN apk add --update --no-cache imagemagick
+RUN apk add --update --no-cache jpeg
+RUN apk add --update --no-cache libwebp
+# RUN curl
+RUN apk add --update --no-cache curl
 
 WORKDIR /app
 
@@ -61,23 +67,20 @@ RUN npx prisma generate
 ENV NODE_ENV=production
 # RUN echo "* * * * * /usr/local/bin/node /app/xmlTasks/index.js" >> /etc/crontab
 
+RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
+# RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
+# RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
 
-RUN (crontab -u $(whoami) -l; echo "*/60 * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
-RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/xmlTasks/testImg.js") | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */9 * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
 
-# RUN (crontab -u $(whoami) -l; echo "*/60 * * *  /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
-
-
-# RUN (crontab -l; echo "0 0,13 * * * /usr/local/bin/node /app/xmlTasks/index(forDownload).js") | crontab -
-
-# RUN (crontab -u $(whoami) -l; echo "* * * * * /usr/local/bin/node /app/xmlTasks/indexforDownload.js") | crontab -u $(whoami) -
-
-RUN (crontab -u $(whoami) -l; echo "*/30 * * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
-
-RUN (crontab -u $(whoami) -l; echo "*/40 * * * * /usr/local/bin/node /app/report/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */1 * * * /usr/local/bin/node /app/report/index.js" ) | crontab -u $(whoami) -
+    
  
-RUN (crontab -u $(whoami) -l; echo "*/50 * * * * /usr/local/bin/node /app/applications/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */2 * * * /usr/local/bin/node /app/applications/index.js" ) | crontab -u $(whoami) -
 
-RUN (crontab -u $(whoami) -l; echo "*/55 * * * * /usr/local/bin/node /app/insurance/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insurance/index.js" ) | crontab -u $(whoami) -
+
+RUN (crontab -u $(whoami) -l; echo "*/90 * * * * /usr/local/bin/node /app/inparse/index.js" ) | crontab -u $(whoami) -
+
 
 EXPOSE 3000

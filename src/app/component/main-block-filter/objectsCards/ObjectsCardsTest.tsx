@@ -130,7 +130,7 @@ export function ObjectsCardsTest({
                           />   */}
                           <img
                             className="rounded w-full h-full   "
-                            src={object.img[0]}
+                            src={object.thubmnail[0]}
                             // src={fetchData(object.id_intrum)? fetchData(object.id_intrum) :'' }
                             alt={object.category}
                             loading="lazy"

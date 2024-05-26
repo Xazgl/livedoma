@@ -1,5 +1,6 @@
 'use client'
 import { DescriptionObj } from "@/app/component/currentObjComponents/description/DescriptionObj"
+import YandexMap from "@/app/component/currentObjComponents/map/YandexMap"
 import { SwiperImg } from "@/app/component/currentObjComponents/slider/SwiperImg"
 import { Header } from "@/app/component/header/Header"
 import { MobileHeader } from "@/app/component/mainBarMobile/MobileBar"
@@ -50,6 +51,7 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
                     showModalImg={showModalImg}
                 />
                 <DescriptionObj object={object} />
+                <YandexMap object={object}/>
             </>
         }
 
