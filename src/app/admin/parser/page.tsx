@@ -7,7 +7,8 @@ import { getCookie, getCookies } from "cookies-next";
 
 import { cookies } from "next/headers";
 import { AuthForm } from "@/app/component/admin/auth/Auth";
-import { Parser } from "@/app/component/admin/Parser";
+import { Parser } from "@/app/component/admin/parser/Parser";
+import { ParserFind } from "@/app/component/admin/parser/ParserFind";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ async function getObjects() {
     const sid = getCookie("sid", { cookies });
     // console.log(sid)
     const admin = await checkSession(sid ? sid : "");
-    console.log( admin)
+    console.log(admin);
     if (admin) {
       const { login } = admin.admin;
       return {
@@ -53,7 +54,7 @@ async function getObjects() {
         uniqueDateStages: uniqueDateStages,
         formattedYesterday: formattedYesterday,
         login: login,
-        admin : admin 
+        admin: admin,
       };
     }
 
@@ -69,27 +70,30 @@ async function getObjects() {
 }
 
 export default async function Home() {
-  const { sales, uniqueDateStages, formattedYesterday, login,  admin  } =
+  const { sales, uniqueDateStages, formattedYesterday, login, admin } =
     await getObjects();
-    console.log( admin )
+  console.log(admin);
 
   return (
     <>
       {login ? (
         <>
           {sales.length > 0 && uniqueDateStages.length > 0 ? (
-            <Parser />
+            <>
+              <Parser />
+              {/* <ParserFind /> */}
+            </>
           ) : (
             <div className="flex w-full h-[100vh] items-center justify-center">
               <CircularProgress />
             </div>
           )}
         </>
-       ) : (
+      ) : (
         <div className="flex w-full h-[100vh] items-center justify-center">
           <AuthForm />
         </div>
-      )} 
+      )}
     </>
   );
 }

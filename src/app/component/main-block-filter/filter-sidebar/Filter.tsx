@@ -27,6 +27,7 @@ import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import { RoomsSelector } from "../../filterFields/rooms/Rooms";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Renovation } from "../../filterFields/renovation/Renovation";
+import { Floor } from "../../filterFields/floor/Floor";
 
 type Props = {
   objects: allObjects;
@@ -47,15 +48,28 @@ type Props = {
   countObjects: number;
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
-  resetPageAndReloadData:() => void;
+  resetPageAndReloadData: () => void;
 };
 
 const filterRow = "flex w-full p-4 h-auto ";
 
-export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,setFilteredHouse,
-  maxPrice,minPrice,setMinPrice,setMaxPrice,valueSliderPrice,setValueSliderPrice,
-  countObjects,setFavArr,favArr,resetPageAndReloadData}: Props) {
-
+export function Filter({
+  filteblackProps,
+  objects,
+  currentFilter,
+  setCurrentFilter,
+  setFilteredHouse,
+  maxPrice,
+  minPrice,
+  setMinPrice,
+  setMaxPrice,
+  valueSliderPrice,
+  setValueSliderPrice,
+  countObjects,
+  setFavArr,
+  favArr,
+  resetPageAndReloadData,
+}: Props) {
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -79,7 +93,7 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
       floor: [],
       wallsType: [],
     }));
-    resetPageAndReloadData()
+    resetPageAndReloadData();
   }
 
   return (
@@ -115,14 +129,14 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
             resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
-        
-        {/* <div className={filterRow}>
+
+        <div className={filterRow}>
           <Renovation
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
           />
-        </div> */}
+        </div>
 
         <div className={filterRow}>
           <CompanySelect
@@ -133,13 +147,18 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
           />
         </div>
 
-        {/* <div className={filterRow}>
-                <CitySelect
+        <div className={filterRow}>
+          <Floor
+            filteblackProps={filteblackProps}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+          />
+          {/* <CitySelect
                     filteblackProps={filteblackProps}
                     currentFilter={currentFilter}
                     setCurrentFilter={setCurrentFilter}
-                />
-            </div> */}
+                /> */}
+        </div>
 
         <div className={filterRow}>
           <Accordion>
@@ -161,7 +180,6 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
                 setMinPrice={setMinPrice}
                 setMaxPrice={setMaxPrice}
                 resetPageAndReloadData={resetPageAndReloadData}
-
               />
             </AccordionDetails>
           </Accordion>
@@ -172,15 +190,17 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
             id="button"
             type="button"
             onClick={resetFilteblackCars}
+            style={{transition:'all 0.5s'}}
             className={` flex  justify-center  items-center  w-[100%] 
-            h-[40px] block w-full rounded  bg-[#f15282ca] 
+            h-[40px] block w-full rounded  bg-[#55529fbd]    
            text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)]
-           hover:bg-[#55529fc1]
+           hover:bg-[#55529f]
             hover:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)]
             focus:bg-[#55529fda] focus:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)]
             active:bg-[#54529F] active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
             transition duration-150 ease-in-out focus:outline-none focus:ring-0`}
           >
+            
             Очистить фильтр
           </button>
         </div>
@@ -209,7 +229,7 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
                 <div className="cursor-pointer  gap-[5px] items-center  transition  duration-700  ease-in-out ">
                   <Link
                     href={`/cart/${favArr[0].sessionId}`}
-                    style={{textDecoration:'none'}}
+                    style={{ textDecoration: "none" }}
                     className="w-[100%] h-[100%] text-black"
                   >
                     <a rel="noopener noreferrer">
@@ -224,7 +244,6 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
             )}
           </div>
         )}
-        
       </aside>
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 import { ObjectIntrum } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FavoriteObj, FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
 import { Filter } from "./filter-sidebar/Filter";
 import { ObjectsCardsTest } from "./objectsCards/ObjectsCardsTest";
@@ -33,6 +33,9 @@ type Props = {
 };
 
 export function ParentFilterBlock({ objects, pages, page }: Props) {
+
+  const refCardsObjects = useRef<HTMLDivElement>(null)
+  
   //Отфильтрованные Квартиры, по умолчанию все квартиры
   const [filteredHouse, setFilteredHouse] = useState<ObjectIntrum[]>(
     objects.length > 0 ? objects.slice(0, 30) : []
@@ -63,6 +66,12 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     }
     if (params.has("renovation")) {
       filterFromParams.renovation = params.getAll("renovation");
+    }
+    if (params.has("floor")) {
+      filterFromParams.floor = params.getAll("floor");
+    }
+    if (params.has("floors")) {
+      filterFromParams.floors = params.getAll("floors");
     }
     if (params.has("street")) {
       filterFromParams.street = params.getAll("street");
@@ -98,7 +107,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 500);
   };
 
   //Конкретные выбранные фильтры
@@ -128,7 +137,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
   //  setCurrentPage(1);
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 500);
   }, [currentFilter]);
 
 
@@ -137,7 +146,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     setCurrentPage(1);
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 500);
   };
 
   const [valueSliderPrice, setValueSliderPrice] = useState<[number, number]>([
@@ -206,6 +215,16 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
         params.append("companyName", compName);
       });
     }
+    if (currentFilter.floor) {
+      currentFilter.floor.forEach((flr) => {
+        params.append("floor", flr);
+      });
+    }
+    if (currentFilter.floors) {
+      currentFilter.floors.forEach((flr) => {
+        params.append("floors", flr);
+      });
+    }
     if (currentFilter.minPrice) {
       params.append("minPrice", String(currentFilter.minPrice));
     }
@@ -229,14 +248,16 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
             ...prevFilterState,
             categories: el.filter.category,
             rooms: el.filter.rooms,
-            renovationTypes: el.filter.renovationTypes,
+            renovationTypes: el.filter.renovation,
+            floor:el.filter.floor,
+            floors:el.filter.floors,
             streets: el.filter.street,
             companyNames: el.filter.companyName,
             price: [el.filter.minPrice, el.filter.maxPrice],
           };
         });
       });
-    console.log(filteblackProps);
+    // console.log(filteblackProps);
   }, [currentFilter, currentPage]);
 
   //Конкретные выбранные фильтры
@@ -256,7 +277,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     square: [],
     floors: [],
     floor: [],
-    wallsTypes: [],
+    wallsTypes: []
   } as {
     categories: string[];
     operationTypes: string[];
@@ -308,19 +329,20 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
         currentFilter={currentFilter}
         setCurrentFilter={setCurrentFilter}
         setFilteredHouse={setFilteredHouse}
+        refCardsObjects={refCardsObjects}
       />
 
-      <div className="flex flex-col items-center lg:items-start lg:w-full justify-center">
-        <h1 className=" w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] text-black mt-[50px] font-semibold">
+      <div className="flex flex-col  items-center lg:items-center w-full justify-center ">
+        <h1 className="w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] text-black mt-[50px] font-semibold">
           Лучшие предложения для
-          <span className="text-[#F15281] border-b-2 lg:border-b-3    xl:border-b-4  border-[#F15281]">
+          <span className="text-[#54529F] border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F]">
             <br />
             ВАШИХ КЛИЕНТОВ НА ОДНОМ САЙТЕ
           </span>
         </h1>
       </div>   
 
-      <section className="flex  flex-col  md:flex-row w-full  h-full  relative   mt-[50px]">
+      <section className="flex  flex-col  md:flex-row w-full  h-full  relative   mt-[50px] ">
         
         <FilterMobile
           objects={objects}
@@ -353,6 +375,8 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           handlePageChange={handlePageChange}
           favArr={favArr}
           setFavArr={setFavArr}
+          refCardsObjects={refCardsObjects}
+
         />
 
         <Filter

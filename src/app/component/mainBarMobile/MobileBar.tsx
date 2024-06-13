@@ -67,7 +67,7 @@ export function MobileHeader({}) {
           <nav className="flex flex-col  w-[100%] ">
             <ul className="flex flex-col gap-1">
               {NavEl.map((item, index) => (
-                <Link key={index} href="/">
+                <Link key={index} href={item.src}>
                   <li key={index}>{item.title}</li>
                 </Link>
               ))}

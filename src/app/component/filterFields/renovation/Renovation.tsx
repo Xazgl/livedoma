@@ -13,71 +13,83 @@ type Props = {
 
 export function Renovation ({filteblackProps,currentFilter,setCurrentFilter}: Props) {
 
-  // console.log(filteblackProps.renovationTypes)
+
+  const renovationOptions = filteblackProps.renovationTypes
+    .map((renovation) => renovation.trim() === "" ? "Не указан" : renovation.trim()) 
+    .sort((a, b) => {
+      const isANumber = !isNaN(Number(a));
+      const isBNumber = !isNaN(Number(b));
+
+      if (isANumber && isBNumber) {
+        return Number(a) - Number(b);
+      } else if (isANumber) {
+        return -1;
+      } else if (isBNumber) {
+        return 1;
+      } else {
+        return a.localeCompare(b);
+      }
+    });
+
   // const renovationOptions = filteblackProps.renovationTypes
-  //   .filter((room) => room.trim() !== "") // Exclude empty strings
+  //   .filter((renovation) => renovation.trim() !== "") 
   //   .sort((a, b) => {
-  //     // Custom sorting logic
   //     const isANumber = !isNaN(Number(a));
   //     const isBNumber = !isNaN(Number(b));
 
   //     if (isANumber && isBNumber) {
-  //       // Both are numbers, compare as numbers
   //       return Number(a) - Number(b);
   //     } else if (isANumber) {
-  //       // Only 'a' is a number, 'b' comes after
   //       return -1;
   //     } else if (isBNumber) {
-  //       // Only 'b' is a number, 'a' comes after
   //       return 1;
   //     } else {
-  //       // Both are words, compare as strings
   //       return a.localeCompare(b);
   //     }
   //   });
 
   return (
-    <></>
-    // <Accordion  sx={{ width: "100%" }}>
-    //   <AccordionSummary
-    //     expandIcon={<ExpandMoreIcon />}
-    //     aria-controls="panel1a-content"
-    //     id="panel1a-header"
-    //   >
-    //     <Typography sx={{ fontSize: "14px" }}>
-    //       {" "}
-    //       <FormatPaintIcon /> Ремонт
-    //     </Typography>
-    //   </AccordionSummary>
-    //   <AccordionDetails>
-    //     <div className="flex flex-col w-full text-black">
 
-    //       <Select
-    //         labelId="demo-simple-select-label"
-    //         id="demo-simple-select"
-    //         value={currentFilter.renovation ?? []}
-    //         label=""
-    //         onChange={(event) => {
-    //           const selectedRenovation = event.target.value as string; 
-    //           setCurrentFilter((prevFilterState) => {
-    //             const updatedRenovation = prevFilterState.renovation?.includes(selectedRenovation)
-    //               ? prevFilterState.renovation.filter((renov) => renov !== selectedRenovation)
-    //               : [...(prevFilterState.renovation ?? []), selectedRenovation];
-    //             return {
-    //               ...prevFilterState,
-    //               renovation: updatedRenovation,
-    //             };
-    //           });
-    //         }}
-    //       >
-    //         {renovationOptions.map((el) => (
-    //           <MenuItem key={el} value={el}>{el}</MenuItem>
-    //         ))
-    //         }
+    <Accordion  sx={{ width: "100%" }}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <Typography sx={{ fontSize: "14px" }}>
+          {" "}
+          <FormatPaintIcon /> Ремонт
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <div className="flex flex-col w-full text-black">
 
-    //       </Select>
-    //     </div>
-    //   </AccordionDetails>
-    // </Accordion>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={currentFilter.renovation ?? []}
+            label=""
+            onChange={(event) => {
+              const selectedRenovation = event.target.value as string; 
+              setCurrentFilter((prevFilterState) => {
+                const updatedRenovation = prevFilterState.renovation?.includes(selectedRenovation)
+                  ? prevFilterState.renovation.filter((renov) => renov !== selectedRenovation)
+                  : [...(prevFilterState.renovation ?? []), selectedRenovation];
+                return {
+                  ...prevFilterState,
+                  renovation: updatedRenovation,
+                };
+              });
+            }}
+          >
+            {renovationOptions.map((el) => (
+              <MenuItem key={el} value={el}>{el}</MenuItem>
+            ))
+            }
+
+          </Select>
+        </div>
+      </AccordionDetails>
+    </Accordion>
   );
 }

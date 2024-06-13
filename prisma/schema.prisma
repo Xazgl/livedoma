@@ -32,8 +32,9 @@ model ObjectIntrum {
   roomType          String[] //Тип комнат
   saleOptions       String[] //Опции продажи , например можно в Ипотеку
   phone             String? //Контактный телефон
-  img               String[] //Фото квартиры 
-  thubmnail         String[] //Превью квартиры 
+  imgUrl            String[] //Фото квартиры с внешний источников
+  img               String[] //Фото квартиры  скачен
+  thubmnail         String[] //Превью квартиры  скачен
   rooms             String? //Кол-во комнат
   square            String? //Площадь
   landArea          String? //Земельный участок
@@ -288,4 +289,7 @@ model InparseObjects {
   agent       String?
   source      String?
   sourceId    String?
+
+  // createdAt DateTime @default(now())
+  // updatedAt DateTime @updatedAt
 }

@@ -59,7 +59,9 @@ RUN mkdir -p static/images
 COPY skillspace ./skillspace 
 COPY report ./report
 COPY applications ./applications
-COPY insurance ./insurance
+COPY insurance ./insurance` 
+COPY inparse ./inparse
+
 
 # COPY .env.prod .env
 RUN npx prisma generate
@@ -67,11 +69,11 @@ RUN npx prisma generate
 ENV NODE_ENV=production
 # RUN echo "* * * * * /usr/local/bin/node /app/xmlTasks/index.js" >> /etc/crontab
 
-RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
-# RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */7 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "*/80 * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
 # RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
 
-RUN (crontab -u $(whoami) -l; echo "0 */9 * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
+# RUN (crontab -u $(whoami) -l; echo "0 */9 * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
 
 RUN (crontab -u $(whoami) -l; echo "0 */1 * * * /usr/local/bin/node /app/report/index.js" ) | crontab -u $(whoami) -
     

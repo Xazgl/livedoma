@@ -12,3 +12,10 @@ export function formatDate(dateString: string): string {
   const [year, month, day] = dateString.split("-");
   return `${day}.${month}.${year}`;
 }
+
+
+
+// export function formatDate(dateString: string): Date {
+//   const [year, month, day] = dateString.split("-");
+//   return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+// }

@@ -3,14 +3,17 @@ import metrs from "/public/images/logo/metrs.png";
 import part from "/public/images/logo/partner.png";
 
 export const NavEl = [
+  // {
+  //   title: "Преимущества",
+  //   src:'/'
+  // },
   {
-    title: "Преимущества",
-  },
-  {
-    title: "Услуги",
+    title: "Ипотека",
+    src:'/mortgage'
   },
   {
     title: "Блог",
+    src:'/'
   },
 ];
 

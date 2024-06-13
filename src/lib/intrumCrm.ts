@@ -59,9 +59,9 @@ export default async function sendIntrumCrm(message: Wazzup, double:boolean) {
   console.log( doubleMessage)
 
   const managers = [
-    // { name: "Политов", id: "391" },
-    { name: "Максимова Людмила", id: "332" },
-    { name: "Трофимов Николай", id: "1140" },
+    { name: "Политов", id: "391" },
+    // { name: "Максимова Людмила", id: "332" },
+    { name: "Трофимов", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
@@ -92,7 +92,7 @@ export default async function sendIntrumCrm(message: Wazzup, double:boolean) {
   params.append("params[request][status]", "unselected"); //статус сделки
   params.append("params[request][request_name]", doubleMessage? "Повторное обращение(дубль) получили каталог в Вотсапе ТОП-10" : "Получили каталог в Вотсапе ТОП-10 проектов домов"); //статус сделки
   if(doubleMessage){
-    params.append("params[request][employee_id]","4"); //id главного отв заявки
+    params.append("params[request][employee_id]","1676"); //id главного отв заявки
   }else{
     params.append("params[request][employee_id]", message.managerId == "Ошибка в выборе менеджера" ? managerIdRandom : message.managerId ? message.managerId :managerIdRandom ); //id главного отв заявки
   }
@@ -228,9 +228,9 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
   const doubleMessage = double;
 
   const managers = [
-    // { name: "Политов", id: "391" },
-    { name: "Максимова Людмила", id: "332" },
-    { name: "Трофимов Николай", id: "1140" },
+    { name: "Политов", id: "391" },
+    // { name: "Максимова Людмила", id: "332" },
+    { name: "Трофимов", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
@@ -266,7 +266,7 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
   }
 
  if(doubleMessage){
-    params.append("params[request][employee_id]","4")
+    params.append("params[request][employee_id]","1676")
   } else{
     params.append("params[request][employee_id]", message.managerId == "Ошибка в выборе менеджера" ? managerIdRandom : message.managerId ? message.managerId :managerIdRandom ); //id главного отв заявки
 
@@ -329,9 +329,9 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
 export async function managerFind() {
 
   const managers = [
-  //  { name: "Политов", id: "391" },
-   { name: "Максимова Людмила", id: "332" },
-   { name: "Трофимов Николай", id: "1140" },
+   { name: "Политов", id: "391" },
+  //  { name: "Максимова Людмила", id: "332" },
+   { name: "Трофимов", id: "1140" },
    { name: "Исаева", id: "39" },
    { name: "Трубачева", id: "1460" },
    { name: "Бородина", id: "353" },

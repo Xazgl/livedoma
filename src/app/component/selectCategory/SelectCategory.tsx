@@ -1,9 +1,10 @@
 "use client";
 import { ObjectIntrum } from "@prisma/client";
-import bg1 from "/public/images/1.png";
-import bg2 from "/public/images/2.png";
-import bg3 from "/public/images/3.png";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import bg3 from "/public/images/mainPage/1.webp";
+import bg1 from "/public/images/mainPage/2.webp";
+import bg2 from "/public/images/mainPage/5.webp";
+import bg4 from "/public/images/mainPage/4.webp";
+import { Dispatch, RefObject, SetStateAction, useEffect } from "react";
 import {
   categoryFilter,
   ceilingHeightFilter,
@@ -30,6 +31,7 @@ type Props = {
   currentFilter: FilterUserOptions;
   setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
   setFilteredHouse: Dispatch<SetStateAction<ObjectIntrum[]>>;
+  refCardsObjects:RefObject<HTMLDivElement>,
 };
 
 export function SelectCategory({
@@ -37,6 +39,7 @@ export function SelectCategory({
   currentFilter,
   setCurrentFilter,
   setFilteredHouse,
+  refCardsObjects
 }: Props) {
   const changeFilter = (filter: FilterUserOptions) => {
     setCurrentFilter((prevFilterState) => {
@@ -84,6 +87,9 @@ export function SelectCategory({
         category: [...currentCategory, categoryName],
       };
     });
+    if (refCardsObjects.current) {
+      refCardsObjects.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const categories = [
@@ -102,25 +108,31 @@ export function SelectCategory({
       bgSrc: bg3.src,
       handler: () => createCategoryHandler("Дома, дачи, коттеджи"),
     },
+    {
+      title: "Комнаты",
+      bgSrc: bg4.src,
+      handler: () => createCategoryHandler("Комнаты"),
+    },
   ];
 
-  const styleCard = `flex h-[95px] w-[250px] md:w-[300px] relative rounded-bl-[15px]  rounded-tr-[15px]
-   after:duration-[1000ms] sm:h-full  after:ease-in-out   overflow-hidden
-   after:w-full after:h-full hover:after:bg-[#0000003f] hover:after:absolute
-   hover:after:rounded-bl-[15px]   hover:after:rounded-tr-[15px]
-   `;
+  const styleCard = `flex h-[95px]   w-[290px]  relative rounded
+    sm:w-[350px] sm:h-[200px]
+    md:w-[400px] md:h-[200px]
+    lg:w-[600px] lg:h-[270px] 
+    after:duration-[1000ms]   after:ease-in-out   overflow-hidden
+    after:w-full after:h-full hover:after:bg-[#0000003f] hover:after:absolute`;
   
     const title = "flex mt-[5px] w-full text-black text-[14px] md:text-[20px]";
   
   return (
     <>
-      <section className="flex  flex-col  h-full     w-full  items-center sm:items-stretch sm:h-[200px]   sm:flex-row sm:flex-wrap justify-center gap-[20px] sm:gap-[0px] sm:justify-around  md:justify-between mt-[40px]">
+      <section className="flex  flex-col  h-full     w-full  items-center sm:items-stretch   sm:flex-row sm:flex-wrap justify-center  mt-[40px] gap-[10px]">
 
         {categories.map((category, index) => (
           <div key={index} className="flex  flex-col-reverse  sm:flex-col w-[auto] cursor-pointer">
             <div
               className={styleCard}
-              style={{
+              style={{ 
                 background: `url(${category.bgSrc})`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",

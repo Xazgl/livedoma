@@ -6,6 +6,8 @@ const { AxiosError } = require("axios");
 const db = new PrismaClient()
 
 async function start() {
+      // Удаляем все объекты из базы данных
+      await db.inparseObjects.deleteMany();
   try {
     const arrHoods = [
       {
@@ -90,12 +92,12 @@ async function start() {
       const lngFrom = lowerCorner[0];
       const latFrom = lowerCorner[1];
       const lngTo = upperCorner[0];
-      const latTo = upperCorner[1];
+      const latTo = upperCorner[1]; 
 
-      const url = `https://inpars.ru/api/v2/estate?sortBy=updated_asc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000`
+      const url = `https://inpars.ru/api/v2/estate?sortBy=created_desc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000`
 
       const response = await axios(
-        `https://inpars.ru/api/v2/estate?sortBy=updated_asc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000`
+        `https://inpars.ru/api/v2/estate?sortBy=created_desc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000`
       );
 
       // if (!response.ok) {
@@ -107,23 +109,24 @@ async function start() {
       const arr = data.map(el => arrObjects.push(el))
     }
 
-    //  // Получаем все объекты из базы данных
-    const dbObjects = await db.inparseObjects.findMany();
-    // Получаем идентификаторы объектов из базы данных
-    const dbObjectIds = dbObjects.map(obj => obj.idInparse);
-    // Получаем идентификаторы объектов из XML-файлов
-    const xmlObjectIds = arrObjects.map(obj => obj.id);
+    // //  // Получаем все объекты из базы данных
+    // const dbObjects = await db.inparseObjects.findMany();
+    // // Получаем идентификаторы объектов из базы данных
+    // const dbObjectIds = dbObjects.map(obj => obj.idInparse);
+    // // Получаем идентификаторы объектов из XML-файлов
+    // const xmlObjectIds = arrObjects.map(obj => obj.id);
 
     //  // Удаляем объекты из базы данных, которых нет в XML-файлах
-    const objectsToDelete = dbObjectIds.filter(id => !xmlObjectIds.includes(id));
-    await Promise.all(objectsToDelete.map(async (id) => {
-      await db.inparseObjects.delete({
-        where: {
-          idInparse: id
-        }
-      });
-      console.log(`Объект удален из базы с  ${id}  т.к. он не найден в фиде`);
-    }));
+    // const objectsToDelete = dbObjectIds.filter(id => !xmlObjectIds.includes(id));
+    // await Promise.all(objectsToDelete.map(async (id) => {
+    //   await db.inparseObjects.delete({
+    //     where: {
+    //       idInparse: id
+    //     }
+    //   });
+    //   console.log(`Объект удален из базы с  ${id}  т.к. он не найден в фиде`);
+    // }));
+
 
     for (const adObject of arrObjects) {
 
@@ -142,22 +145,22 @@ async function start() {
             data: {
               idInparse: String(adObject.id),
               regionId: String(adObject.regionId),
-              cityId: String(adObject.regionId? adObject.regionId : ''),
-              typeAd: String(adObject.typeAd? adObject.typeAd : ''),
-              sectionId: String(adObject.sectionId? adObject.sectionId : ''),
-              categoryId: String(adObject.categoryId? adObject.categoryId : ''),
-              title: String(adObject.title? adObject.title : ''),
-              address: String(adObject.address? adObject.address : ''),
-              floor: String(adObject.floor? adObject.floor : '' ),
+              cityId: String(adObject.regionId ? adObject.regionId : ''),
+              typeAd: String(adObject.typeAd ? adObject.typeAd : ''),
+              sectionId: String(adObject.sectionId ? adObject.sectionId : ''),
+              categoryId: String(adObject.categoryId ? adObject.categoryId : ''),
+              title: String(adObject.title ? adObject.title : ''),
+              address: String(adObject.address ? adObject.address : ''),
+              floor: String(adObject.floor ? adObject.floor : ''),
               floors: String(adObject.floors ? adObject.floors : ''),
               sq: String(adObject.sq ? adObject.sq : ''),
               sqLand: String(adObject.sqLand ? adObject.sqLand : ''),
-              price: String(adObject.cost ? adObject.cost:'' ),
-              description: String(adObject.text? adObject.text : '' ),
+              price: String(adObject.cost ? adObject.cost : ''),
+              description: String(adObject.text ? adObject.text : ''),
               images: {
                 set: imgArr
               },
-              lat: String(adObject.lat? adObject.lat : ''),
+              lat: String(adObject.lat ? adObject.lat : ''),
               lng: String(adObject.lng ? adObject.lng : ''),
               name: String(adObject.name ? adObject.name : ''),
               phones: {
@@ -172,27 +175,27 @@ async function start() {
         } else {
           const updateObject = await db.inparseObjects.update({
             where: {
-              idInparse:  String(adObject.id),
+              idInparse: String(adObject.id),
             },
             data: {
               idInparse: String(adObject.id),
               regionId: String(adObject.regionId),
-              cityId: String(adObject.regionId? adObject.regionId : ''),
-              typeAd: String(adObject.typeAd? adObject.typeAd : ''),
-              sectionId: String(adObject.sectionId? adObject.sectionId : ''),
-              categoryId: String(adObject.categoryId? adObject.categoryId : ''),
-              title: String(adObject.title? adObject.title : ''),
-              address: String(adObject.address? adObject.address : ''),
-              floor: String(adObject.floor? adObject.floor : '' ),
+              cityId: String(adObject.regionId ? adObject.regionId : ''),
+              typeAd: String(adObject.typeAd ? adObject.typeAd : ''),
+              sectionId: String(adObject.sectionId ? adObject.sectionId : ''),
+              categoryId: String(adObject.categoryId ? adObject.categoryId : ''),
+              title: String(adObject.title ? adObject.title : ''),
+              address: String(adObject.address ? adObject.address : ''),
+              floor: String(adObject.floor ? adObject.floor : ''),
               floors: String(adObject.floors ? adObject.floors : ''),
               sq: String(adObject.sq ? adObject.sq : ''),
               sqLand: String(adObject.sqLand ? adObject.sqLand : ''),
-              price: String(adObject.cost ? adObject.cost:'' ),
-              description: String(adObject.text? adObject.text : '' ),
+              price: String(adObject.cost ? adObject.cost : ''),
+              description: String(adObject.text ? adObject.text : ''),
               images: {
                 set: imgArr
               },
-              lat: String(adObject.lat? adObject.lat : ''),
+              lat: String(adObject.lat ? adObject.lat : ''),
               lng: String(adObject.lng ? adObject.lng : ''),
               name: String(adObject.name ? adObject.name : ''),
               phones: {

@@ -3,7 +3,7 @@ import { ObjectIntrum } from "@prisma/client";
 import Image from "next/image";
 import { getRoomsEnding, logoFind, numberWithSpaces } from "./functionCard";
 import ProgressBar from "../../progressBar/ProgressBar";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, MutableRefObject, RefObject, SetStateAction, useEffect, useState } from "react";
 import { PaginationRow } from "../../paginationRow/PaginatiowRow";
 import PropertyInfo from "../../currentObjComponents/description/PropertyInfo";
 import size from "/public/svg/size.svg";
@@ -19,6 +19,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 // import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import Link from "next/link";
+import DynamicCardImg from "./DynamicCardImg";
 
 type Props = {
   filteredHouse: ObjectIntrum[];
@@ -30,6 +31,7 @@ type Props = {
   // handlePageChangeNew:(event: React.ChangeEvent<unknown>, value: number) => void
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
+  refCardsObjects:RefObject<HTMLDivElement>,
 };
 
 export function ObjectsCardsTest({
@@ -40,6 +42,7 @@ export function ObjectsCardsTest({
   setCurrentPage,
   handlePageChange,
   setFavArr,
+  refCardsObjects,
   favArr,
 }: Props) {
   const [loadingImg, setLoadingImg] = useState(true);
@@ -72,23 +75,22 @@ export function ObjectsCardsTest({
     // console.log(favArr.length);
   }, [favArr]);
 
-  const  fetchData = async (id: string) => {
+  const fetchData = async (id: string) => {
     try {
       const response = await fetch(`/api/${id}`);
       const data = await response.json();
-      return data.imgSrc? data.imgSrc : '' ;
+      return data.imgSrc ? data.imgSrc : "";
     } catch (error) {
-      console.error('Ошибка при загрузке изображения:', error);
+      console.error("Ошибка при загрузке изображения:", error);
     }
   };
-
- 
 
   return (
     <>
       <main
         id={styles.main}
         className={`flex w-full  md:w-[80%]   p-7   ${style} relative `}
+        ref={refCardsObjects} 
       >
         {loading ? (
           <ProgressBar />
@@ -106,10 +108,11 @@ export function ObjectsCardsTest({
                 >
                   <article
                     key={object.id}
+                    style={{transition:"all 1s"}}
                     // rounded-[12px] border-[solid] rounded border-[#c9d1e5]   border-[0.60px]
                     className="flex   flex-col  md:flex-row  w-[300px] md:w-full  h-[100%] md:h-[300px]  sm:p-2  mt-[10px]  md:gap-[50px]
                                  md:border-none md:border-[transparent] md:border-[0px] 
-                                cursor-pointer md:hover:scale-[1.01]  md:duration-700   md:ease-in-out   md:hover:shadow-2xl"
+                                cursor-pointer   md:duration-700   md:ease-in-out   md:hover:shadow-2xl"
                   >
                     <div className="flex  flex-col  w-[auto]  h-[100%]    md:justify-around">
                       <div className="flex   w-[100%] h-[200px] sm:w-[300px]  sm:h-[260px]   lg:w-[400px] lg:h-[98%]  relative">
@@ -128,28 +131,40 @@ export function ObjectsCardsTest({
                                                30vw"
                             loading="lazy"
                           />   */}
-                          <img
+                          {/* <img
                             className="rounded w-full h-full   "
-                            src={object.thubmnail[0]}
+                            src={object.thubmnail[0] ? object.thubmnail[0] : object.img[0] ? object.img[0] : object.imgUrl[0]}
                             // src={fetchData(object.id_intrum)? fetchData(object.id_intrum) :'' }
                             alt={object.category}
                             loading="lazy"
+                          /> */}
+                          <DynamicCardImg
+                            alt={object.category}
+                            src={
+                              object.thubmnail[0]
+                                ? object.thubmnail[0]
+                                : object.img[0]
+                                ? object.img[0]
+                                : object.imgUrl[0]
+                            }
                           />
-                         </Link> 
+                        </Link>
                         {loadingImg == false && (
                           <div className="flex absolute w-[100%] justify-end p-[4px]">
                             {favArr.find(
                               (obj) => obj.object.id === object.id
                             ) ? (
                               <FavoriteIcon
+                              
                                 sx={{
                                   display: "flex",
+                                  transition:'all 0.5s',
                                   justifyContent: "center",
                                   alignContent: "center",
                                   padding: "1px",
                                   // background: "#f5eeee7d",
                                   borderRadius: "100%",
-                                  color: "red",
+                                  color: "#bc3737bd",
                                   "&:hover": { color: "black" },
                                 }}
                                 onClick={() =>
@@ -162,11 +177,12 @@ export function ObjectsCardsTest({
                                   display: "flex",
                                   justifyContent: "center",
                                   alignContent: "center",
+                                  transition:'all 0.5s',
                                   padding: "1px",
                                   // background: "#f5eeee7d",
                                   borderRadius: "100%",
                                   color: "white",
-                                  "&:hover": { color: "red" },
+                                  "&:hover": { color: "#bc3737bd" },
                                 }}
                                 onClick={() =>
                                   addToFavorite(object.id, setFavArr)
@@ -270,7 +286,9 @@ export function ObjectsCardsTest({
                                 label="Общая площадь"
                                 value={`${
                                   object.square
-                                    ? Math.round(parseInt(object.square))
+                                    ? Number.isInteger(object.square)
+                                      ? Math.round(parseInt(object.square))
+                                      : object.square
                                     : ""
                                 } м²`}
                               />
@@ -286,8 +304,8 @@ export function ObjectsCardsTest({
                                 } м`}
                               />
                             )}
-                            {(object.floor && object.category == "Квартиры") ||
-                            object.category == "Комнаты" ? (
+
+                            {object.floor && object.floors && object.category == "Квартиры" || object.category == "Комнаты" &&  
                               <PropertyInfo
                                 icon={floor}
                                 label="Этаж"
@@ -301,23 +319,21 @@ export function ObjectsCardsTest({
                                     : ""
                                 }`}
                               />
-                            ) : (
-                              <PropertyInfo
-                                icon={floor}
-                                label={
-                                  object.floors
-                                    ? +object.floors < 5
-                                      ? "Этажа"
-                                      : "Этажей"
-                                    : ""
-                                }
-                                value={`${
-                                  object.floors
-                                    ? Math.round(parseInt(object.floors))
-                                    : ""
-                                }  `}
-                              />
-                            )}
+                            }
+
+                            {object.floor == null || (object.floor == "" && object.floors) && 
+                                <PropertyInfo
+                                  icon={floor}
+                                  label="Этажей"
+                                  value={
+                                    object.floors
+                                      ? Math.round(parseInt(object.floors))
+                                      : ""
+                                  }
+                                />
+                            }
+
+
                           </div>
 
                           <div className="hidden md:flex w-full md:justify-end">

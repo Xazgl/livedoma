@@ -1,53 +1,58 @@
 import { CircularProgress } from "@mui/material";
-import Image from 'next/image';
+// import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
-
+import DynamicImgSlider from "./DynamicImgSlider";
 
 type Props = {
-    showModalImg: boolean,
-    setShowModalImg: Dispatch<SetStateAction<boolean>>,
-    setHouseStepImg: (Dispatch<SetStateAction<string>>)
-    img: string
-}
+  showModalImg: boolean;
+  setShowModalImg: Dispatch<SetStateAction<boolean>>;
+  setHouseStepImg: Dispatch<SetStateAction<string>>;
+  img: string;
+};
 
 export function ImgCard({ img, setShowModalImg, setHouseStepImg }: Props) {
+  //   function showModalImgFunction(item: string) {
+  //     setShowModalImg(true);
+  //     setHouseStepImg(item);
+  //   }
 
-
-    function showModalImgFunction(item: string) {
-        setShowModalImg(true)
-        setHouseStepImg(item)
-    }
-
-
-    return (
+  return (
+    <>
+      {img !== null ? (
         <>
-            {img !== null ?
-                <>
-                    <div className="card"
-                    //    className="flex justify-center text-center flex-col w-[100%] h-[auto]
-                    //    mt-[40px] rounded-[7px] cursor-pointer duration-700  ease-in-out "
-                    >
-                        <div className="imgDiv">
-                            <Image
+          <div
+            className="card"
+            //    className="flex justify-center text-center flex-col w-[100%] h-[auto]
+            //    mt-[40px] rounded-[7px] cursor-pointer duration-700  ease-in-out "
+          >
+            <div className="imgDiv">
+              {/* <Image
                                 src={img}
                                 alt={img}
                                 layout="fill"
-                                sizes="(max-width: 750px) 80vw,
-                                            (max-width: 828px) 70vw,
-                                            (max-width: 1080px) 73vw,
+                                sizes="(max-width: 750px) 90vw,
+                                            (max-width: 828px) 85vw,
+                                            (max-width: 1080px) 85vw,
                                             80vw"
                                 loading="lazy"
                                 style={{ cursor: 'zoom-in' }}
                                 onClick={() => showModalImgFunction(img)}
-                            />
-                        </div>
-                    </div>
+                            /> */}
+              <DynamicImgSlider
+                src={img}
+                alt={img}
+                setShowModalImg={setShowModalImg}
+                setHouseStepImg={setHouseStepImg}
+                img={img}
+              />
+            </div>
+          </div>
+        </>
+      ) : (
+        <CircularProgress />
+      )}
 
-                </>
-                : <CircularProgress />
-            }
-
-            <style jsx>{`
+      <style jsx>{`
             @keyframes cblackit-open {
                     0% {
                         opacity: 0;
@@ -98,6 +103,7 @@ export function ImgCard({ img, setShowModalImg, setHouseStepImg }: Props) {
                     width: 100%;
                     height: 250px;
                     position: relative;
+                    overflow: hidden
                 }
 
 
@@ -142,7 +148,6 @@ export function ImgCard({ img, setShowModalImg, setHouseStepImg }: Props) {
                 }
 
         `}</style>
-        </>
-    )
-
+    </>
+  );
 }

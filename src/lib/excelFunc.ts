@@ -129,6 +129,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
     { name: "Политов", id: "391" },
     { name: "Максимова", id: "332" },
     { name: "Исаева", id: "39" },
+    { name: "Трофимов Николай", id: "1140" },
     { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
   ];
@@ -139,6 +140,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
 
   }
     
+  
 
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
@@ -156,15 +158,15 @@ export async function generateExcel2(applications: constructionApplications[]) {
     rejection:appl.rejection? appl.rejection : '',
     errorReejctionDone: appl.errorReejctionDone ==  true? 'Да' : 'Нет', // Ошибка исправлена?
     datecallCenter: appl.datecallCenter? appl.datecallCenter : '', //Дата обработки заявки колл центром String? //Дата обработки заявки колл центром
-    timecallCenter:appl.timecallCenter? appl.timecallCenter: '',
+    timecallCenter: appl.timecallCenter ? parseFloat(appl.timecallCenter).toLocaleString('ru-RU') : '',
     okCallCenter: appl.timecallCenter? appl.timecallCenter < '0.15' ? '✓' : '👎🏻' : '', // ОК КЦ
-    timesaletCenter:appl.timesaletCenter? appl.timesaletCenter  :'' ,
+    timesaletCenter: appl.timesaletCenter ? parseFloat(appl.timesaletCenter).toLocaleString('ru-RU') : '',// время ОП
     okSaleCenter: appl.timesaletCenter? appl.timesaletCenter < '0.15' ? '✓' : '👎🏻': '' , // ОК ОП
     dateFirstContact: appl.dateFirstContact? appl.dateFirstContact : '',
     phone:appl.phone? appl.phone : '',
     comment:appl.comment? appl.comment : [],
     url:appl.url? appl.url : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${appl.idApplicationIntrum}#request`,
-    createdAtCrm: appl.createdAtCrm ? appl.createdAtCrm : '', 
+    createdAtCrm: appl.createdAtCrm ? appl.createdAtCrm.replace(/-/g, '.') : '', // Дата в формате 2024-05-07 11:25:23 нужно убрать - на .
     createdAt: appl.createdAt ? formatDateTime(new Date(appl.createdAt)) : ''
   }));
 
@@ -180,7 +182,6 @@ export async function generateExcel2(applications: constructionApplications[]) {
  
 
 
-  // Создание вкладок Excel для каждого типа заявки
   // Создание вкладок Excel для каждого типа заявки
 Object.entries(applicationsByType).forEach(([type, data]) => {
   if (type !== 'Заявка без типа') {
@@ -209,6 +210,29 @@ Object.entries(applicationsByType).forEach(([type, data]) => {
       });
       worksheet.addRow(row);
     });
+
+    // Установка формата для колонки nextAction
+    // const nextActionColumn = columns.findIndex(col => col.field === 'nextAction') + 1;
+    // worksheet.getColumn(nextActionColumn).eachCell((cell) => {
+    //   const cellValue = cell.dataValidation;
+    // });
+
+    
+      //   // Установка числового формата для timecallCenter и timesaletCenter
+      //   const timecallCenterColumn = columns.findIndex(col => col.field === 'timecallCenter') + 1;
+      //   worksheet.getColumn(timecallCenterColumn).eachCell((cell) => {
+      //     if (typeof cell.value === 'number') {
+      //       cell.value = +cell.value 
+      //       // cell.numFmt = '#,##0.0';
+      //     }
+      // });
+  
+      // const timesaletCenterColumn = columns.findIndex(col => col.field === 'timesaletCenter') + 1;
+      //   worksheet.getColumn(timesaletCenterColumn).eachCell((cell) => {
+      //     if (typeof cell.value === 'number') {
+      //       // cell.numFmt = '#,##0.0';
+      //     }
+      // });
 
     // Управление стилями для колонки "URL"
     const postUrlColumn = columns.find(col => col.field === 'url');

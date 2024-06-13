@@ -4,7 +4,7 @@ import { NavEl, logoArr } from "./navEl";
 // import bg from "/public/images/big_img.jpg";
 
 export function Header({}) {
-  const style = `flex relative  text-white text-base 
+  const style = `flex relative  text-white text-base md:text-[18px]
     after:absolute after:width-[0%] after:h-[1.7px] after:bg-[#F15281] after:left-[50%] after:bottom-[-1px;] 
     after:hover:w-[100%]  after:hover:left-[0]  after:ease-in-out   after:duration-300   after:delay-0 
    `;
@@ -35,9 +35,9 @@ export function Header({}) {
         </div>
 
         <nav className="flex h-[80px]   w-[50%]  items-center justify-start  ">
-          <ul className="hidden lg:flex   sm:gap-6  md:gap-10  items-center  h-[20px] ">
+          <ul className="hidden lg:flex   sm:gap-6  md:gap-[60px]  items-center  h-[20px] ">
             {NavEl.map((item, index) => (
-              <Link key={index} href="/">
+              <Link key={index}  href={item.src}>
                 <li key={index} className={style}>
                   {item.title}
                 </li>

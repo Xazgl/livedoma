@@ -1,5 +1,4 @@
 import "server-only";
-import { ParentFilterBlock } from "./component/main-block-filter/ParentFilterBlock";
 import db from "../../prisma";
 import { Header } from "./component/header/Header";
 import { MobileHeader } from "./component/mainBarMobile/MobileBar";
@@ -22,7 +21,22 @@ async function getObjects(page?: string) {
     const objects = await db.objectIntrum.findMany({
       where: {
         active: true,
-        operationType:'Продам'
+        operationType:'Продам',
+        // thubmnail: {
+        //   isEmpty: false, // Проверка, что массив не пустой
+        // },
+        // OR: [
+        //   {
+        //     thubmnail: {
+        //       equals: [],
+        //     },
+        //   },
+        //   {
+        //     thubmnail: {
+        //       equals: null,
+        //     },
+        //   },
+        // ],
       },
       orderBy: {
         createdAt: "desc",

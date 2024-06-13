@@ -15,6 +15,8 @@ export async function GET(
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
   const renovation = searchParams.get("renovation");
+  const floor = searchParams.get("floor");
+  const floors = searchParams.get("floors");
   const sPage = searchParams.get("page");
   const page = sPage ? +sPage : 1;
 
@@ -62,8 +64,25 @@ export async function GET(
       },
     });
 
+
+    const countFloor = await db.objectIntrum.groupBy({
+      by: ["floor"],
+      _count: true,
+      where: {
+        ...(floor ? { floor: { contains: floor } } : {}),
+      },
+    });
+
+    const countFloors = await db.objectIntrum.groupBy({
+      by: ["floors"],
+      _count: true,
+      where: {
+        ...(floors ? { floors: { contains: floors } } : {}),
+      },
+    });
+
     //Если фильтры не выбраны, то отсылаем все доступные значения для филтра по умолчанию
-    if (!category && !rooms && !street && !companyName && !renovation) {
+    if (!category && !rooms && !street && !companyName && !renovation && !floors) {
       filter = {
         category: countCategory.map((el) => el.category),
         rooms: countRooms.map((el) => el.rooms),
@@ -71,6 +90,8 @@ export async function GET(
         //@ts-ignore
         street: countStreet.map((el) => el.street),
         companyName: countCompanyName.map((el) => el.companyName),
+        floor: countFloor.map((el) => el.floor),
+        floors: countFloors.map((el) => el.floors),
       };
     }
 
@@ -78,19 +99,23 @@ export async function GET(
     const allObjects = await db.objectIntrum.findMany({
       where: {
         active: true,
+        // thubmnail: {
+        //   isEmpty: false, // Проверка, что массив не пустой
+        // },
         ...(category ? { category: { contains: category } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(street ? { street: { contains: street } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
+        ...(floor ? { floor: { contains: floor } } : {}),
+        ...(floors ? { floors: { contains: floors } } : {}),
         ...(minPrice && maxPrice
           ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
           : {}),
       },
       orderBy: {
-        createdAt: "desc", // Сортировка по дате добавления в обратном порядке
+        createdAt: "desc" 
       },
-
       skip: (page - 1) * 10,
       take: 10,
     });
@@ -99,11 +124,16 @@ export async function GET(
     const allFilteredObject = await db.objectIntrum.findMany({
       where: {
         active: true,
+        // thubmnail: {
+        //   isEmpty: false, // Проверка, что массив не пустой
+        // },
         ...(category ? { category: { contains: category } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(street ? { street: { contains: street } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
+        ...(floor ? { floor: { contains: floor } } : {}),
+        ...(floors ? { floors: { contains: floors } } : {}),
         ...(minPrice && maxPrice
           ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
           : {}),
@@ -114,17 +144,21 @@ export async function GET(
         renovation:true,
         street: true,
         companyName: true,
+        floor:true,
+        floors:true,
         price: true,
       },
     });
 
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if (category || rooms || street || companyName || renovation ) {
+    if (category || rooms || street || companyName || renovation || floor || floors) {
       filter = {
         category: [...new Set(allFilteredObject.map((el) => el.category))],
         rooms: [...new Set(allFilteredObject.map((el) => el.rooms))],
         renovation: [...new Set(allFilteredObject.map((el) => el.renovation))],
+        floor: [...new Set(allFilteredObject.map((el) => el.floor))],
+        floors: [...new Set(allFilteredObject.map((el) => el.floors))],
         //@ts-ignore
         street: [...new Set(allFilteredObject.map((el) => el.street))],
         companyName: [

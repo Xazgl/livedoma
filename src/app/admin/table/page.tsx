@@ -70,7 +70,7 @@ async function getObjects() {
 export default async function Home() {
   const { sales, uniqueDateStages, formattedYesterday, login,  admin  } =
     await getObjects();
-    console.log( admin )
+    // console.log( admin )
 
   return (
     <>

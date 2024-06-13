@@ -13,7 +13,7 @@ type Props = {
 
 export function CategoriesCheckbox({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
   return (
-    <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
+    <Accordion defaultExpanded={true} sx={{ width: "100%" }}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"

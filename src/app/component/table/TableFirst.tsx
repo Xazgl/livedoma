@@ -66,6 +66,7 @@ export function TableFirst({sales,uniqueDateStages,formattedYesterday,}: Props) 
         // setCountObjects(el.countObjects);
         // setAllPages(el.totalPages);
         setTransactions(el.allFilteredSales);
+        console.log(transactions)
       });
   }, [value,valueEnd]);
 

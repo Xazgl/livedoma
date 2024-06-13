@@ -25,7 +25,8 @@
     "start7": "node xmlTasks/testImg.js",
     "start8": "node inparse/index.js",
     "start9": "node inparse/test.js",
-    "start10": "node prisma/wazzup.js"
+    "start10": "node prisma/wazzup.js",
+    "start11": "node xmlTasks/test.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -49,6 +50,7 @@
     "dayjs": "^1.11.11",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "fuse.js": "^7.0.0",
     "helmet": "^7.1.0",
     "jszip": "^3.10.1",
     "next": "^14.2.3",

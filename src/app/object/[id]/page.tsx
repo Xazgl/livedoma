@@ -30,12 +30,10 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
                 const answer = await res.json()
                 console.log(answer);
                 setObject(answer.currentObject)
-                setHouseImg(answer.currentObject.img)
+                answer.currentObject.img.length > 0 ? setHouseImg(answer.currentObject.img)  : setHouseImg(answer.currentObject.imgUrl)
             }
         }
-
         start()
-
     }, [params.id]);
 
 
@@ -45,7 +43,7 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
         {object &&
             <>
                 <SwiperImg
-                    img={object.img}
+                    img={object.img.length > 0 ?  object.img : object.imgUrl}
                     setShowModalImg={setShowModalImg}
                     setHouseStepImg={setHouseStepImg}
                     showModalImg={showModalImg}

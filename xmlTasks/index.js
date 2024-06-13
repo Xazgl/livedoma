@@ -112,7 +112,7 @@ async function start() {
                             roomType: roomArr,
                             saleOptions: saleArr,
                             phone: adObject.ContactPhone ? String(adObject.ContactPhone[0]) : "",
-                            img: {
+                            imgUrl : {
                                 set: cleanLinks
                             },
                             rooms: adObject.Rooms ? String(adObject.Rooms[0]) : '',
@@ -151,7 +151,7 @@ async function start() {
                         id_intrum: adObject.Id[0],
                     },
                     data: {
-                        img: {
+                        imgUrl : {
                             set: cleanLinks
                         },
                     },

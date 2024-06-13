@@ -88,7 +88,6 @@ export type Marquiz = {
   result: {};
 };
 
-
 // {
 //     raw: [
 //       { q: 'UudhPun5j1', a: 'ua5F6VMqm8' },
@@ -204,33 +203,39 @@ export type MessagesResponse = {
 export type crmAnswer = {
   status: string;
   data: {
-    customer:string,
-    request: string
-  }
-  ;
+    customer: string;
+    request: string;
+  };
 };
 
 export type FavoriteObj = {
-  object:ObjectIntrum,
-  objectId: string,
-  sessionId: string
-}
-
-
+  object: ObjectIntrum;
+  objectId: string;
+  sessionId: string;
+};
 
 export type Coordinates = {
-  longitude: string,
-  latitude: string,
-}
-
+  longitude: string;
+  latitude: string;
+};
 
 export type InparseAnswer = {
-  address: string,
-  objects: InparseObjects[]
-}
+  idIntrum: string;
+  address: string;
+  manager: string;
+  price: string;
+  rooms: string;
+  objects: InparseObjects[];
+};
 
-
-
+export type objectExcel = {
+  objectId: string;
+  address: string;
+  responsible: string;
+  rooms: string;
+  floor: string;
+  price: string;
+};
 
 //   {
 //     "status": "success",
@@ -271,30 +276,27 @@ export type InparseAnswer = {
 //     ],
 //   }
 
-
-
 export type Transaction = {
-  id: string ,
-  idSalesIntrum:           string,  
-  responsibleMain:         string, //Главный отвественный 
-  partCommissionSeller:     string, //Часть комиссии, которую отдаем с комиссии продавца 1383
-  sumCommissionBuyer:     string ,//Сумма которую отдаем с комиссии покупателя 3187
-  agentSellerName:         string, //Агент продавца  3190
-  agentSellerCommission:   string,  //Комиссия продавца 3364
-  lawyerName:         string,  //3096
-  lawyerCommission:     string, //Комиссия юриста СД 4616
-  agentBuyerName:       string, // Агент покупателя 3350
-  agentBuyerCommission:  string,  //Коммиссия  покупателя  3365
-  lawyerCommission2:    string, //Юрист Сумма к выдаче  3363
-  adress:               string, //1321
-  dateStage:            string, //3415
-  column: string
-}
-
+  id: string;
+  idSalesIntrum: string;
+  responsibleMain: string; //Главный отвественный
+  partCommissionSeller: string; //Часть комиссии, которую отдаем с комиссии продавца 1383
+  sumCommissionBuyer: string; //Сумма которую отдаем с комиссии покупателя 3187
+  agentSellerName: string; //Агент продавца  3190
+  agentSellerCommission: string; //Комиссия продавца 3364
+  lawyerName: string; //3096
+  lawyerCommission: string; //Комиссия юриста СД 4616
+  agentBuyerName: string; // Агент покупателя 3350
+  agentBuyerCommission: string; //Коммиссия  покупателя  3365
+  lawyerCommission2: string; //Юрист Сумма к выдаче  3363
+  adress: string; //1321
+  dateStage: string; //3415
+  column: string;
+};
 
 export type RequestDataApplication = {
   id: string;
-  idApplicationIntrum:string,
+  idApplicationIntrum: string;
   publish: string;
   employee_id: string;
   customer_id: string;
@@ -317,44 +319,49 @@ export type RequestDataApplication = {
       value: string;
     };
   };
-}
-
-
-
-
+};
 
 export type constructionApplicationsExcel = {
-  id:                string ,
-  idApplicationIntrum: string , 
-  translator:          string, //Источник
-  responsibleMain :    string, //Главный отвественный 
-  status :             string, //статус
-  postMeetingStage :   string, //стадия после встречи
-  desc :               string, //описание
-  typeApplication :    string, //тип заявки
-  contactedClient :    string, //специалист связался с клиентом
-  campaignUtm:         string,
-  termUtm :           string,
-  nextAction :         string, //Дата следующего действия по заявки 
+  id: string;
+  idApplicationIntrum: string;
+  translator: string; //Источник
+  responsibleMain: string; //Главный отвественный
+  status: string; //статус
+  postMeetingStage: string; //стадия после встречи
+  desc: string; //описание
+  typeApplication: string; //тип заявки
+  contactedClient: string; //специалист связался с клиентом
+  campaignUtm: string;
+  termUtm: string;
+  nextAction: string | Date; //Дата следующего действия по заявки
 
-  rejection :         string, //Отклонения работы с заявкой
-  errorReejctionDone: string, // Ошибка исправлена?
+  rejection: string; //Отклонения работы с заявкой
+  errorReejctionDone: string; // Ошибка исправлена?
 
-  datecallCenter: string, //Дата обработки заявки колл центром
-  timecallCenter: string, // Время обработки КЦ
-  okCallCenter: string,
-  timesaletCenter :string, // Дата обработки ОП
-  okSaleCenter:string,
-  
+  datecallCenter: string ; //Дата обработки заявки колл центром
+  timecallCenter: string | number | null; // Время обработки КЦ
+  okCallCenter: string;
+  timesaletCenter: string | number| null ; // время обработки ОП
+  okSaleCenter: string;
 
-  dateFirstContact :string, // Дата первого контакта
+  dateFirstContact: string; // Дата первого контакта
 
-  phone: string,
-  url :  string,
-  comment: string[],
+  phone: string;
+  url: string;
+  comment: string[];
 
-  createdAtCrm: string,
-  createdAt: string,
+  createdAtCrm: string;
+  createdAt: string;
+};
 
-}
 
+
+export type FilterInparseOptions = {
+  street?: string[];
+};
+
+
+
+export type FilterInparseProps = {
+  streets: string[];
+};

@@ -21,12 +21,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const messages: Message[] = answer.messages;
         const allContacts = await Promise.all(
           messages.map(async (message) => {
-            if (message.authorName) {
+            if (message.chatId) {
               const manager = await managerFind()
               console.log({managerid:manager} )
               const name = message.contact.name ? message.contact.name : "Нету";
               // const phone = message.authorName;
-              const phone = await normalizeWazzupNumber(message.authorName);
+              const phone = await normalizeWazzupNumber(message.chatId);
               const chatType = message.chatType ? message.chatType : "Нету";
               const text = message.text ? message.text : "Нету";
               if (phone !== "Admin") {
@@ -46,6 +46,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                   });
 
                   crmAnswer = await sendIntrumCrm(newContact, double);
+                  console.log(crmAnswer)
 
                   if (crmAnswer.status == "success") {
                     console.log(crmAnswer)
@@ -109,3 +110,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return NextResponse.json("Only POST requests allowed", { status: 405 });
   }
 }
+
+
+

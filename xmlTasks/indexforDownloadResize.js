@@ -176,22 +176,19 @@ async function objHandler(adObject) {
             id_intrum: adObject.Id[0],
         }
     });
+    console.log(findObject)
     if (findObject === null) {
+        console.log(`Создаем объект ${adObject.Id[0]}`)
         try {
             const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
             const roomArr = adObject.RoomType ? adObject.RoomType.map(room => room.Option[0]) : [];
-            console.log(roomArr);
             const saleArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : [];
-            console.log(JSON.stringify(saleArr));
             const houseServicesArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : [];
-            console.log(JSON.stringify(houseServicesArr));
             // Путь для сохранения изображений
             const photoFolderPath = path.join(__dirname, '..', 'static', 'images', 'objects', adObject.Id[0]);
-            // const photoFolderPath = path.resolve(__dirname, '../static/images/objects', adObject.Id[0]);
             // Загружаем и сохраняем изображения
             const cleanLinksNew = await downloadAndSaveImages(cleanLinks, photoFolderPath);
 
-            // console.log(cleanLinksNew);
             const newAdObject = await db.objectIntrum.create({
                 data: {
                     id_intrum: String(adObject.Id[0]),
@@ -246,37 +243,42 @@ async function objHandler(adObject) {
                 }
             });
 
-            // console.log(newAdObject);
+            console.log(`создали  ${newAdObject}`)
         } catch (error) {
             console.error(error);
             console.log(adObject.Id[0] + ' ' + parts);
         }
     } else {
-        const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
-        const roomArr = adObject.RoomType ? adObject.RoomType.map(room => room.Option[0]) : [];
-        console.log(roomArr);
-        const saleArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : [];
-        console.log(JSON.stringify(saleArr));
-        const houseServicesArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : [];
-        console.log(JSON.stringify(houseServicesArr));
-        // Путь для сохранения изображений
-        const photoFolderPath = path.resolve(__dirname, '../static/images/objects', adObject.Id[0]);
-        // Загружаем и сохраняем изображения
-        const cleanLinksNew = await downloadAndSaveImages(cleanLinks, photoFolderPath);
-        // console.log(cleanLinksNew);
+        if (findObject.thubmnail.length > 0) {
+            console.log(`Не обновляем т.к. тут уже есть thubmnail  ${adObject.Id[0]}`)
+        } else {
+            try {
 
-        const updateUser = await db.objectIntrum.update({
-            where: {
-                id_intrum: adObject.Id[0],
-            },
-            data: {
-                img: {
-                    set: cleanLinksNew.full
-                },
-                thubmnail: {
-                    set: cleanLinksNew.thumbnail
-                }
-            },
-        })
+                const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
+                // Путь для сохранения изображений
+                const photoFolderPath = path.join(__dirname, '..', 'static', 'images', 'objects', adObject.Id[0]);
+                // Загружаем и сохраняем изображения
+                const cleanLinksNew = await downloadAndSaveImages(cleanLinks, photoFolderPath);
+
+
+                const updateAdObject = await db.objectIntrum.update({
+                    where: {
+                        id_intrum: adObject.Id[0]
+                    },
+                    data: {
+                        img: {
+                            set: cleanLinksNew.full
+                        },
+                        thubmnail: {
+                            set: cleanLinksNew.thumbnail
+                        },
+                    },
+                })
+                console.log(`обновили ${updateAdObject.id_intrum}`)
+            } catch (error) {
+                console.error(error);
+                console.log(adObject.Id[0] + ' ' + parts);
+            }
+        }
     }
 }

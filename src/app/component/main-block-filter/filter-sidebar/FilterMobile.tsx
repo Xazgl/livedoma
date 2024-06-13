@@ -23,6 +23,9 @@ import styles from "./Filter.module.css";
 import { CompanySelect } from "../../filterFields/company/CompanySelect";
 import TuneIcon from "@mui/icons-material/Tune";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Renovation } from "../../filterFields/renovation/Renovation";
+import { Floor } from "../../filterFields/floor/Floor";
+import RoomIcon from '@mui/icons-material/Room';
 
 type Props = {
   objects: allObjects;
@@ -43,15 +46,28 @@ type Props = {
   countObjects: number;
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
-  resetPageAndReloadData:() => void;
+  resetPageAndReloadData: () => void;
 };
 
 const filterRow = "flex  w-full  p-4  h-auto";
 
-export function FilterMobile({filteblackProps,objects,currentFilter,setCurrentFilter,setFilteredHouse,
-maxPrice,minPrice,setMinPrice,setMaxPrice,valueSliderPrice,setValueSliderPrice,countObjects,
-favArr,setFavArr,resetPageAndReloadData}: Props) {
-
+export function FilterMobile({
+  filteblackProps,
+  objects,
+  currentFilter,
+  setCurrentFilter,
+  setFilteredHouse,
+  maxPrice,
+  minPrice,
+  setMinPrice,
+  setMaxPrice,
+  valueSliderPrice,
+  setValueSliderPrice,
+  countObjects,
+  favArr,
+  setFavArr,
+  resetPageAndReloadData,
+}: Props) {
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -75,7 +91,7 @@ favArr,setFavArr,resetPageAndReloadData}: Props) {
       floor: [],
       wallsType: [],
     }));
-    resetPageAndReloadData()
+    resetPageAndReloadData();
   }
 
   const [expanded, setExpanded] = useState<string | false>(false);
@@ -96,7 +112,7 @@ favArr,setFavArr,resetPageAndReloadData}: Props) {
             color: "white",
             margin: "1px",
             width: "100%",
-            position:'relative'
+            position: "relative",
           }}
         >
           <AccordionSummary
@@ -117,7 +133,7 @@ favArr,setFavArr,resetPageAndReloadData}: Props) {
             </h1>
           </AccordionSummary>
           <AccordionDetails
-            sx={{  backgroundColor: "#f2f2f21a", width: "100%"  }}
+            sx={{ backgroundColor: "#f2f2f21a", width: "100%" }}
             // sx={{zIndex:'999', backgroundColor: "#f2f2f21a", width: "100%",position:`${expanded ? ' absolute' : 'relative'}`    }}
           >
             <div
@@ -126,13 +142,25 @@ favArr,setFavArr,resetPageAndReloadData}: Props) {
               id={styles.aside}
             >
               <div className={filterRow}>
-                <StreetSelect
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                  resetPageAndReloadData={resetPageAndReloadData}
-
-                />
+                <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography sx={{ fontSize: "14px" }}>
+                      <RoomIcon  /> Местоположение
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <StreetSelect
+                      filteblackProps={filteblackProps}
+                      currentFilter={currentFilter}
+                      setCurrentFilter={setCurrentFilter}
+                      resetPageAndReloadData={resetPageAndReloadData}
+                    />
+                  </AccordionDetails>
+                </Accordion>
               </div>
 
               <div className={filterRow}>
@@ -141,7 +169,6 @@ favArr,setFavArr,resetPageAndReloadData}: Props) {
                   currentFilter={currentFilter}
                   setCurrentFilter={setCurrentFilter}
                   resetPageAndReloadData={resetPageAndReloadData}
-
                 />
               </div>
 
@@ -154,13 +181,26 @@ favArr,setFavArr,resetPageAndReloadData}: Props) {
                 />
               </div>
 
-              {/* <div className={filterRow}>
-                <CitySelect
+              <div className={filterRow}>
+                <Renovation
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                />
+                {/* <CitySelect
                     filteblackProps={filteblackProps}
                     currentFilter={currentFilter}
                     setCurrentFilter={setCurrentFilter}
+                /> */}
+              </div>
+
+              <div className={filterRow}>
+                <Floor
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
                 />
-            </div> */}
+              </div>
 
               <div className={filterRow}>
                 <Accordion sx={{ width: "100%" }}>
@@ -191,7 +231,7 @@ favArr,setFavArr,resetPageAndReloadData}: Props) {
                     <Link
                       href={`/cart/${favArr[0].sessionId}`}
                       className="w-[100%] h-[100%] text-white"
-                      style={{textDecoration:'none'}}
+                      style={{ textDecoration: "none" }}
                     >
                       <a rel="noopener noreferrer">
                         <button
