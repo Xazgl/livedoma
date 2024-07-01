@@ -54,13 +54,15 @@ COPY prisma ./prisma/
 COPY next.config.js ./
 
 COPY xmlTasks ./xmlTasks 
-# COPY static ./static/
+COPY static ./static
 RUN mkdir -p static/images
 COPY skillspace ./skillspace 
 COPY report ./report
 COPY applications ./applications
-COPY insurance ./insurance` 
+COPY insurance ./insurance 
 COPY inparse ./inparse
+COPY statictwo ./statictwo
+# COPY static ./static/crm
 
 
 # COPY .env.prod .env
@@ -79,6 +81,7 @@ RUN (crontab -u $(whoami) -l; echo "0 */1 * * * /usr/local/bin/node /app/report/
     
  
 RUN (crontab -u $(whoami) -l; echo "0 */2 * * * /usr/local/bin/node /app/applications/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/indexSansara.js" ) | crontab -u $(whoami) -
 
 RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insurance/index.js" ) | crontab -u $(whoami) -
 

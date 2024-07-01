@@ -70,6 +70,9 @@ async function cleanAddressNew(address:string) {
   return cleanedAddress;
 }
 
+
+
+
 // Функция для проверки совпадения адресов
 export async function isExactMatchThree(address1:string,searchAddress:string ) {
 
@@ -118,6 +121,35 @@ export async function isExactMatchThree(address1:string,searchAddress:string ) {
   
   return false;
 }
+
+
+export function funcCity(input:string) {
+  const cityArr = [
+      { name: "Волгоград" },
+      { name: "Волжский" },
+      { name: "Фролово" },
+      { name: "Среднеахтубинский" },
+      { name: "Елань" },
+      { name: "Михайловка" },
+      { name: "Урюпинск" },
+      { name: "Калач-на-Дону" }
+  ];
+
+  // Проверяем, есть ли значение в массиве городов
+  const cityExists = cityArr.some(city => city.name === input);
+
+  if (cityExists) {
+      return input;
+  }
+
+  if (input !== 'Не указан') {
+      return '';
+  }
+
+  return input;
+}
+
+
 
 
 // // Функция для очистки и нормализации строки адреса с учетом сокращений и объединения цифр с буквами

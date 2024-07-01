@@ -3,7 +3,15 @@ import { ObjectIntrum } from "@prisma/client";
 import Image from "next/image";
 import { getRoomsEnding, logoFind, numberWithSpaces } from "./functionCard";
 import ProgressBar from "../../progressBar/ProgressBar";
-import { Dispatch, MutableRefObject, RefObject, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  Fragment,
+  MutableRefObject,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { PaginationRow } from "../../paginationRow/PaginatiowRow";
 import PropertyInfo from "../../currentObjComponents/description/PropertyInfo";
 import size from "/public/svg/size.svg";
@@ -26,12 +34,11 @@ type Props = {
   loading: boolean;
   allPages: number;
   currentPage: number;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
   handlePageChange: (page: number) => void;
   // handlePageChangeNew:(event: React.ChangeEvent<unknown>, value: number) => void
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
-  refCardsObjects:RefObject<HTMLDivElement>,
+  refCardsObjects: RefObject<HTMLDivElement>;
 };
 
 export function ObjectsCardsTest({
@@ -39,7 +46,6 @@ export function ObjectsCardsTest({
   loading,
   allPages,
   currentPage,
-  setCurrentPage,
   handlePageChange,
   setFavArr,
   refCardsObjects,
@@ -64,33 +70,29 @@ export function ObjectsCardsTest({
       });
       if (res.ok) {
         const answer = await res.json();
-        console.log(answer);
+        // console.log(answer);
         setLoadingImg(false);
       }
     }
     start();
   }, []);
 
-  useEffect(() => {
-    // console.log(favArr.length);
-  }, [favArr]);
-
-  const fetchData = async (id: string) => {
-    try {
-      const response = await fetch(`/api/${id}`);
-      const data = await response.json();
-      return data.imgSrc ? data.imgSrc : "";
-    } catch (error) {
-      console.error("Ошибка при загрузке изображения:", error);
-    }
-  };
+  // const fetchData = async (id: string) => {
+  //   try {
+  //     const response = await fetch(`/api/${id}`);
+  //     const data = await response.json();
+  //     return data.imgSrc ? data.imgSrc : "";
+  //   } catch (error) {
+  //     console.error("Ошибка при загрузке изображения:", error);
+  //   }
+  // };
 
   return (
     <>
       <main
         id={styles.main}
         className={`flex w-full  md:w-[80%]   p-7   ${style} relative `}
-        ref={refCardsObjects} 
+        ref={refCardsObjects}
       >
         {loading ? (
           <ProgressBar />
@@ -100,22 +102,17 @@ export function ObjectsCardsTest({
           <ShoppingBagIcon sx={{color:"black"}}/>
           </div> */}
             {filteredHouse.map((object) => (
-              <>
-                <div
-                  // href={`/object/${object.id}`}
-                  key={object.id}
-                  className="flex  justify-center  md:justify-start md:w-full  mt-[20px] md:mt-[0px]"
-                >
+              <Fragment key={object.id}>
+                <div className="flex  justify-center  md:justify-start md:w-full  mt-[20px] md:mt-[0px]">
                   <article
                     key={object.id}
-                    style={{transition:"all 1s"}}
-                    // rounded-[12px] border-[solid] rounded border-[#c9d1e5]   border-[0.60px]
+                    style={{ transition: "all 1s" }}
                     className="flex   flex-col  md:flex-row  w-[300px] md:w-full  h-[100%] md:h-[300px]  sm:p-2  mt-[10px]  md:gap-[50px]
                                  md:border-none md:border-[transparent] md:border-[0px] 
                                 cursor-pointer   md:duration-700   md:ease-in-out   md:hover:shadow-2xl"
                   >
                     <div className="flex  flex-col  w-[auto]  h-[100%]    md:justify-around">
-                      <div className="flex   w-[100%] h-[200px] sm:w-[300px]  sm:h-[260px]   lg:w-[400px] lg:h-[98%]  relative">
+                      <div className="flex   w-[100%] h-[200px] sm:w-[300px]  sm:h-[260px]   lg:w-[400px] lg:h-[98%]  relative overflow-hidden">
                         <Link
                           href={`/object/${object.id}`}
                           className="w-[100%] h-[100%]"
@@ -155,10 +152,9 @@ export function ObjectsCardsTest({
                               (obj) => obj.object.id === object.id
                             ) ? (
                               <FavoriteIcon
-                              
                                 sx={{
                                   display: "flex",
-                                  transition:'all 0.5s',
+                                  transition: "all 0.5s",
                                   justifyContent: "center",
                                   alignContent: "center",
                                   padding: "1px",
@@ -177,9 +173,8 @@ export function ObjectsCardsTest({
                                   display: "flex",
                                   justifyContent: "center",
                                   alignContent: "center",
-                                  transition:'all 0.5s',
+                                  transition: "all 0.5s",
                                   padding: "1px",
-                                  // background: "#f5eeee7d",
                                   borderRadius: "100%",
                                   color: "white",
                                   "&:hover": { color: "#bc3737bd" },
@@ -257,13 +252,13 @@ export function ObjectsCardsTest({
                           </h3>
 
                           <h2 className="flex text-[#9da1ab] text-[12px]  md:text-[16px]">
-                            {`${object.state},${object.city},${object.street}`
+                            {`${object.state}, ${object.city},${object.street == 'Не указана'? '' :  `, ${object.street}`}`
                               .length > 70
-                              ? `${`${object.state},${object.city},${object.street}`.slice(
+                              ? `${`${object.state}, ${object.city} ${object.street == 'Не указана'? '' :  `, ${object.street}`}`.slice(
                                   0,
                                   70
                                 )}...`
-                              : `${object.state},${object.city},${object.street}`}{" "}
+                              : `${object.state}, ${object.city} ${object.street == 'Не указана'? '' :  `, ${object.street}` }`}{" "}
                           </h2>
                           <div className="flex md:hidden  w-full">
                             <Image
@@ -305,23 +300,27 @@ export function ObjectsCardsTest({
                               />
                             )}
 
-                            {object.floor && object.floors && object.category == "Квартиры" || object.category == "Комнаты" &&  
-                              <PropertyInfo
-                                icon={floor}
-                                label="Этаж"
-                                value={`${
-                                  object.floor
-                                    ? Math.round(parseInt(object.floor))
-                                    : ""
-                                } из ${
-                                  object.floors
-                                    ? Math.round(parseInt(object.floors))
-                                    : ""
-                                }`}
-                              />
-                            }
+                            {(object.floor &&
+                              object.floors &&
+                              object.category == "Квартиры") ||
+                              (object.category == "Комнаты" && (
+                                <PropertyInfo
+                                  icon={floor}
+                                  label="Этаж"
+                                  value={`${
+                                    object.floor
+                                      ? Math.round(parseInt(object.floor))
+                                      : ""
+                                  } из ${
+                                    object.floors
+                                      ? Math.round(parseInt(object.floors))
+                                      : ""
+                                  }`}
+                                />
+                              ))}
 
-                            {object.floor == null || (object.floor == "" && object.floors) && 
+                            {object.floor == null ||
+                              (object.floor == "" && object.floors && (
                                 <PropertyInfo
                                   icon={floor}
                                   label="Этажей"
@@ -331,9 +330,7 @@ export function ObjectsCardsTest({
                                       : ""
                                   }
                                 />
-                            }
-
-
+                              ))}
                           </div>
 
                           <div className="hidden md:flex w-full md:justify-end">
@@ -346,8 +343,6 @@ export function ObjectsCardsTest({
                               loading="lazy"
                             />
                           </div>
-
-                          {/* <h4 dangerouslySetInnerHTML={{ __html: object.description? object.description : '' }}></h4> */}
                         </div>
                       </>
                     </Link>
@@ -356,8 +351,9 @@ export function ObjectsCardsTest({
                 <div className="hidden md:flex w-full justify-center">
                   <div className="flex  w-[95%]  h-[0.80px]  bg-[#f1f2f4] "></div>
                 </div>
-              </>
+              </Fragment>
             ))}
+
             <PaginationRow
               currentPage={currentPage}
               totalPages={allPages}

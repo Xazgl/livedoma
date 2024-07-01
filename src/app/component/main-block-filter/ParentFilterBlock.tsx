@@ -6,22 +6,9 @@ import { Filter } from "./filter-sidebar/Filter";
 import { ObjectsCardsTest } from "./objectsCards/ObjectsCardsTest";
 import { FilterMobile } from "./filter-sidebar/FilterMobile";
 import { SelectCategory } from "../selectCategory/SelectCategory";
-import {
-  categoryFilter,
-  ceilingHeightFilter,
-  cityFilter,
-  companyNameFilter,
-  floorFilter,
-  floorsFilter,
-  freightElevatorFilter,
-  operationTypeFilter,
-  passengerElevatorFilter,
-  priceFilter,
-  renovationFilter,
-  roomsFilter,
-  squareFilter,
-  stateFilter,
-  streetFilter,
+import {categoryFilter,ceilingHeightFilter, cityFilter,companyNameFilter,floorFilter,
+  floorsFilter,freightElevatorFilter,operationTypeFilter,passengerElevatorFilter,priceFilter,
+  renovationFilter,roomsFilter,squareFilter,stateFilter,streetFilter,
   wallsTypeFilter,
 } from "./filter-sidebar/myFilters";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -61,6 +48,9 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     if (params.has("category")) {
       filterFromParams.category = params.getAll("category");
     }
+    if (params.has("city")) {
+      filterFromParams.city = params.getAll("city");
+    }
     if (params.has("rooms")) {
       filterFromParams.rooms = params.getAll("rooms");
     }
@@ -77,7 +67,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
       filterFromParams.street = params.getAll("street");
     }
     if (params.has("companyName")) {
-      filterFromParams.companyName= params.getAll("companyName");
+      filterFromParams.companyName = params.getAll("companyName");
     }
     // if (params.has("minPrice")) {
     //   filterFromParams.minPrice = params.getAll("minPrice");
@@ -96,7 +86,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
 
 
   /////// Состояния для паганации
-      const params = new URLSearchParams(searchParams);
+  const params = new URLSearchParams(searchParams);
 
   const [currentPage, setCurrentPage] = useState(page); // текущая страница
 
@@ -134,7 +124,6 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
   //Загрузка при изменении фильтра и сброс страницы на 1
   useEffect(() => {
     setLoading(true);
-  //  setCurrentPage(1);
     setTimeout(() => {
       setLoading(false);
     }, 500);
@@ -195,6 +184,11 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
         params.append("category", cat);
       });
     }
+    if (currentFilter.city) {
+      currentFilter.city.forEach((cit) => {
+        params.append("city", cit);
+      });
+    }
     if (currentFilter.rooms) {
       currentFilter.rooms.forEach((room) => {
         params.append("rooms", room);
@@ -247,6 +241,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           return {
             ...prevFilterState,
             categories: el.filter.category,
+            cities: el.filter.city,
             rooms: el.filter.rooms,
             renovationTypes: el.filter.renovation,
             floor:el.filter.floor,
@@ -257,7 +252,6 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           };
         });
       });
-    // console.log(filteblackProps);
   }, [currentFilter, currentPage]);
 
   //Конкретные выбранные фильтры
@@ -354,9 +348,6 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           maxPrice={maxPrice}
           setMinPrice={setMinPrice}
           setMaxPrice={setMaxPrice}
-          currentPage={currentPage}
-          setAllPages={setAllPages}
-          setCurrentPage={setCurrentPage}
           filteblackProps={filteblackProps}
           valueSliderPrice={valueSliderPrice}
           setValueSliderPrice={setValueSliderPrice}
@@ -367,7 +358,6 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
         />
 
         <ObjectsCardsTest
-          setCurrentPage={setCurrentPage}
           allPages={allPages}
           currentPage={currentPage}
           loading={loading}
@@ -389,9 +379,6 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           maxPrice={maxPrice}
           setMinPrice={setMinPrice}
           setMaxPrice={setMaxPrice}
-          currentPage={currentPage}
-          setAllPages={setAllPages}
-          setCurrentPage={setCurrentPage}
           filteblackProps={filteblackProps}
           valueSliderPrice={valueSliderPrice}
           setValueSliderPrice={setValueSliderPrice}

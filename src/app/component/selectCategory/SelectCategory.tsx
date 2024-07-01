@@ -26,6 +26,7 @@ import {
 import { FilterUserOptions, allObjects } from "../../../../@types/dto";
 // import { Slide } from "@mui/material"
 
+
 type Props = {
   objects: allObjects;
   currentFilter: FilterUserOptions;
@@ -122,7 +123,7 @@ export function SelectCategory({
     after:duration-[1000ms]   after:ease-in-out   overflow-hidden
     after:w-full after:h-full hover:after:bg-[#0000003f] hover:after:absolute`;
   
-    const title = "flex mt-[5px] w-full text-black text-[14px] md:text-[20px]";
+  const title = "flex mt-[5px] w-full text-black text-[14px] md:text-[20px]";
   
   return (
     <>
@@ -144,60 +145,6 @@ export function SelectCategory({
           </div>
         ))}
       </section>
-
-
-
-      {/*
-       <Slide in={true} direction="right" timeout={3000}> 
-
-      {/* 
-      <section className="flex  flex-wrap justify-center gap-[20px] sm:gap-[0px] w-full h-[200px] sm:justify-around  md:justify-between mt-[40px]">
-        <div className="flex  flex-col w-[auto]  cursor-pointer ">
-          <div
-            className={styleCard}
-            style={{
-              background: `url(${bg1.src})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-            }}
-            onClick={createCategoryHandler("Квартиры")}
-          ></div>
-          <h1 className={title}>Квартиры</h1>
-        </div>
-
-        <div className="flex  flex-col w-[auto]  cursor-pointer ">
-          <div
-            className={styleCard}
-            style={{
-              background: `url(${bg2.src})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-            }}
-            onClick={createCategoryHandler("Коммерческая недвижимость")}
-          ></div>
-          <h1 className={title}>Коммерческая недвижимость</h1>
-        </div>
-
-        <div className="flex  flex-col w-[auto]  cursor-pointer ">
-          <div
-            className={styleCard}
-            style={{
-              background: `url(${bg3.src})`,
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-            }}
-            onClick={createCategoryHandler("Дома, дачи, коттеджи")}
-          ></div>
-          <h1 className={title}>Дома, дачи, коттеджи</h1>
-        </div>
-      </section> 
-      </Slide> 
-      */}
-
-
     </>
   );
 }

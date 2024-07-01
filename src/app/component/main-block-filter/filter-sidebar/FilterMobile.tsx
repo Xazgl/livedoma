@@ -26,6 +26,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Renovation } from "../../filterFields/renovation/Renovation";
 import { Floor } from "../../filterFields/floor/Floor";
 import RoomIcon from '@mui/icons-material/Room';
+import { CitySelect } from "../../filterFields/adress/CitySelect";
 
 type Props = {
   objects: allObjects;
@@ -37,9 +38,6 @@ type Props = {
   minPrice: number;
   setMinPrice: Dispatch<SetStateAction<number>>;
   setMaxPrice: Dispatch<SetStateAction<number>>;
-  setAllPages: Dispatch<SetStateAction<number>>;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
-  currentPage: number;
   filteblackProps: FilteblackProps;
   valueSliderPrice: [number, number];
   setValueSliderPrice: Dispatch<SetStateAction<[number, number]>>;
@@ -164,6 +162,15 @@ export function FilterMobile({
               </div>
 
               <div className={filterRow}>
+               <CitySelect
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              </div>
+
+              <div className={filterRow}>
                 <CategoriesCheckbox
                   filteblackProps={filteblackProps}
                   currentFilter={currentFilter}
@@ -255,9 +262,11 @@ export function FilterMobile({
               )}
 
               <div className={filterRow}>
+             
                 <button
+                  style={{ transition: "all 1s" }}
                   className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded color-[white] 
-                     bg-[#F15281]  hover:bg-[#54529F]  cursor-pointer 
+                     bg-[#563D82]  hover:bg-[#54529F]  cursor-pointer 
                        transition  duration-700  ease-in-out "
                   onClick={resetFilteblackCars}
                 >

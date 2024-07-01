@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { InparseObjects } from "../../../../prisma";
 import { isExactMatchThree } from "@/lib/foundAdress";
-import { normalizeAddressApi } from "@/lib/inparseExcel";
+// import { normalizeAddressApi } from "@/lib/inparseExcel";
+
+
+
 
 export async function GET(req: NextRequest) {
   if (req.method === "GET") {
@@ -13,8 +16,8 @@ export async function GET(req: NextRequest) {
       ]);
 
       let results: InparseObjects[] = [];
-      //делаем батч по 500 объектов
-      const batchSize = 500;
+      //делаем батч по 200 объектов
+      const batchSize = 100;
 
       for (let i = 0; i < allInparseObjects.length; i += batchSize) {
         const batch = allInparseObjects.slice(i, i + batchSize);
@@ -40,6 +43,91 @@ export async function GET(req: NextRequest) {
     }
   }
 }
+
+
+// export async function GET(req: NextRequest) {
+//   if (req.method === "GET") {
+//     try {
+//       // Загружаем все объекты из баз данных параллельно
+//       const [allInparseObjects, allIntumAddresses] = await Promise.all([
+//         db.inparseObjects.findMany(),
+//         db.objectIntrum.findMany({ select: { street: true } }).then(objects => objects.map(obj => obj.street)),
+//       ]);
+
+//       let results: InparseObjects[] = [];
+//       const batchSize = 400;// батч по 400 объектов 
+
+//       const limitConcurrency = async (tasks: any[], limit: number) => {
+//         const results = [];
+//         const executing: Promise<void>[] = [];
+
+//         for (const task of tasks) {
+//           const p = Promise.resolve().then(() => task());
+//           results.push(p);
+
+//           if (limit <= tasks.length) {
+//             const e: any = p.then(() => executing.splice(executing.indexOf(e), 1));
+//             executing.push(e);
+//             if (executing.length >= limit) {
+//               await Promise.race(executing);
+//             }
+//           }
+//         }
+
+//         return Promise.all(results);
+//       };
+
+//       const processBatch = async (batch: InparseObjects[]) => {
+//         const tasks = batch.map(inparseObj => async () => {
+//           const isUnique = await Promise.all(allIntumAddresses.map(address => {
+//             console.log(inparseObj.idInparse)
+//             return isExactMatchThree(address!, inparseObj.address);
+//           })).then(matches => matches.every(match => match === false));
+
+//           if (isUnique) {
+//             results.push(inparseObj);
+//           }
+//         });
+
+//         await limitConcurrency(tasks, 7); // Ограничение до 7 параллельных задач
+//       };
+
+//       const batches = [];
+//       for (let i = 0; i < allInparseObjects.length; i += batchSize) {
+        
+//         batches.push(allInparseObjects.slice(i, i + batchSize));
+//       }
+
+//       await Promise.all(batches.map(processBatch));
+
+//       return NextResponse.json({ results }, { status: 200 });
+//     } catch (error) {
+//       console.error("Error processing request:", error);
+//       return NextResponse.json(
+//         { error: "Internal Server Error" },
+//         { status: 500 }
+//       );
+//     }
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // export async function GET(req: NextRequest) {
 //   if (req.method === "GET") {

@@ -5,7 +5,7 @@ const ProgressBar = () => {
   const [progress, setProgress] = React.useState(13);
 
   React.useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 500);
+    const timer = setTimeout(() => setProgress(66), 800);
     return () => clearTimeout(timer);
   }, []);
 
@@ -18,7 +18,7 @@ const ProgressBar = () => {
       value={progress}
     >
       <Progress.Indicator
-        className="   bg-[#F15281]  w-full h-full transition-transform duration-[660ms] ease-[cubic-bezier(0.65, 0, 0.35, 1)] relative"
+        className="   bg-[#563D82]  w-full h-full transition-transform duration-[660ms] ease-[cubic-bezier(0.65, 0, 0.35, 1)] relative"
         style={{ transform: `translateX(-${100 - progress}%)` }}
       >
 

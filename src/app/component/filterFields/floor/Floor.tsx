@@ -13,15 +13,6 @@ type Props = {
 
 export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) {
 
-//   useEffect(() => {
-//         if (currentFilter.category && currentFilter.category[0] === "Дома, дачи, коттеджи") {
-//           setCurrentFilter((prevFilterState) => ({
-//             ...prevFilterState,
-//             floor: []
-//           }));
-//         }
-//   }, [currentFilter.category, setCurrentFilter]);
-
   const floorOptions = filteblackProps.floor
     .map((floor) => (floor.trim() === "" ? "Не указан" : floor.trim()))
     .sort((a, b) => {
@@ -56,8 +47,6 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
       }
     });
 
-  // console.log({filteblackProps,currentFilter})
-
   return (
     <div className="flex flex-col  w-full gap-[5px]">
       <Accordion sx={{ width: "100%" }}>
@@ -73,7 +62,6 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
         </AccordionSummary>
         <AccordionDetails>
           <div className="flex flex-col w-full text-black">
-            {/* Дома, дачи, коттеджи */}
             {currentFilter.category && currentFilter.category[0] !== "Дома, дачи, коттеджи" && (
               <>
                 <h4>Этаж</h4>

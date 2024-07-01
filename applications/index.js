@@ -99,6 +99,7 @@ async function start() {
             phone: getField(application.fields, "5033"),
             url: getField(application.fields, "5032"),
             comment: await commentArr(application.id),
+            typeApplicationCrm:"ЖДД",
             createdAtCrm: application.date_create,
             createdAt: new Date(`${application.date_create}`)
           },
@@ -126,6 +127,7 @@ async function start() {
             phone: getField(application.fields, "5033"),
             url: getField(application.fields, "5032"),
             comment: await commentArr(application.id),
+            typeApplicationCrm:"ЖДД",
             createdAtCrm: application.date_create,
             createdAt: new Date(`${application.date_create}`)
           },

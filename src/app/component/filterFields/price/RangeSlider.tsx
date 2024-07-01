@@ -49,7 +49,7 @@ export default function RangeSlider({minPrice,maxPrice,valueSliderPrice,setValue
   useEffect(() => {
     debounceHandler(() => {
       // debugger
-      console.log("debounceHandler");
+      // console.log("debounceHandler");
       setValueSliderPrice(value);
     });
   }, [value]);

@@ -167,7 +167,7 @@ const handleChange2 = async () => {
                 },
               }}
             >
-              Загрузить объекты <FileUploadIcon sx={{ fontSize: "22px" }} />
+              Загрузить объекты Биг <FileUploadIcon sx={{ fontSize: "22px" }} />
             </Button>
           </label>
           <div className="flex w-[78px] h-[90px]   mt-[20px] relative ">

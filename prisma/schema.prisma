@@ -260,6 +260,9 @@ model constructionApplications {
 
   createdAtCrm String?
 
+
+  typeApplicationCrm String @default("ЖДД")// Тип заявки ЖДД или Сансара 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

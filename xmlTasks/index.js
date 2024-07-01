@@ -35,32 +35,44 @@ async function start() {
             }
         }))).filter(ad => ad !== null).flat()
 
-         // Получаем все объекты из базы данных
-         const dbObjects = await db.objectIntrum.findMany();
-         // Получаем идентификаторы объектов из базы данных
-         const dbObjectIds = dbObjects.map(obj => obj.id_intrum);
-         // Получаем идентификаторы объектов из XML-файлов
-         const xmlObjectIds = adsObjects.map(obj => obj.Id[0]);
- 
-         // Удаляем объекты из базы данных, которых нет в XML-файлах
-         const objectsToDelete = dbObjectIds.filter(id => !xmlObjectIds.includes(id));
-         await Promise.all(objectsToDelete.map(async (id) => {
-             await db.objectIntrum.delete({
-                 where: {
-                     id_intrum: id
-                 }
-             });
-             console.log(`Объект удален из базы с  ${id}  т.к. он не найден в фиде`);
-         }));
+        // Получаем все объекты из базы данных
+        const dbObjects = await db.objectIntrum.findMany();
+        // Получаем идентификаторы объектов из базы данных
+        const dbObjectIds = dbObjects.map(obj => obj.id_intrum);
+        // Получаем идентификаторы объектов из XML-файлов
+        const xmlObjectIds = adsObjects.map(obj => obj.Id[0]);
+
+        // Удаляем объекты из базы данных, которых нет в XML-файлах
+        const objectsToDelete = dbObjectIds.filter(id => !xmlObjectIds.includes(id));
+        await Promise.all(objectsToDelete.map(async (id) => {
+            await db.objectIntrum.delete({
+                where: {
+                    id_intrum: id
+                }
+            });
+            console.log(`Объект удален из базы с  ${id}  т.к. он не найден в фиде`);
+        }));
 
         for (const adObject of adsObjects) {
+
+            let companyNameStr = adObject.CompanyName ? (adObject.CompanyName[0] === "Живем дома" || adObject.CompanyName[0] === "АН Живем дома" ? "Живем дома" : adObject.CompanyName[0]) : "Владис"
+            let state = ''
+            let city = ''
+            let street = ''
             let str = adObject.Address[0]
-            // Разделяем строку по запятой и удаляем лишние пробелы
-            let parts = str.split(',').map(part => part.trim());
-            // Извлекаем нужные элементы
-            let state = parts[1];
-            let city = parts[2];
-            let street = parts.slice(3).join(', '); // Объединяем элементы начиная с индекса 3 через запятую
+            if (companyNameStr !== 'Владис') {
+                // Разделяем строку по запятой и удаляем лишние пробелы
+                let parts = str.split(',').map(part => part.trim());
+                // Извлекаем нужные элементы
+                state = parts[1];
+                city = parts[2];
+                street = parts.slice(3).join(', '); // Объединяем элементы начиная с индекса 3 через запятую
+            } else {
+                let parts = str.split(',').map(part => part.trim());
+                state = parts[1].trim();
+                city = parts[1].trim();
+                street = parts.slice(2).filter(Boolean).join(' ').trim();
+            }
 
             const findObject = await db.objectIntrum.findUnique({
                 where: {
@@ -70,13 +82,56 @@ async function start() {
             //  console.log(JSON.stringify(adObject.RoomType[0].Option[0]))
 
 
+            function funcState(input) {
+                const cityRoots = [
+                    { root: "Волгоград", name: "Волгоградская область" },
+                    { root: "Волж", name: "Волгоградская область" },
+                    { root: "Краснодар", name: "Краснодарский край" },
+                    { root: "Астрахан", name: "Астраханская область" }
+                ];
+
+                for (const city of cityRoots) {
+                    if (input.includes(city.root)) {
+                        return city.name;
+                    }
+                }
+
+                return input;
+            }
+
+
+            function funcCity(input) {
+                const cityRoots = [
+                    { root: "Волгоград", name: "Волгоград" },
+                    { root: "Волж", name: "Волжский" },
+                    // { root: "Городищ", name: "Волг. обл. Городищенский" },
+                    { root: "Фролов", name: "Фролово" },
+                    { root: "ахтуб", name: "Среднеахтубинский" },
+                    { root: "Елан", name: "Елань" },
+                    { root: "Михайл", name: "Михайловка" },
+                    { root: "Урюпинск", name: "Урюпинск" },
+                    { root: "Калач", name: "Калач-на-Дону" },
+                    // { root: "Новоникол", name: "Волг. обл. Новониколаевский" }
+                ];
+
+                for (const city of cityRoots) {
+                    if (input.includes(city.root)) {
+                        return city.name;
+                    }
+                }
+
+                return input;
+            }
+
+
             if (findObject === null) {
                 try {
                     // console.log(JSON.stringify(adObject.BalconyOrLoggia[0] + adObject.WallsType[0]))
 
-                    const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
+                    const cleanLinks = adObject.Images ? adObject.Images[0].Image.map(image => image.$.url) : [''];
                     // console.log(JSON.stringify(cleanLinks))
-
+                    console.log({cleanLinks, obj:adObject.Id[0] })
+                    
                     const roomArr = adObject.RoomType ? adObject.RoomType.map(room => room.Option[0]) : []
                     console.log(roomArr)
                     const saleArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
@@ -91,14 +146,11 @@ async function start() {
                             id_intrum: String(adObject.Id[0]),
                             category: String(adObject.Category[0]),
                             operationType: String(adObject.OperationType[0]),
-                            state: state ? state : "Не указан",
-                            city: city ? city : 'Не указан',
+                            state: state ? funcState(state) : "Не указан",
+                            city: city ? funcCity(city) : 'Не указан',
                             street: street ? street : 'Не указана',
                             price: adObject.Price ? Number(adObject.Price[0]) : 0,
-                            companyName: adObject.CompanyName ?
-                                (adObject.CompanyName[0] === "Живем дома" || adObject.CompanyName[0] === "АН Живем дома" ? "Живем дома" : adObject.CompanyName[0])
-                                : "Владис",
-
+                            companyName: companyNameStr,
                             // companyName: adObject.CompanyName ? String(adObject.CompanyName[0]) : "Владис",
                             managerName: adObject.ManagerName ? String(adObject.ManagerName[0]) : "Живем Дома",
                             description: adObject.Description ? String(adObject.Description[0]) : '',
@@ -112,7 +164,8 @@ async function start() {
                             roomType: roomArr,
                             saleOptions: saleArr,
                             phone: adObject.ContactPhone ? String(adObject.ContactPhone[0]) : "",
-                            imgUrl : {
+                            imgUrl: {
+                                // set:  cleanLinks.map(link => link.replace(/^http:\/\//i, 'https://'))
                                 set: cleanLinks
                             },
                             rooms: adObject.Rooms ? String(adObject.Rooms[0]) : '',
@@ -142,21 +195,34 @@ async function start() {
                     console.log(newAdObject)
                 } catch (error) {
                     console.error(error)
-                    console.log(adObject.Id[0] + ' ' + parts)
+                    console.log(adObject.Id[0] + ' ' + str)
                 }
             } else {
-                const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
-                const updateUser = await db.objectIntrum.update({
-                    where: {
-                        id_intrum: adObject.Id[0],
-                    },
-                    data: {
-                        imgUrl : {
-                            set: cleanLinks
+                try {
+                    const cleanLinks = adObject.Images ? adObject.Images[0].Image.map(image => image.$.url) : [''];
+                    console.log({cleanLinks, obj:adObject.Id[0] })
+                    const updateUser = await db.objectIntrum.update({
+                        where: {
+                            id_intrum: adObject.Id[0],
                         },
-                    },
-                })
-            
+                        data: {
+                            state: state ? funcState(state) : "Не указан",
+                            city: city ? funcCity(city) : 'Не указан',
+                            street: street ? street : 'Не указана',
+                            // state: state ? (city === "Волжский" || city === "г Волжский" ? "Волжский" : funcCity(state) ) : "Не указан",
+                            imgUrl: {
+                                set: cleanLinks
+                                // set:  cleanLinks.map(link => link.replace(/^http:\/\//i, 'https://'))
+                            },
+                        },
+                    })
+
+                    console.log('Обновили' + updateUser.id)
+                } catch (error) {
+                    console.error(error)
+                    console.log(adObject.Id[0] + ' не смогли обновить' + str)
+                }
+
             }
         }
         // await wait(5000)

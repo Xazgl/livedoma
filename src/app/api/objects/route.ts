@@ -9,6 +9,7 @@ export async function GET(
 
   //params
   const category = searchParams.get("category");
+  const city = searchParams.get("city");
   const rooms = searchParams.get("rooms");
   const street = searchParams.get("street");
   const companyName = searchParams.get("companyName");
@@ -29,6 +30,14 @@ export async function GET(
       _count: true,
       where: {
         ...(category ? { category: { contains: category } } : {}),
+      },
+    });
+
+    const countCity = await db.objectIntrum.groupBy({
+      by: ["city"],
+      _count: true,
+      where: {
+        ...(city ? { city: { contains: city } } : {}),
       },
     });
 
@@ -82,9 +91,10 @@ export async function GET(
     });
 
     //Если фильтры не выбраны, то отсылаем все доступные значения для филтра по умолчанию
-    if (!category && !rooms && !street && !companyName && !renovation && !floors) {
+    if (!category && !city && !rooms && !street && !companyName && !renovation && !floors) {
       filter = {
         category: countCategory.map((el) => el.category),
+        city:countCity.map((el) => el.city),
         rooms: countRooms.map((el) => el.rooms),
         renovation: countRenovation.map((el) => el.renovation),
         //@ts-ignore
@@ -103,6 +113,7 @@ export async function GET(
         //   isEmpty: false, // Проверка, что массив не пустой
         // },
         ...(category ? { category: { contains: category } } : {}),
+        ...(city ? { city: { contains: city } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(street ? { street: { contains: street } } : {}),
@@ -128,6 +139,7 @@ export async function GET(
         //   isEmpty: false, // Проверка, что массив не пустой
         // },
         ...(category ? { category: { contains: category } } : {}),
+        ...(city ? { city: { contains: city } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(street ? { street: { contains: street } } : {}),
@@ -140,6 +152,7 @@ export async function GET(
       },
       select: {
         category: true,
+        city:true,
         rooms: true,
         renovation:true,
         street: true,
@@ -152,9 +165,10 @@ export async function GET(
 
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if (category || rooms || street || companyName || renovation || floor || floors) {
+    if (category || city || rooms || street || companyName || renovation || floor || floors) {
       filter = {
         category: [...new Set(allFilteredObject.map((el) => el.category))],
+        city: [...new Set(allFilteredObject.map((el) => el.city))],
         rooms: [...new Set(allFilteredObject.map((el) => el.rooms))],
         renovation: [...new Set(allFilteredObject.map((el) => el.renovation))],
         floor: [...new Set(allFilteredObject.map((el) => el.floor))],

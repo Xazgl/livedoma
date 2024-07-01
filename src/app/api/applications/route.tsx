@@ -33,6 +33,7 @@ export async function GET(
           lte: dateEnd? dateEnd : "2022-01-30",
           gte: date ? date : "2022-01-30",
         },
+        typeApplicationCrm:'ЖДД'
       },
       orderBy: {
         createdAt: 'asc'
@@ -46,6 +47,7 @@ export async function GET(
           //    lte: new Date(dateEnd? dateEnd : "2022-01-30"),
           //   gte: new Date(date ? date : "2022-01-30"),
           // }, 
+          typeApplicationCrm:'ЖДД',
           createdAtCrm: {
             lte: dateEnd? dateEnd : "2022-01-30",
             gte: date ? date : "2022-01-30",
@@ -64,6 +66,7 @@ export async function GET(
           //   lte: new Date(dateEnd? dateEnd : "2022-01-30"),
           //   gte: new Date(date ? date : "2022-01-30"),
           // },
+          typeApplicationCrm:'ЖДД',
           createdAtCrm: {
             lte: dateEnd? dateEnd : "2022-01-30",
             gte: date ? date : "2022-01-30",

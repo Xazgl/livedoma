@@ -22,6 +22,7 @@ async function getObjects() {
 
     const applications = await db.constructionApplications.findMany({
       where: {
+        typeApplicationCrm:'ЖДД'
         // dateStage: formattedYesterday,
       },
     });

@@ -28,6 +28,7 @@ import { RoomsSelector } from "../../filterFields/rooms/Rooms";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Renovation } from "../../filterFields/renovation/Renovation";
 import { Floor } from "../../filterFields/floor/Floor";
+import { CitySelect } from "../../filterFields/adress/CitySelect";
 
 type Props = {
   objects: allObjects;
@@ -39,9 +40,6 @@ type Props = {
   minPrice: number;
   setMinPrice: Dispatch<SetStateAction<number>>;
   setMaxPrice: Dispatch<SetStateAction<number>>;
-  setAllPages: Dispatch<SetStateAction<number>>;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
-  currentPage: number;
   filteblackProps: FilteblackProps;
   valueSliderPrice: [number, number];
   setValueSliderPrice: Dispatch<SetStateAction<[number, number]>>;
@@ -53,23 +51,10 @@ type Props = {
 
 const filterRow = "flex w-full p-4 h-auto ";
 
-export function Filter({
-  filteblackProps,
-  objects,
-  currentFilter,
-  setCurrentFilter,
-  setFilteredHouse,
-  maxPrice,
-  minPrice,
-  setMinPrice,
-  setMaxPrice,
-  valueSliderPrice,
-  setValueSliderPrice,
-  countObjects,
-  setFavArr,
-  favArr,
-  resetPageAndReloadData,
-}: Props) {
+export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,setFilteredHouse,
+  maxPrice,minPrice,setMinPrice,setMaxPrice,valueSliderPrice,setValueSliderPrice,countObjects,
+  setFavArr,favArr,resetPageAndReloadData,}: Props) {
+    
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -105,6 +90,15 @@ export function Filter({
       >
         <div className={filterRow}>
           <StreetSelect
+            filteblackProps={filteblackProps}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+            resetPageAndReloadData={resetPageAndReloadData}
+          />
+        </div>
+
+        <div className={filterRow}>
+          <CitySelect
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
@@ -153,11 +147,6 @@ export function Filter({
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
           />
-          {/* <CitySelect
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                /> */}
         </div>
 
         <div className={filterRow}>
@@ -190,7 +179,7 @@ export function Filter({
             id="button"
             type="button"
             onClick={resetFilteblackCars}
-            style={{transition:'all 0.5s'}}
+            style={{ transition: "all 0.5s" }}
             className={` flex  justify-center  items-center  w-[100%] 
             h-[40px] block w-full rounded  bg-[#55529fbd]    
            text-neutral-50 shadow-[0_4px_9px_-4px_rgba(51,45,45,0.7)]
@@ -200,7 +189,6 @@ export function Filter({
             active:bg-[#54529F] active:shadow-[0_8px_9px_-4px_rgba(51,45,45,0.2),0_4px_18px_0_rgba(51,45,45,0.1)] px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal 
             transition duration-150 ease-in-out focus:outline-none focus:ring-0`}
           >
-            
             Очистить фильтр
           </button>
         </div>

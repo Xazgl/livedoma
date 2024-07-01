@@ -172,6 +172,7 @@ async function start() {
               sourceId: String(adObject.sourceId ? adObject.sourceId : '')
             }
           })
+          console.log(newAdObject.id + " скачен")
         } else {
           const updateObject = await db.inparseObjects.update({
             where: {
@@ -207,6 +208,8 @@ async function start() {
               sourceId: String(adObject.sourceId ? adObject.sourceId : '')
             }
           })
+          console.log(updateObject.id + " обновлен")
+
         }
       } catch (error) {
         console.error('Ошибка при выполнении запроса:', error);
