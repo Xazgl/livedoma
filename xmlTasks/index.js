@@ -6,6 +6,7 @@ const fs = require('fs/promises');
 const wait = require('timers/promises').setTimeout
 const path = require("path");
 const xml2js = require('xml2js')
+const { getDistrictFromAddress,findDistrict } = require("./geocode");
 
 const objectLinks = require('./links.json') || [] //массив ссылок на фиды
 const axios = require('axios').default
@@ -148,6 +149,8 @@ async function start() {
                             operationType: String(adObject.OperationType[0]),
                             state: state ? funcState(state) : "Не указан",
                             city: city ? funcCity(city) : 'Не указан',
+                            district: adObject.Description[0] && city == 'Волгоград'?  findDistrict(adObject.Description[0]) : 'Не указан',
+                            // district: str? await getDistrictFromAddress(str) : 'Не указан',
                             street: street ? street : 'Не указана',
                             price: adObject.Price ? Number(adObject.Price[0]) : 0,
                             companyName: companyNameStr,
@@ -208,6 +211,8 @@ async function start() {
                         data: {
                             state: state ? funcState(state) : "Не указан",
                             city: city ? funcCity(city) : 'Не указан',
+                            district: adObject.Description[0] && city == 'Волгоград'?  findDistrict(adObject.Description[0]) : 'Не указан',
+                            // district: findObject.district? findObject.district : await getDistrictFromAddress(str) ,
                             street: street ? street : 'Не указана',
                             // state: state ? (city === "Волжский" || city === "г Волжский" ? "Волжский" : funcCity(state) ) : "Не указан",
                             imgUrl: {

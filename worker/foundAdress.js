@@ -1,5 +1,5 @@
 // Функция для очистки и нормализации строки адреса с учетом сокращений и объединения цифр с буквами
-function cleanAddress(address: string) {
+function cleanAddress(address) {
   let cleanedAddress = address.toLowerCase().trim();
   // Объединение цифр с последующими буквами
   cleanedAddress = cleanedAddress.replace(/(\d)\s*([a-zA-Zа-яА-Я])/g, "$1$2");
@@ -9,7 +9,7 @@ function cleanAddress(address: string) {
 }
 
 // Функция для проверки совпадения адресов
-export async function isExactMatchTwo(address1: string, searchAddress: string) {
+async function isExactMatchTwo(address1, searchAddress) {
   const cleanedAddress1 = cleanAddress(address1);
   const cleanedAddress2 = cleanAddress(searchAddress);
   // Разделение на части для точного сравнения
@@ -39,7 +39,7 @@ export async function isExactMatchTwo(address1: string, searchAddress: string) {
   return match;
 }
 
-function cleanAddressNew(address: string) {
+function cleanAddressNew(address) {
   let cleanedAddress = address.toLowerCase().trim();
   // Замена сокращений и объединение цифр с последующими буквами
   const replacements = {
@@ -70,7 +70,7 @@ function cleanAddressNew(address: string) {
 }
 
 // Функция для проверки совпадения адресов
-export function isExactMatchThree(address1: string, searchAddress: string) {
+function isExactMatchThree(address1, searchAddress) {
   const cleanedAddress1 = cleanAddressNew(address1);
   const cleanedAddress2 = cleanAddressNew(searchAddress);
 
@@ -121,7 +121,7 @@ export function isExactMatchThree(address1: string, searchAddress: string) {
   return false;
 }
 
-export function funcCity(input: string) {
+function funcCity(input) {
   const cityArr = [
     { name: "Волгоград" },
     { name: "Волжский" },
@@ -147,31 +147,8 @@ export function funcCity(input: string) {
   return input;
 }
 
-// // Функция для очистки и нормализации строки адреса с учетом сокращений и объединения цифр с буквами
-// function cleanAddress(address:string) {
-
-//     let cleanedAddress = address.toLowerCase().trim();
-
-//     // Объединение цифр с последующими буквами
-//     cleanedAddress = cleanedAddress.replace(/(\d)\s*([a-zA-Zа-яА-Я])/g, '$1$2');
-
-//     // Удаление лишних символов
-//     cleanedAddress = cleanedAddress.replace(/[^a-zA-Zа-яА-Я0-9\s]/g, '').trim();
-
-//     // // Логирование промежуточного результата
-//     // console.log(`Normalized address: ${cleanedAddress}`);
-
-//     return cleanedAddress;
-// }
-
-// // Функция для проверки совпадения адресов
-// export async function isExactMatchTwo(address1:string, searchAddress:string) {
-//     console.log({address1: address1 ,searchAddress:searchAddress}  );
-
-//     const cleanedAddress1 = cleanAddress(address1);
-
-//     const cleanedAddress2 = cleanAddress(searchAddress)
-
-//     // Проверка, что все части cleanedAddress2 присутствуют в cleanedAddress1
-//     return cleanedAddress2.split(/\s+/).every(part => cleanedAddress1.includes(part));
-// }
+module.exports = {
+  isExactMatchTwo,
+  isExactMatchThree,
+  funcCity,
+}

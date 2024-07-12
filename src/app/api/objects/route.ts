@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest,{ params }: { params: { id: string } }) {
   const searchParams = request.nextUrl.searchParams;
 
   //params
@@ -20,6 +17,9 @@ export async function GET(
   const floors = searchParams.get("floors");
   const sPage = searchParams.get("page");
   const page = sPage ? +sPage : 1;
+  const sortOrder = searchParams.get("sortOrder") === "asc" ? "asc" : "desc"; // По умолчанию сортируем по убыванию
+  const sortPrice =  searchParams.get("sortPrice")? (searchParams.get("sortPrice") === "asc" ? "asc" : "desc") : null; // По умолчанию сортируем по убыванию
+
 
   //создаем пустой объекты фильтра, куда потом буду попадать все значения фильтра
   let filter = {};
@@ -120,13 +120,13 @@ export async function GET(
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(floor ? { floor: { contains: floor } } : {}),
         ...(floors ? { floors: { contains: floors } } : {}),
-        ...(minPrice && maxPrice
-          ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
-          : {}),
+        ...(minPrice && maxPrice?
+            { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } } : {}),
       },
-      orderBy: {
-        createdAt: "desc" 
-      },
+      // orderBy: {
+      //   createdAt: sortOrder
+      // },
+      orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       skip: (page - 1) * 10,
       take: 10,
     });
@@ -150,6 +150,10 @@ export async function GET(
           ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
           : {}),
       },
+      // orderBy: {
+      //   createdAt: sortOrder 
+      // },
+      orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       select: {
         category: true,
         city:true,

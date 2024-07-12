@@ -19,6 +19,8 @@ export type FilterUserOptions = {
   floors?: string[];
   floor?: string[];
   wallsType?: string[];
+  sortOrder?: string[];
+  sortPrice?: string[];
 };
 
 export type allObjects = ObjectIntrum[];
@@ -84,6 +86,7 @@ export type Marquiz = {
   contacts: {
     name: string;
     phone: string;
+    text: string;
   };
   result: {};
 };

@@ -42,12 +42,14 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
         <MobileHeader />
         {object &&
             <>
+            {object.imgUrl.length > 0  && object.imgUrl[0] !== "" &&        
                 <SwiperImg
                     img={object.img.length > 0 ?  object.img : object.imgUrl}
                     setShowModalImg={setShowModalImg}
                     setHouseStepImg={setHouseStepImg}
-                    showModalImg={showModalImg}
+                    showModalImg={showModalImg}  
                 />
+            }
                 <DescriptionObj object={object} />
                 <YandexMap object={object}/>
             </>

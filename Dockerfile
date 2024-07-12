@@ -62,6 +62,9 @@ COPY applications ./applications
 COPY insurance ./insurance 
 COPY inparse ./inparse
 COPY statictwo ./statictwo
+COPY worker ./worker
+COPY smartagent ./smartagent
+
 # COPY static ./static/crm
 
 
@@ -86,6 +89,7 @@ RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applica
 RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insurance/index.js" ) | crontab -u $(whoami) -
 
 RUN (crontab -u $(whoami) -l; echo "*/90 * * * * /usr/local/bin/node /app/inparse/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "*/80 * * * * /usr/local/bin/node /app/smartagent/index.js" ) | crontab -u $(whoami) -
 
 
 EXPOSE 3000

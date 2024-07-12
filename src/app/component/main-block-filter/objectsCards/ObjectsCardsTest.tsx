@@ -6,7 +6,6 @@ import ProgressBar from "../../progressBar/ProgressBar";
 import {
   Dispatch,
   Fragment,
-  MutableRefObject,
   RefObject,
   SetStateAction,
   useEffect,
@@ -18,16 +17,19 @@ import size from "/public/svg/size.svg";
 import plan from "/public/svg/plan.svg";
 import floor from "/public/svg/floor.svg";
 import styles from "./Object.module.css";
-// import { CardActions, IconButton } from "@mui/material";
 import { Circle } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { addToFavorite, deleteFavorite } from "@/lib/favoriteFunc";
-import { FavoriteObj } from "../../../../../@types/dto";
+import { FavoriteObj, FilterUserOptions } from "../../../../../@types/dto";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import noPhoto from "/public/images/noPhoto.jpg";
 
 // import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import Link from "next/link";
 import DynamicCardImg from "./DynamicCardImg";
+import { SortDateSelect } from "../../filterFields/sortPrice/SortPriceSelect";
+import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
+
 
 type Props = {
   filteredHouse: ObjectIntrum[];
@@ -39,6 +41,9 @@ type Props = {
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
   refCardsObjects: RefObject<HTMLDivElement>;
+  currentFilter: FilterUserOptions;
+  setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
+  resetPageAndReloadData: () => void;
 };
 
 export function ObjectsCardsTest({
@@ -50,6 +55,9 @@ export function ObjectsCardsTest({
   setFavArr,
   refCardsObjects,
   favArr,
+  currentFilter,
+  setCurrentFilter,
+  resetPageAndReloadData,
 }: Props) {
   const [loadingImg, setLoadingImg] = useState(true);
 
@@ -98,6 +106,18 @@ export function ObjectsCardsTest({
           <ProgressBar />
         ) : (
           <>
+            <div className="hidden md:flex justify-start w-full gap-[25px]">
+              <SortDateSelect
+                currentFilter={currentFilter}
+                setCurrentFilter={setCurrentFilter}
+                resetPageAndReloadData={resetPageAndReloadData}
+              />
+               <SortPriceSelect
+                currentFilter={currentFilter}
+                setCurrentFilter={setCurrentFilter}
+                resetPageAndReloadData={resetPageAndReloadData}
+              />
+            </div>
             {/* <div className="flex w-[100%] sticky">
           <ShoppingBagIcon sx={{color:"black"}}/>
           </div> */}
@@ -142,7 +162,10 @@ export function ObjectsCardsTest({
                                 ? object.thubmnail[0]
                                 : object.img[0]
                                 ? object.img[0]
-                                : object.imgUrl[0]
+                                : object.imgUrl.length > 0 &&
+                                  object.imgUrl[0] !== ""
+                                ? object.imgUrl[0]
+                                : noPhoto.src
                             }
                           />
                         </Link>
@@ -252,13 +275,21 @@ export function ObjectsCardsTest({
                           </h3>
 
                           <h2 className="flex text-[#9da1ab] text-[12px]  md:text-[16px]">
-                            {`${object.state}, ${object.city},${object.street == 'Не указана'? '' :  `, ${object.street}`}`
-                              .length > 70
-                              ? `${`${object.state}, ${object.city} ${object.street == 'Не указана'? '' :  `, ${object.street}`}`.slice(
-                                  0,
-                                  70
-                                )}...`
-                              : `${object.state}, ${object.city} ${object.street == 'Не указана'? '' :  `, ${object.street}` }`}{" "}
+                            {`${object.state}, ${object.city},${
+                              object.street == "Не указана"
+                                ? ""
+                                : `, ${object.street}`
+                            }`.length > 70
+                              ? `${`${object.state}, ${object.city} ${
+                                  object.street == "Не указана"
+                                    ? ""
+                                    : `, ${object.street}`
+                                }`.slice(0, 70)}...`
+                              : `${object.state}, ${object.city} ${
+                                  object.street == "Не указана"
+                                    ? ""
+                                    : `, ${object.street}`
+                                }`}{" "}
                           </h2>
                           <div className="flex md:hidden  w-full">
                             <Image

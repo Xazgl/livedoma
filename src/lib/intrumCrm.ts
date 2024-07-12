@@ -2,6 +2,8 @@ import { Tilda, Wazzup } from "@prisma/client";
 import axios from "axios";
 import db from "../../prisma";
 
+
+
 export default async function sendIntrumCrm(message: Wazzup, double:boolean) {
 //Создание заявки сразу с контактом
   const obj = {
@@ -61,7 +63,7 @@ export default async function sendIntrumCrm(message: Wazzup, double:boolean) {
   const managers = [
     { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
-    { name: "Трофимов", id: "1140" },
+    // { name: "Трофимов", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
@@ -230,7 +232,7 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
   const managers = [
     { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
-    { name: "Трофимов", id: "1140" },
+    // { name: "Трофимов", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
@@ -254,6 +256,10 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
   params.append("params[customer][name]", message.name ? message.name : ""); // Имя клиента в контакте
   params.append(`params[customer][phone][]`, message.phone); // Телефон в контакте
   params.append(`params[customer][marktype]`, "8"); // Тип контакта покупатель
+
+  params.append("params[customer][fields][0][id]", "5078"); // доп поле для контактов 
+  params.append("params[customer][fields][0][value]", message.timeForClientCall ? message.timeForClientCall: '');
+
 
   params.append("params[request][request_type]", "23"); // Id типа заявка (тут строительство)
   params.append("params[request][status]", "unselected"); //статус сделки
@@ -282,7 +288,7 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
   params.append("params[request][fields][0][value]", doubleMessage? 'Дубль' :'Заявка'); //доп поле 1
 
-
+  
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append("params[request][fields][1][value]", message.utm_campaign ? "лендинг" : "Наш сайт"); //доп поле 2
 

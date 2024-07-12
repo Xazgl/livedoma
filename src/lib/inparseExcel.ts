@@ -3,7 +3,7 @@ import { InparseAnswer } from "../../@types/dto";
 import JSZip from "jszip";
 import FileSaver from "file-saver";
 import { isExactMatchTwo } from "./foundAdress";
-import { InparseObjects } from "@prisma/client";
+import { InparseObjects, SmartAgentObjects } from "@prisma/client";
 
 type GroupedByManager = {
   manager: string;
@@ -242,21 +242,21 @@ export async function createExcelUniqObj(objectsInparse: InparseObjects[]) {
     // Заголовки столбцов на русском языке
     const headers: string[] = [
       "ID Inparse",
-      "Category ID",
-      "Title",
-      "Address",
-      "Floor",
-      "Floors",
-      "Square",
-      "Land Square",
-      "Price",
-      "Description",
-      "Images",
-      "Name",
-      "Phones",
-      "URL",
-      "Agent",
-      "Source",
+      "ID Категории",
+      "Название",
+      "Адрес",
+      "Этаж",
+      "Этажей",
+      "Площадь",
+      "Площадь земли",
+      "Цена",
+      "Описание",
+      "Фото",
+      "ФИО",
+      "Телефон",
+      "Ссылка",
+      "Продавец",
+      "Источник",
     ];
     const worksheetData: any[][] = [headers];
   
@@ -314,6 +314,68 @@ export async function createExcelUniqObj(objectsInparse: InparseObjects[]) {
     document.body.removeChild(link);
     // Очищаем ссылку
     URL.revokeObjectURL(url);
+}
+
+
+export async function createExcelUniqObjTwo(objectsInparse: SmartAgentObjects[]) {
+  // Создаем новый workbook
+  const workbook = XLSX.utils.book_new();
+
+  // Заголовки столбцов на русском языке
+  const headers: string[] = [
+    "ID Смартагент",
+    "Адрес",
+    "Фото",
+    "Фото источника",
+    "Телефоны",
+    "Ссылка на источник"
+  ];
+  const worksheetData: any[][] = [headers];
+
+  // Заполняем данные для каждого объекта
+  objectsInparse.forEach((item) => {
+    const row: any[] = [
+      item.idSmartAgent,
+      item.street_cache,
+      item.images.join(', '), // Преобразуем массив изображений в строку
+      item.images_source.join(', '), 
+      item.phone.join(', '),
+      item.source_url
+    ];
+    worksheetData.push(row); // Добавляем строку в данные листа
+  });
+
+  // Создаем рабочий лист из массива данных
+  const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+  // Добавляем worksheet в workbook
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+  // Преобразуем workbook в бинарный формат
+  const excelBuffer = XLSX.write(workbook, {
+    bookType: "xlsx",
+    type: "buffer",
+  });
+
+  // Создаем Blob из буфера
+  const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+
+  // Создаем ссылку на Blob
+  const url = URL.createObjectURL(blob);
+
+  // Создаем ссылку для скачивания файла
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "objects.xlsx";
+
+  // Добавляем ссылку на страницу и эмулируем клик по ней
+  document.body.appendChild(link);
+  link.click();
+
+  // Удаляем ссылку из документа
+  document.body.removeChild(link);
+  // Очищаем ссылку
+  URL.revokeObjectURL(url);
 }
 
 

@@ -25,8 +25,12 @@ import TuneIcon from "@mui/icons-material/Tune";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Renovation } from "../../filterFields/renovation/Renovation";
 import { Floor } from "../../filterFields/floor/Floor";
-import RoomIcon from '@mui/icons-material/Room';
+import RoomIcon from "@mui/icons-material/Room";
 import { CitySelect } from "../../filterFields/adress/CitySelect";
+import { SortDateSelect } from "../../filterFields/sortPrice/SortPriceSelect";
+import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
+import ImportExportIcon from "@mui/icons-material/ImportExport";
+import { RoomsSelector } from "../../filterFields/rooms/Rooms";
 
 type Props = {
   objects: allObjects;
@@ -131,12 +135,12 @@ export function FilterMobile({
             </h1>
           </AccordionSummary>
           <AccordionDetails
-            sx={{ backgroundColor: "#f2f2f21a", width: "100%" }}
+            sx={{ backgroundColor: "#f2f2f21a", width: "100%"}}
             // sx={{zIndex:'999', backgroundColor: "#f2f2f21a", width: "100%",position:`${expanded ? ' absolute' : 'relative'}`    }}
           >
             <div
-              className={`flex  flex-col w-full  md:w-[20%]   h-[100%]  items-center 
-                                    sticky  top-0  right-0`}
+              className={`flex  flex-col w-full  md:w-[20%]   items-center 
+                                    sticky  top-0  right-0  h-[70vh]  overflow-auto`}
               id={styles.aside}
             >
               <div className={filterRow}>
@@ -147,7 +151,34 @@ export function FilterMobile({
                     id="panel1a-header"
                   >
                     <Typography sx={{ fontSize: "14px" }}>
-                      <RoomIcon  /> Местоположение
+                      <ImportExportIcon /> Сортировка
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <div className="flex w-[full] justify-between">
+                      <SortDateSelect
+                        currentFilter={currentFilter}
+                        setCurrentFilter={setCurrentFilter}
+                        resetPageAndReloadData={resetPageAndReloadData}
+                      />
+                      <SortPriceSelect
+                        currentFilter={currentFilter}
+                        setCurrentFilter={setCurrentFilter}
+                        resetPageAndReloadData={resetPageAndReloadData}
+                      />
+                    </div>
+                  </AccordionDetails>
+                </Accordion>
+              </div>
+              <div className={filterRow}>
+                <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography sx={{ fontSize: "14px" }}>
+                      <RoomIcon /> Местоположение
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
@@ -162,7 +193,7 @@ export function FilterMobile({
               </div>
 
               <div className={filterRow}>
-               <CitySelect
+                <CitySelect
                   filteblackProps={filteblackProps}
                   currentFilter={currentFilter}
                   setCurrentFilter={setCurrentFilter}
@@ -178,6 +209,17 @@ export function FilterMobile({
                   resetPageAndReloadData={resetPageAndReloadData}
                 />
               </div>
+
+              {/* {!currentFilter.category ||currentFilter.category.length === 0 ||currentFilter.category[0] !== "Земельные участки"   && currentFilter.category[0] !== "Гаражи и машиноместа" ? ( */}
+                <div className={filterRow}>
+                  <RoomsSelector
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                    resetPageAndReloadData={resetPageAndReloadData}
+                  />
+                </div>
+              {/* ) : null} */}
 
               <div className={filterRow}>
                 <CompanySelect
@@ -262,7 +304,6 @@ export function FilterMobile({
               )}
 
               <div className={filterRow}>
-             
                 <button
                   style={{ transition: "all 1s" }}
                   className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded color-[white] 

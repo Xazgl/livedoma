@@ -23,6 +23,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       if (answer) {
         const name = answer.contacts.name;
         const phone = await normalizePhoneNumber(answer.contacts.phone);
+        const clientCallTime = answer.contacts.text;
         const formid = answer.form.id ? answer.form.id : "Нету";
         let utm_medium = "";
         let utm_campaign = "";
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             data: {
               name: name,
               phone: phone,
+              timeForClientCall:clientCallTime,
               formid: formid,
               typeSend: "Marquiz",
               utm_medium: utm_medium,

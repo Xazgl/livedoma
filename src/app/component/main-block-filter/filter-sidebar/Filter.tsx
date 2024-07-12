@@ -51,10 +51,23 @@ type Props = {
 
 const filterRow = "flex w-full p-4 h-auto ";
 
-export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,setFilteredHouse,
-  maxPrice,minPrice,setMinPrice,setMaxPrice,valueSliderPrice,setValueSliderPrice,countObjects,
-  setFavArr,favArr,resetPageAndReloadData,}: Props) {
-    
+export function Filter({
+  filteblackProps,
+  objects,
+  currentFilter,
+  setCurrentFilter,
+  setFilteredHouse,
+  maxPrice,
+  minPrice,
+  setMinPrice,
+  setMaxPrice,
+  valueSliderPrice,
+  setValueSliderPrice,
+  countObjects,
+  setFavArr,
+  favArr,
+  resetPageAndReloadData,
+}: Props) {
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -77,6 +90,7 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
       floors: [],
       floor: [],
       wallsType: [],
+      sortOrder: [],
     }));
     resetPageAndReloadData();
   }
@@ -88,6 +102,7 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
             sticky  top-0  right-0    rounded  overflow-auto`}
         id={styles.aside}
       >
+
         <div className={filterRow}>
           <StreetSelect
             filteblackProps={filteblackProps}
@@ -115,6 +130,8 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
           />
         </div>
 
+
+        {/* {!currentFilter.category ||currentFilter.category.length === 0 ||currentFilter.category[0] !== "Земельные участки"   && currentFilter.category[0] !== "Гаражи и машиноместа" ?  */}
         <div className={filterRow}>
           <RoomsSelector
             filteblackProps={filteblackProps}
@@ -123,6 +140,8 @@ export function Filter({filteblackProps,objects,currentFilter,setCurrentFilter,s
             resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
+        {/* :  null
+         }  */}
 
         <div className={filterRow}>
           <Renovation

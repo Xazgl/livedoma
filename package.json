@@ -78,6 +78,7 @@
     "@types/react-dom": "latest",
     "@types/shelljs": "^0.8.15",
     "autoprefixer": "latest",
+    "consola": "^3.2.3",
     "eslint": "latest",
     "eslint-config-next": "^14.1.1",
     "postcss": "latest",

@@ -8,6 +8,8 @@ import jd from "/public/images/cardLogo/card_jd.png"
 import metr from "/public/images/cardLogo/card_metrs.png"
 import part from "/public/images/cardLogo/card_partner.png"
 import vladis from "/public/images/cardLogo/card_vladis.png"
+import sansara from "/public/images/cardLogo/sansara.png"
+
 
 
 export type LogoArr = {
@@ -31,6 +33,10 @@ export const LogoList: LogoArr[] = [
     {
         name: 'Владис',
         img: `${vladis.src}`
+    },
+    {
+        name: 'ЖК Сансара',
+        img: `${sansara.src}`
     },
 
 ]

@@ -2,14 +2,14 @@
 import axios from "axios";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { createArchiveNew, createExcelUniqObj} from "@/lib/inparseExcel";
+import { createArchiveNew, createExcelUniqObj, createExcelUniqObjTwo} from "@/lib/inparseExcel";
 // import logoBG from "/public/images/inparse/logo.jpg";
 import exampleBG from "/public/images/inparse/example.png";
 import cupImg from "/public/images/inparse/cup.png";
 import { Button, CircularProgress, Input } from "@mui/material";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import Image from "next/image";
-import { InparseObjects } from "@prisma/client";
+import { InparseObjects, SmartAgentObjects } from "@prisma/client";
 
 //Маппинг русских заголовков
 const headersMapping: { [key: string]: string } = {
@@ -120,6 +120,35 @@ const handleChange2 = async () => {
   }
 };
 
+
+const handleChange3 = async () => {
+  try {
+    // Устанавливаем состояние загрузки
+    setLoading(true);
+
+    const res = await axios.get(
+      "/api/findtwo",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log(res.data.results)
+
+    const objectsRes: SmartAgentObjects[] = res.data.results;
+
+    // Убираем состояние загрузки
+    setLoading(false);
+
+    await createExcelUniqObjTwo(objectsRes);
+  } catch (error) {
+    console.error("Error processing file:", error);
+    setLoading(false);
+  }
+};
+
   return (
     <section className="flex flex-col w-full h-[100%]">
       <div className="flex flex-col mt-[10px] w-full items-center sm:items-start">
@@ -200,7 +229,26 @@ const handleChange2 = async () => {
                 transform: "scale(0.99)",
               },
             }}
-          >Уникальные объекты</Button>
+          >Уникальные объекты Inparse</Button>
+        </div>
+
+        <div className="flex w-full items-center gap-[10px] mt-[10px]">
+          <Button
+            variant="contained"
+            component="span"
+            onClick={handleChange3}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#01ca7c",
+              transition: "all 0.7s",
+              ":hover": {
+                backgroundColor: "#943c82",
+                transform: "scale(0.99)",
+              },
+            }}
+          >Уникальные объекты Smart agent</Button>
         </div>
 
         <div className="flex w-full mt-[5px] justify-center sm:justify-start ">
