@@ -29,6 +29,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Renovation } from "../../filterFields/renovation/Renovation";
 import { Floor } from "../../filterFields/floor/Floor";
 import { CitySelect } from "../../filterFields/adress/CitySelect";
+import { DistSelect } from "../../filterFields/adress/DistSelect";
 
 type Props = {
   objects: allObjects;
@@ -102,7 +103,6 @@ export function Filter({
             sticky  top-0  right-0    rounded  overflow-auto`}
         id={styles.aside}
       >
-
         <div className={filterRow}>
           <StreetSelect
             filteblackProps={filteblackProps}
@@ -120,6 +120,14 @@ export function Filter({
             resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
+        <div className={filterRow}>
+          <DistSelect
+            filteblackProps={filteblackProps}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+            resetPageAndReloadData={resetPageAndReloadData}
+          />
+        </div>
 
         <div className={filterRow}>
           <CategoriesCheckbox
@@ -129,7 +137,6 @@ export function Filter({
             resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
-
 
         {/* {!currentFilter.category ||currentFilter.category.length === 0 ||currentFilter.category[0] !== "Земельные участки"   && currentFilter.category[0] !== "Гаражи и машиноместа" ?  */}
         <div className={filterRow}>

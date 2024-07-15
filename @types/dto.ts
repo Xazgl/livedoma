@@ -4,6 +4,7 @@ import { number } from "zod";
 export type FilterUserOptions = {
   category?: string[];
   operationType?: string[];
+  district?: string[];
   state?: string[];
   city?: string[];
   street?: string[];
@@ -30,6 +31,7 @@ export type FilteblackProps = {
   operationTypes: string[];
   states: string[];
   cities: string[];
+  districts: string[];
   streets: string[];
   companyNames: string[];
   passengerElevators: string[];

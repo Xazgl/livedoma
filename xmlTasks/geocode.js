@@ -61,7 +61,7 @@ function findDistrict(description) {
         }
     }
 
-    return "Район не найден";
+    return "Не указан";
 }
 module.exports = {
     getDistrictFromAddress: getDistrictFromAddress,

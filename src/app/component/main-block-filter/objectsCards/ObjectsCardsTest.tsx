@@ -123,11 +123,11 @@ export function ObjectsCardsTest({
           </div> */}
             {filteredHouse.map((object) => (
               <Fragment key={object.id}>
-                <div className="flex  justify-center  md:justify-start md:w-full  mt-[20px] md:mt-[0px]">
+                <div className="flex  justify-center  md:justify-start md:w-full  mt-[25px] md:mt-[0px]">
                   <article
                     key={object.id}
                     style={{ transition: "all 1s" }}
-                    className="flex   flex-col  md:flex-row  w-[300px] md:w-full  h-[100%] md:h-[300px]  sm:p-2  mt-[10px]  md:gap-[50px]
+                    className="flex   flex-col  md:flex-row  w-[300px] xs:w-[310px] md:w-full  h-[100%] md:h-[300px]  sm:p-2  md:mt-[10px]  md:gap-[50px]
                                  md:border-none md:border-[transparent] md:border-[0px] 
                                 cursor-pointer   md:duration-700   md:ease-in-out   md:hover:shadow-2xl"
                   >
@@ -155,6 +155,7 @@ export function ObjectsCardsTest({
                             alt={object.category}
                             loading="lazy"
                           /> */}
+                          
                           <DynamicCardImg
                             alt={object.category}
                             src={
@@ -176,6 +177,7 @@ export function ObjectsCardsTest({
                             ) ? (
                               <FavoriteIcon
                                 sx={{
+                                  background:'#80757529',
                                   display: "flex",
                                   transition: "all 0.5s",
                                   justifyContent: "center",
@@ -193,6 +195,7 @@ export function ObjectsCardsTest({
                             ) : (
                               <FavoriteBorderIcon
                                 sx={{
+                                  background:'#80757529',
                                   display: "flex",
                                   justifyContent: "center",
                                   alignContent: "center",
@@ -241,7 +244,7 @@ export function ObjectsCardsTest({
                             Категория: {object.category}
                           </h3>
 
-                          <h3 className="flex md:hidden w-full text-sm  text-black gap-[5px] items-center">
+                          <h3 className="flex md:hidden w-full text-[15px] xs:text-[17px] md:text-sm  text-black gap-[5px] items-center">
                             {object.objectType
                               ? object.objectType
                               : object.category}
@@ -274,7 +277,7 @@ export function ObjectsCardsTest({
                               : null}
                           </h3>
 
-                          <h2 className="flex text-[#9da1ab] text-[12px]  md:text-[16px]">
+                          <h2 className="flex text-[#9da1ab] text-[13px]  md:text-[16px]">
                             {`${object.state}, ${object.city},${
                               object.street == "Не указана"
                                 ? ""
@@ -302,7 +305,7 @@ export function ObjectsCardsTest({
                             />
                           </div>
                           {/* <h2 className="flex text-[#9da1ab] text-sm  text-[16px]">{`${object.state},${object.city},${object.street}`}</h2> */}
-                          <h1 className="flex w-full  font-bold  text-[22px]">
+                          <h1 className="flex w-full  font-bold text-[25px] sm:text-[22px]">
                             {numberWithSpaces(Number(object.price))} ₽
                           </h1>
                           <div className="hidden md:flex  flex-col md:flex-row  gap-[5px]  md:gap-[40px]  mt-[5px]  md:mt-[30px]">

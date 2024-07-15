@@ -31,6 +31,7 @@ import { SortDateSelect } from "../../filterFields/sortPrice/SortPriceSelect";
 import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { RoomsSelector } from "../../filterFields/rooms/Rooms";
+import { DistSelect } from "../../filterFields/adress/DistSelect";
 
 type Props = {
   objects: allObjects;
@@ -135,7 +136,7 @@ export function FilterMobile({
             </h1>
           </AccordionSummary>
           <AccordionDetails
-            sx={{ backgroundColor: "#f2f2f21a", width: "100%"}}
+            sx={{ backgroundColor: "#f2f2f21a", width: "100%" }}
             // sx={{zIndex:'999', backgroundColor: "#f2f2f21a", width: "100%",position:`${expanded ? ' absolute' : 'relative'}`    }}
           >
             <div
@@ -200,6 +201,15 @@ export function FilterMobile({
                   resetPageAndReloadData={resetPageAndReloadData}
                 />
               </div>
+              
+              <div className={filterRow}>
+                <DistSelect
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              </div>
 
               <div className={filterRow}>
                 <CategoriesCheckbox
@@ -211,14 +221,14 @@ export function FilterMobile({
               </div>
 
               {/* {!currentFilter.category ||currentFilter.category.length === 0 ||currentFilter.category[0] !== "Земельные участки"   && currentFilter.category[0] !== "Гаражи и машиноместа" ? ( */}
-                <div className={filterRow}>
-                  <RoomsSelector
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                    resetPageAndReloadData={resetPageAndReloadData}
-                  />
-                </div>
+              <div className={filterRow}>
+                <RoomsSelector
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              </div>
               {/* ) : null} */}
 
               <div className={filterRow}>

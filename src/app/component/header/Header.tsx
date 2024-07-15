@@ -26,6 +26,7 @@ export function Header({}) {
                 sizes="100vh"
                 alt={el.img}
                 className="flex"
+                loading="lazy"
               />
               {index !== logoArr.length - 1 && (
                 <div className="flex w-[1px] h-[34px]  border-l-[1px] border-solid border-white border-opacity-50" />

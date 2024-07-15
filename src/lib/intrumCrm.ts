@@ -68,6 +68,7 @@ export default async function sendIntrumCrm(message: Wazzup, double:boolean) {
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
+    { name: "Выходцева", id: "1944" }
   ];
 
   // Случайный выбор менеджера
@@ -237,6 +238,7 @@ export  async function sendIntrumCrmTilda(message: Tilda, double:boolean ) {
     { name: "Исаева", id: "39" },
     { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
+    { name: "Выходцева", id: "1944" }
   ];
 
   // Случайный выбор менеджера
@@ -341,6 +343,7 @@ export async function managerFind() {
    { name: "Исаева", id: "39" },
    { name: "Трубачева", id: "1460" },
    { name: "Бородина", id: "353" },
+   { name: "Выходцева", id: "1944" }
   ];
 
   const existingContactsWazzup: Wazzup[] = await db.wazzup.findMany({

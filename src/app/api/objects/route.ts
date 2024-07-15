@@ -8,6 +8,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
   const category = searchParams.get("category");
   const city = searchParams.get("city");
   const rooms = searchParams.get("rooms");
+  const district = searchParams.get("district");
   const street = searchParams.get("street");
   const companyName = searchParams.get("companyName");
   const minPrice = searchParams.get("minPrice");
@@ -57,6 +58,14 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       },
     });
 
+    const countDistrict  = await db.objectIntrum.groupBy({
+      by: ["district"],
+      _count: true,
+      where: {
+        ...(district  ? { district : { contains: district  } } : {}),
+      },
+    });
+
     const countStreet = await db.objectIntrum.groupBy({
       by: ["street"],
       _count: true,
@@ -91,13 +100,14 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
     });
 
     //Если фильтры не выбраны, то отсылаем все доступные значения для филтра по умолчанию
-    if (!category && !city && !rooms && !street && !companyName && !renovation && !floors) {
+    if (!category && !city && !rooms && !street && !district && !companyName && !renovation && !floors) {
       filter = {
         category: countCategory.map((el) => el.category),
         city:countCity.map((el) => el.city),
         rooms: countRooms.map((el) => el.rooms),
         renovation: countRenovation.map((el) => el.renovation),
         //@ts-ignore
+        district:countDistrict.map((el) => el.district),
         street: countStreet.map((el) => el.street),
         companyName: countCompanyName.map((el) => el.companyName),
         floor: countFloor.map((el) => el.floor),
@@ -116,6 +126,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         ...(city ? { city: { contains: city } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
+        ...(district ? { district: { contains: district } } : {}),
         ...(street ? { street: { contains: street } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(floor ? { floor: { contains: floor } } : {}),
@@ -142,6 +153,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         ...(city ? { city: { contains: city } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
+        ...(district ? { district: { contains: district } } : {}),
         ...(street ? { street: { contains: street } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(floor ? { floor: { contains: floor } } : {}),
@@ -159,6 +171,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         city:true,
         rooms: true,
         renovation:true,
+        district:true,
         street: true,
         companyName: true,
         floor:true,
@@ -169,7 +182,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
 
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if (category || city || rooms || street || companyName || renovation || floor || floors) {
+    if (category || city || rooms || district ||street || companyName || renovation || floor || floors) {
       filter = {
         category: [...new Set(allFilteredObject.map((el) => el.category))],
         city: [...new Set(allFilteredObject.map((el) => el.city))],
@@ -178,6 +191,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         floor: [...new Set(allFilteredObject.map((el) => el.floor))],
         floors: [...new Set(allFilteredObject.map((el) => el.floors))],
         //@ts-ignore
+        district : [...new Set(allFilteredObject.map((el) => el.district))],
         street: [...new Set(allFilteredObject.map((el) => el.street))],
         companyName: [
           ...new Set(allFilteredObject.map((el) => el.companyName)),

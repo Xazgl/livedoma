@@ -65,14 +65,6 @@ export default async function Home() {
       {objects && objects.length > 0 && 
         <SuspenseFilter  objects={objects}  pages={pages} page={page}/>
       }
-      {/* <div className="flex gap-2 text-black"> */}
-
-      {/* {
-        Array(pages).fill(0).map((el, i) => {
-          return <Link href={`/${i+1}`}  key={i} >{i+1}</Link>
-        })
-      } */}
-      {/* </div> */}
     </>
   );
 }

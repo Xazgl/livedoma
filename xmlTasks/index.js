@@ -82,7 +82,6 @@ async function start() {
             })
             //  console.log(JSON.stringify(adObject.RoomType[0].Option[0]))
 
-
             function funcState(input) {
                 const cityRoots = [
                     { root: "Волгоград", name: "Волгоградская область" },
@@ -124,23 +123,18 @@ async function start() {
                 return input;
             }
 
-
             if (findObject === null) {
                 try {
                     // console.log(JSON.stringify(adObject.BalconyOrLoggia[0] + adObject.WallsType[0]))
-
                     const cleanLinks = adObject.Images ? adObject.Images[0].Image.map(image => image.$.url) : [''];
                     // console.log(JSON.stringify(cleanLinks))
-                    console.log({cleanLinks, obj:adObject.Id[0] })
-                    
+                    // console.log({cleanLinks, obj:adObject.Id[0] })
                     const roomArr = adObject.RoomType ? adObject.RoomType.map(room => room.Option[0]) : []
-                    console.log(roomArr)
+                    // console.log(roomArr)
                     const saleArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
-                    console.log(JSON.stringify(saleArr))
+                    // console.log(JSON.stringify(saleArr))
                     const houseServicesArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
-                    console.log(JSON.stringify(houseServicesArr))
-
-
+                    // console.log(JSON.stringify(houseServicesArr))
 
                     const newAdObject = await db.objectIntrum.create({
                         data: {
@@ -180,6 +174,7 @@ async function start() {
                             objectType: adObject.ObjectType ? String(adObject.ObjectType[0]) : '',
                             transactionType: adObject.transactionType ? (adObject.transactionType[0]) : '',
 
+
                             //Если дом
                             landArea: adObject.LandAre ? String(adObject.LandArea[0]) : '',
                             houseServices: houseServicesArr,
@@ -194,7 +189,6 @@ async function start() {
                             leaseDeposit: adObject.LeaseDeposit ? (adObject.LeaseDeposit[0]) : '',
                         }
                     })
-
                     console.log(newAdObject)
                 } catch (error) {
                     console.error(error)
@@ -202,8 +196,11 @@ async function start() {
                 }
             } else {
                 try {
+                    const roomArr = adObject.RoomType ? adObject.RoomType.map(room => room.Option[0]) : []
+                    const saleArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
+                    const houseServicesArr = adObject.SaleOptions ? adObject.SaleOptions.map(saleOpt => saleOpt.Option[0]) : []
                     const cleanLinks = adObject.Images ? adObject.Images[0].Image.map(image => image.$.url) : [''];
-                    console.log({cleanLinks, obj:adObject.Id[0] })
+                   
                     const updateUser = await db.objectIntrum.update({
                         where: {
                             id_intrum: adObject.Id[0],
@@ -215,13 +212,43 @@ async function start() {
                             // district: findObject.district? findObject.district : await getDistrictFromAddress(str) ,
                             street: street ? street : 'Не указана',
                             // state: state ? (city === "Волжский" || city === "г Волжский" ? "Волжский" : funcCity(state) ) : "Не указан",
+                            price: adObject.Price ? Number(adObject.Price[0]) : 0,
+                            managerName: adObject.ManagerName ? String(adObject.ManagerName[0]) : "Живем Дома",
+                            description: adObject.Description ? String(adObject.Description[0]) : '',
+                            balconyOrLoggia: adObject.BalconyOrLoggia && adObject.BalconyOrLoggia.length > 0 ? String(adObject.BalconyOrLoggia[0]) : "Без балкона и лоджий",
+                            passengerElevator: adObject.PassengerElevator ? String(adObject.PassengerElevator[0]) : '',
+                            freightElevator: adObject.FreightElevator ? String(adObject.FreightElevator[0]) : '',
+                            ceilingHeight: adObject.CeilingHeight ? String(adObject.CeilingHeight[0]) : '',
+                            renovation: adObject.Renovation ? String(adObject.Renovation[0]) : '',
+                            bathroomMulti: adObject.BathroomMulti ? String(adObject.BathroomMulti[0].Option[0]) : '',
+                            dealType: adObject.DealType ? String(adObject.DealType[0]) : '',
+                            roomType: roomArr,
+                            saleOptions: saleArr,
+                            phone: adObject.ContactPhone ? String(adObject.ContactPhone[0]) : "",
                             imgUrl: {
                                 set: cleanLinks
-                                // set:  cleanLinks.map(link => link.replace(/^http:\/\//i, 'https://'))
                             },
+                            rooms: adObject.Rooms ? String(adObject.Rooms[0]) : '',
+                            square: adObject.Square ? String(adObject.Square[0]) : '',
+                            floors: adObject.Floors ? String(adObject.Floors[0]) : '',
+                            floor: adObject.Floor ? String(adObject.Floor[0]) : '',
+                            wallsType: adObject.WallsType ? String(adObject.WallsType[0]) : 'Не указан',
+                            propertyRights: adObject.PropertyRights ? String(adObject.PropertyRights[0]) : '',
+                            objectType: adObject.ObjectType ? String(adObject.ObjectType[0]) : '',
+                            transactionType: adObject.transactionType ? (adObject.transactionType[0]) : '',
+                            //Если дом
+                            landArea: adObject.LandAre ? String(adObject.LandArea[0]) : '',
+                            houseServices: houseServicesArr,
+                            // cadastralNumber: adObject.CadastralNumber ? String(adObject.CadastralNumber[0]) : '',
+                            cadastralNumber: '',
+                            //Для коммерческой
+                            parkingType: adObject.ParkingType ? (adObject.ParkingType[0]) : '',
+                            rentalType: adObject.RentalType ? (adObject.RentalType[0]) : '',
+                            decoration: adObject.Decoration ? (adObject.Decoration[0]) : '',
+                            leaseCommissionSize: adObject.LeaseCommissionSize ? (adObject.LeaseCommissionSize[0]) : '',
+                            leaseDeposit: adObject.LeaseDeposit ? (adObject.LeaseDeposit[0]) : '',
                         },
                     })
-
                     console.log('Обновили' + updateUser.id)
                 } catch (error) {
                     console.error(error)

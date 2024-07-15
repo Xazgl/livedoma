@@ -15,6 +15,7 @@ import {
   ceilingHeightFilter,
   cityFilter,
   companyNameFilter,
+  districtFilter,
   floorFilter,
   floorsFilter,
   freightElevatorFilter,
@@ -29,7 +30,6 @@ import {
   wallsTypeFilter,
 } from "./filter-sidebar/myFilters";
 import { usePathname, useSearchParams } from "next/navigation";
-
 
 type Props = {
   objects: ObjectIntrum[];
@@ -59,8 +59,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-
-  // Получаем значения параметров из URL 
+  // Получаем значения параметров из URL
   const filterFromParams = useMemo(() => {
     const params = new URLSearchParams(searchParams);
     const filter: Partial<FilterUserOptions> = {};
@@ -81,6 +80,9 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     }
     if (params.has("floors")) {
       filter.floors = params.getAll("floors");
+    }
+    if (params.has("district")) {
+      filter.district = params.getAll("district");
     }
     if (params.has("street")) {
       filter.street = params.getAll("street");
@@ -111,7 +113,6 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     });
   }, [filterFromParams]);
 
-
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
     setLoading(true);
@@ -126,6 +127,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     operationType: [],
     state: [],
     city: [],
+    district: [],
     street: [],
     minPrice: minPrice,
     maxPrice: maxPrice,
@@ -140,7 +142,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     floor: [],
     wallsType: [],
     sortOrder: [],
-    sortPrice:[]
+    sortPrice: [],
   });
 
   //Загрузка при изменении фильтра и сброс страницы на 1
@@ -196,6 +198,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           operationTypeFilter(object, currentFilter) &&
           stateFilter(object, currentFilter) &&
           cityFilter(object, currentFilter) &&
+          districtFilter(object, currentFilter) &&
           streetFilter(object, currentFilter) &&
           priceFilter(object, currentFilter) &&
           companyNameFilter(object, currentFilter) &&
@@ -236,6 +239,11 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
         params.append("renovation", renovation);
       });
     }
+    if (currentFilter.district) {
+      currentFilter.district.forEach((dist) => {
+        params.append("district", dist);
+      });
+    }
     if (currentFilter.street) {
       currentFilter.street.forEach((str) => {
         params.append("street", str);
@@ -257,11 +265,20 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
       });
     }
     // Взаимоисключающие условия для sortOrder и sortPrice
-    if (currentFilter.sortOrder && (!currentFilter.sortPrice || currentFilter.sortPrice.length === 0)) {
-      currentFilter.sortOrder.forEach((dateSort) => { params.append("sortOrder", dateSort)});
-    } else if (currentFilter.sortPrice && (!currentFilter.sortOrder || currentFilter.sortOrder.length === 0)) {
+    if (
+      currentFilter.sortOrder &&
+      (!currentFilter.sortPrice || currentFilter.sortPrice.length === 0)
+    ) {
+      currentFilter.sortOrder.forEach((dateSort) => {
+        params.append("sortOrder", dateSort);
+      });
+    } else if (
+      currentFilter.sortPrice &&
+      (!currentFilter.sortOrder || currentFilter.sortOrder.length === 0)
+    ) {
       currentFilter.sortPrice.forEach((priceSort) => {
-       params.append("sortPrice", priceSort)});
+        params.append("sortPrice", priceSort);
+      });
     }
     if (currentFilter.minPrice) {
       params.append("minPrice", String(currentFilter.minPrice));
@@ -289,6 +306,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
             renovationTypes: el.filter.renovation,
             floor: el.filter.floor,
             floors: el.filter.floors,
+            districts: el.filter.district,
             streets: el.filter.street,
             companyNames: el.filter.companyName,
             price: [el.filter.minPrice, el.filter.maxPrice],
@@ -303,6 +321,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     operationTypes: [],
     states: [],
     cities: [],
+    districts: [],
     streets: [],
     companyNames: [],
     price: [],
@@ -316,12 +335,13 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     floor: [],
     wallsTypes: [],
     sortOrder: [],
-    sortPrice:[]
+    sortPrice: [],
   } as {
     categories: string[];
     operationTypes: string[];
     states: string[];
     cities: string[];
+    districts: string[];
     streets: string[];
     companyNames: string[];
     price: number[];
@@ -335,9 +355,8 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     floor: string[];
     wallsTypes: string[];
     sortOrder: string[];
-    sortPrice:string[];
+    sortPrice: string[];
   });
-
 
   useEffect(() => {
     async function getFav() {
@@ -358,24 +377,27 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
 
   return (
     <div className="flex  flex-col  w-full  h-auto  justify-center">
-      <SelectCategory
-        objects={objects}
-        currentFilter={currentFilter}
-        setCurrentFilter={setCurrentFilter}
-        setFilteredHouse={setFilteredHouse}
-        refCardsObjects={refCardsObjects}
-      />
+      {currentPage == 1 && (
+        <>
+          <SelectCategory
+            objects={objects}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+            setFilteredHouse={setFilteredHouse}
+            refCardsObjects={refCardsObjects}
+          />
 
-      <div className="flex flex-col  items-center lg:items-center w-full justify-center ">
-        <h1 className="w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] text-black mt-[50px] font-semibold">
-          Лучшие предложения для
-          <span className="text-[#54529F] border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F]">
-            <br />
-            ВАШИХ КЛИЕНТОВ НА ОДНОМ САЙТЕ
-          </span>
-        </h1>
-      </div>
-
+          <div className="flex flex-col  items-center lg:items-center w-full justify-center ">
+            <h1 className="w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] text-black mt-[50px] font-semibold">
+              Лучшие предложения для
+              <span className="text-[#54529F] border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F]">
+                <br />
+                ВАШИХ КЛИЕНТОВ НА ОДНОМ САЙТЕ
+              </span>
+            </h1>
+          </div>
+        </>
+      )}
 
       <section className="flex  flex-col  md:flex-row w-full  h-full  relative   mt-[50px] ">
         <FilterMobile
@@ -406,7 +428,6 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           favArr={favArr}
           setFavArr={setFavArr}
           refCardsObjects={refCardsObjects}
-          
           resetPageAndReloadData={resetPageAndReloadData}
           currentFilter={currentFilter}
           setCurrentFilter={setCurrentFilter}

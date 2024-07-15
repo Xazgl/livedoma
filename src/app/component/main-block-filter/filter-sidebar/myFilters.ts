@@ -33,6 +33,14 @@ export function cityFilter(object: ObjectIntrum, currentFilter: FilterUserOption
     return true
 }
 
+export function districtFilter(object: ObjectIntrum, currentFilter: FilterUserOptions) {
+    if (currentFilter.district?.length) {
+        return currentFilter.district.includes(object.district? object.district: '' )
+    }
+    return true
+}
+
+
 
 export function streetFilter(object: ObjectIntrum, currentFilter: FilterUserOptions) {
     if (currentFilter.street?.length) {

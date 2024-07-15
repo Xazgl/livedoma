@@ -5,7 +5,7 @@ import {Accordion,AccordionDetails,AccordionSummary,Box,Checkbox,FormControlLabe
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {  FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
-import LocationCityIcon from '@mui/icons-material/LocationCity';
+import ZoomInMapIcon from '@mui/icons-material/ZoomInMap';
 import { funcCity } from "@/lib/foundAdress";
 
 type Props = {
@@ -15,8 +15,10 @@ type Props = {
   resetPageAndReloadData:() => void;
 };
 
-export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
-  return (
+export function DistSelect({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
+    console.log(filteblackProps.districts)
+  
+    return (
     <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -24,18 +26,19 @@ export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,reset
         id="panel1a-header"
       >
         <Typography sx={{ fontSize: "14px" }}>
-          <LocationCityIcon /> Город {" "}
+          < ZoomInMapIcon  /> Район {" "}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
         
         <div className="flex  flex-col  w-full  justify-start ">
-          {Array.from(new Set(filteblackProps.cities.map((city) => funcCity(city))))
-            .filter((city) => city !== '')
-            .map((city) => (
-            city !=='' ?
-            <FormControlLabel
-              key={city}
+          {Array.from(new Set(filteblackProps.districts.map((district) => district)))
+            .filter((district) => district !=='' && district !== 'Не указан' && district !== 'Район не найден')
+            .map((district) => (
+                district !=='' && district !== 'Не указан' && district !== 'Район не найден'?
+           
+                <FormControlLabel
+              key={district}
               control={
                 <Box
                   sx={{
@@ -46,47 +49,26 @@ export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,reset
                 >
                   <Checkbox
                     color="default"
-                    checked={currentFilter.city?.includes(city)}
+                    checked={currentFilter.district?.includes(district)}
                   />
-                  {/* <Avatar
-                                                        sx={{ width: '60px', marginLeft: '10px' }}
-                                                        aria-label="brand"
-                                                        src={modelPhotoFind(ModelPhotoList, model)}
-                                                    /> */}
                 </Box>
               }
-            //   label={ 
-            //     category === "Гаражи и машиноместа" ?
-            //     "Гаражи" 
-            //     :
-            //    (category === "Коммерческая недвижимость" ? "Коммерческая" : category) 
-            //   }
-             label = {city}
+
+             label = {district}
               onClick={() => {
                 setCurrentFilter((prevFilterState) => {
                   return {
                     ...prevFilterState,
-                    city: prevFilterState?.city
-                      ? prevFilterState.city.includes(city)
-                        ? prevFilterState.city.filter(
-                            (el) => el !== city
+                    district: prevFilterState?.district
+                      ? prevFilterState.district.includes(district)
+                        ? prevFilterState.district.filter(
+                            (el) => el !== district
                           )
-                        : [...(prevFilterState.city?? []), city]
-                      : [city],
+                        : [...(prevFilterState.district ?? []), district]
+                      : [district],
                   };
                 });
                 resetPageAndReloadData()
-
-                // setCurrentFilter(prevFilterState => {
-                //     if (prevFilterState.category ? prevFilterState.category.includes(category) : null) {
-                //         return {
-                //             ...prevFilterState,
-                //             category:
-                //                 prevFilterState.category ? prevFilterState.category.filter(el => el !== category) : []
-                //         };
-                //     }
-                //     return { ...prevFilterState, category: [...prevFilterState.category ? prevFilterState.category : [], category] };
-                // });
               }}
             />
             : null 
@@ -97,7 +79,7 @@ export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,reset
     </Accordion>
   );
 
-  // logoFind(object.companyName)
+
 
 
 
