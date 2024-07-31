@@ -68,7 +68,7 @@ export function SwiperImg({ showModalImg, img, setShowModalImg, setHouseStepImg 
 
     return (
 
-        <section className="w-[100%] m-[0 auto] bg-[#f5f2f261] gap-[0px] p-[20px] justify-center">
+        <section className="w-[100%] m-[0 auto] bg-[transparent] gap-[0px] p-[20px] justify-center">
             {houseArrImg.length > 0  ?
                 <Carousel sx={{ height: 'auto' }} animation="slide" autoPlay={false} swipe indicators cycleNavigation fullHeightHover
                     navButtonsAlwaysVisible

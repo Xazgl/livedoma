@@ -2,6 +2,7 @@
 import { DescriptionObj } from "@/app/component/currentObjComponents/description/DescriptionObj"
 import YandexMap from "@/app/component/currentObjComponents/map/YandexMap"
 import { SwiperImg } from "@/app/component/currentObjComponents/slider/SwiperImg"
+import { Footer } from "@/app/component/folder/Footer"
 import { Header } from "@/app/component/header/Header"
 import { MobileHeader } from "@/app/component/mainBarMobile/MobileBar"
 import { ModalImg } from "@/app/component/modalWindow/ModalImg"
@@ -52,6 +53,7 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
             }
                 <DescriptionObj object={object} />
                 <YandexMap object={object}/>
+                <Footer/>
             </>
         }
 
@@ -63,5 +65,6 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
                 houseStepImg={houseStepImg}
             />
         }
+
     </>
 }

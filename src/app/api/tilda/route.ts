@@ -31,9 +31,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const utm_term = answer.utm_term ? answer.utm_term : "";
 
         try {
-
-          
-          let double = await doubleFind(phone)
+          let double = await doubleFind(phone);
 
           const newContact = await db.tilda.create({
             data: {
@@ -65,6 +63,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 intrumId: crmAnswer.data.request.toString(),
                 intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
               },
+            });
+
+            await db.managerQueue.create({
+              data: {
+                managerId:
+                  manager && manager !== ""
+                    ? manager
+                    : "Ошибка в выборе менеджера",
+                  url:  `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+                  type  : 'Tilda'
+              }
             });
 
             const queue = await db.wazzup.create({

@@ -30,6 +30,7 @@ import { Renovation } from "../../filterFields/renovation/Renovation";
 import { Floor } from "../../filterFields/floor/Floor";
 import { CitySelect } from "../../filterFields/adress/CitySelect";
 import { DistSelect } from "../../filterFields/adress/DistSelect";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   objects: allObjects;
@@ -96,11 +97,14 @@ export function Filter({
     resetPageAndReloadData();
   }
 
+  const { theme } = useTheme();
+
   return (
     <>
       <aside
+        style={{ transition: "all 0.5s" }}
         className={`hidden md:flex  flex-col  w-[20%]  h-[full] md:h-[80vh]  items-center 
-            sticky  top-0  right-0    rounded  overflow-auto`}
+            sticky  top-0  right-0    rounded  overflow-auto  ${theme === "dark"? "bg-[#3a3f4635]":"bg-[transparent]"} `}
         id={styles.aside}
       >
         <div className={filterRow}>

@@ -32,6 +32,7 @@ import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { RoomsSelector } from "../../filterFields/rooms/Rooms";
 import { DistSelect } from "../../filterFields/adress/DistSelect";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   objects: allObjects;
@@ -96,8 +97,10 @@ export function FilterMobile({
     }));
     resetPageAndReloadData();
   }
-
+  
+  const { theme } = useTheme();
   const [expanded, setExpanded] = useState<string | false>(false);
+
 
   const handleChangeBar =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -111,7 +114,7 @@ export function FilterMobile({
           expanded={expanded === "panel1"}
           onChange={handleChangeBar("panel1")}
           sx={{
-            backgroundColor: "#131313f0",
+            backgroundColor:  theme === "dark"? "#44546578" : "#131313f0" ,
             color: "white",
             margin: "1px",
             width: "100%",

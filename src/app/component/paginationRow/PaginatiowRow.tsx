@@ -1,5 +1,8 @@
+"use client";
 import React from 'react';
 import { Pagination, PaginationItem, Stack } from "@mui/material";
+import { useTheme } from '../provider/ThemeProvider';
+
 
 type Props = {
   currentPage: number;
@@ -8,6 +11,7 @@ type Props = {
 };
 
 export function PaginationRow({ currentPage, totalPages, handlePageChange }: Props) {
+  const { theme } = useTheme();
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -22,34 +26,6 @@ export function PaginationRow({ currentPage, totalPages, handlePageChange }: Pro
     return (
       <PaginationItem
         {...item}
-        sx={{
-          color: 'black',
-          backgroundColor: 'black',
-          transition: 'all 1s',
-          '&:hover': {
-            backgroundColor: '#55529fbd',
-            color: 'white',
-          },
-          '&.Mui-selected': {
-            backgroundColor: '#55529fbd',
-            color: 'white',
-          },
-          '@media (max-width: 540px)': {
-            minWidth: '28px',
-            height: '28px',
-            fontSize: '0.75rem',
-            marginTop: '10px'
-          },
-          '@media (max-width: 420px)': {
-            minWidth: '25px',
-            height: '25px',
-            fontSize: '0.70rem',
-          },
-          '@media (max-width: 370px)': {
-            minWidth: '20px',
-            height: '20px'
-          },
-        }}
       />
     );
   };
@@ -81,9 +57,10 @@ export function PaginationRow({ currentPage, totalPages, handlePageChange }: Pro
                 color: 'white',
               },
               '&:not(.Mui-selected):not(:hover)': {
-                backgroundColor: 'black',
-                color: 'white',
+                backgroundColor: theme === 'dark' ? 'transition' :  'black',
+                color: theme === 'dark' ?  'white' : 'white',
                 opacity: 1,
+                borderColor:theme === 'dark' ?  'white' : 'transparent'
               },
               '@media (max-width: 540px)': {
                 minWidth: '28px',

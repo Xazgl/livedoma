@@ -29,6 +29,7 @@ import Link from "next/link";
 import DynamicCardImg from "./DynamicCardImg";
 import { SortDateSelect } from "../../filterFields/sortPrice/SortPriceSelect";
 import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
+import { useTheme } from "../../provider/ThemeProvider";
 
 
 type Props = {
@@ -60,6 +61,7 @@ export function ObjectsCardsTest({
   resetPageAndReloadData,
 }: Props) {
   const [loadingImg, setLoadingImg] = useState(true);
+  const { theme } = useTheme();
 
   let style = loading
     ? "flex-col items-center  h-[100vh]  justify-center  flex-nowrap"
@@ -85,15 +87,6 @@ export function ObjectsCardsTest({
     start();
   }, []);
 
-  // const fetchData = async (id: string) => {
-  //   try {
-  //     const response = await fetch(`/api/${id}`);
-  //     const data = await response.json();
-  //     return data.imgSrc ? data.imgSrc : "";
-  //   } catch (error) {
-  //     console.error("Ошибка при загрузке изображения:", error);
-  //   }
-  // };
 
   return (
     <>
@@ -123,13 +116,13 @@ export function ObjectsCardsTest({
           </div> */}
             {filteredHouse.map((object) => (
               <Fragment key={object.id}>
-                <div className="flex  justify-center  md:justify-start md:w-full  mt-[25px] md:mt-[0px]">
+                <div className="flex  justify-center  md:justify-start md:w-full  mt-[35px] md:mt-[0px]">
                   <article
                     key={object.id}
                     style={{ transition: "all 1s" }}
-                    className="flex   flex-col  md:flex-row  w-[300px] xs:w-[310px] md:w-full  h-[100%] md:h-[300px]  sm:p-2  md:mt-[10px]  md:gap-[50px]
+                    className={`flex   flex-col  md:flex-row  h-[100%] w-[300px] xs:w-[310px] md:w-full  md:h-[250px] xxl:h-[300px]   sm:p-2  md:mt-[10px]  md:gap-[50px]
                                  md:border-none md:border-[transparent] md:border-[0px] 
-                                cursor-pointer   md:duration-700   md:ease-in-out   md:hover:shadow-2xl"
+                                cursor-pointer   md:duration-700   md:ease-in-out    ${theme === "dark"? "dark:md:hover:shadow-dark-2xl":"md:hover:shadow-2xl"}`} 
                   >
                     <div className="flex  flex-col  w-[auto]  h-[100%]    md:justify-around">
                       <div className="flex   w-[100%] h-[200px] sm:w-[300px]  sm:h-[260px]   lg:w-[400px] lg:h-[98%]  relative overflow-hidden">
@@ -183,9 +176,8 @@ export function ObjectsCardsTest({
                                   justifyContent: "center",
                                   alignContent: "center",
                                   padding: "1px",
-                                  // background: "#f5eeee7d",
                                   borderRadius: "100%",
-                                  color: "#bc3737bd",
+                                  color: "#d31717",
                                   "&:hover": { color: "black" },
                                 }}
                                 onClick={() =>
@@ -195,7 +187,7 @@ export function ObjectsCardsTest({
                             ) : (
                               <FavoriteBorderIcon
                                 sx={{
-                                  background:'#80757529',
+                                  background:'#3734345c',
                                   display: "flex",
                                   justifyContent: "center",
                                   alignContent: "center",
@@ -213,38 +205,18 @@ export function ObjectsCardsTest({
                           </div>
                         )}
                       </div>
-                      {/* <Link href={`/object/${object.id}`} >
-                        <div className="hidden md:flex  mt-[5px] w-[100%] md:w-[312px] h-[50px] md:h-[60px]  justify-between sm:mt-[5px] ">
-                          {object.img.slice(1, 4).map((image, index) => (
-                            <div
-                              key={index}
-                              className="flex h-[50px] w-[95px] md:h-[50px] md:w-[100px] relative"
-                            >
-                              <Image
-                                className="rounded"
-                                src={image}
-                                alt={object.category}
-                                layout="fill"
-                                sizes="(max-width: 750px) 60vw,
-                                                      (max-width: 828px) 60vw,
-                                                      (max-width: 1080px) 66vw,
-                                                      70vw"
-                                loading="lazy"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      </Link> */}
                     </div>
 
                     <Link href={`/object/${object.id}`} className="w-[100%]">
                       <>
-                        <div className="flex mt-[5px] gap-[5px] md:mt-[0px] flex-col  w-full  h-full   items-start md:gap-[20px] text-black">
+                        <div className={`flex mt-[5px] gap-[5px] md:mt-[0px] flex-col  w-full  h-full   items-start md:gap-[20px]  relative
+                          ${theme === "dark"? "text-[white]":"text-[black]"}`}>
+                          
                           <h3 className="hidden md:flex  w-full text-sm ">
                             Категория: {object.category}
                           </h3>
 
-                          <h3 className="flex md:hidden w-full text-[15px] xs:text-[17px] md:text-sm  text-black gap-[5px] items-center">
+                          <h3 className={`flex md:hidden w-full text-[15px] xs:text-[17px] md:text-sm  gap-[5px] items-center  ${theme === "dark"? "text-[white]":"text-[black]"}`}>
                             {object.objectType
                               ? object.objectType
                               : object.category}
@@ -294,7 +266,8 @@ export function ObjectsCardsTest({
                                     : `, ${object.street}`
                                 }`}{" "}
                           </h2>
-                          <div className="flex md:hidden  w-full">
+                          
+                          <div className="flex md:hidden  w-full absolute bottom-0  justify-end">
                             <Image
                               className="flex md:hidden"
                               src={logoFind(object.companyName) ?? ""}
@@ -304,10 +277,11 @@ export function ObjectsCardsTest({
                               loading="lazy"
                             />
                           </div>
-                          {/* <h2 className="flex text-[#9da1ab] text-sm  text-[16px]">{`${object.state},${object.city},${object.street}`}</h2> */}
+
                           <h1 className="flex w-full  font-bold text-[25px] sm:text-[22px]">
                             {numberWithSpaces(Number(object.price))} ₽
                           </h1>
+
                           <div className="hidden md:flex  flex-col md:flex-row  gap-[5px]  md:gap-[40px]  mt-[5px]  md:mt-[30px]">
                             {object.square && (
                               <PropertyInfo
@@ -367,7 +341,7 @@ export function ObjectsCardsTest({
                               ))}
                           </div>
 
-                          <div className="hidden md:flex w-full md:justify-end">
+                          <div className="hidden md:flex w-full md:absolute md:bottom-0 md:justify-end">
                             <Image
                               className="hidden md:flex "
                               src={logoFind(object.companyName) ?? ""}
@@ -383,16 +357,18 @@ export function ObjectsCardsTest({
                   </article>
                 </div>
                 <div className="hidden md:flex w-full justify-center">
-                  <div className="flex  w-[95%]  h-[0.80px]  bg-[#f1f2f4] "></div>
+                  <div className={`flex  w-[95%]  h-[0.80px] ${theme === "dark"? " bg-[#f1f2f43d] ":" bg-[#f1f2f4] "} `}></div>
                 </div>
               </Fragment>
             ))}
 
-            <PaginationRow
-              currentPage={currentPage}
-              totalPages={allPages}
-              handlePageChange={handlePageChange}
-            />
+            <div className="flex mt-[35px] sm:hidden">
+              <PaginationRow
+               currentPage={currentPage}
+               totalPages={allPages}
+               handlePageChange={handlePageChange}
+              />
+            </div> 
           </>
         )}
       </main>

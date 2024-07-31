@@ -7,12 +7,12 @@ export const NavEl = [
   //   title: "Преимущества",
   //   src:'/'
   // },
+  // {
+  //   title: "",
+  //   src:'/mortgage'
+  // },
   {
-    title: "Ипотека",
-    src:'/mortgage'
-  },
-  {
-    title: "Блог",
+    title: "",
     src:'/'
   },
 ];

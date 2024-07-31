@@ -30,6 +30,8 @@ import {
   wallsTypeFilter,
 } from "./filter-sidebar/myFilters";
 import { usePathname, useSearchParams } from "next/navigation";
+import { PaginationRow } from "../paginationRow/PaginatiowRow";
+import { useTheme } from "../provider/ThemeProvider";
 
 type Props = {
   objects: ObjectIntrum[];
@@ -38,6 +40,8 @@ type Props = {
 };
 
 export function ParentFilterBlock({ objects, pages, page }: Props) {
+
+  const { theme } = useTheme();
   const refCardsObjects = useRef<HTMLDivElement>(null);
 
   //Отфильтрованные Квартиры, по умолчанию все квартиры
@@ -290,7 +294,7 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
       params.append("page", String(currentPage));
     }
     window.history.replaceState(null, "", `${pathname}?${params}`);
-
+    // console.log('запрос')
     fetch("/api/objects/?" + params)
       .then((res) => res.json())
       .then((el) => {
@@ -309,10 +313,11 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
             districts: el.filter.district,
             streets: el.filter.street,
             companyNames: el.filter.companyName,
-            price: [el.filter.minPrice, el.filter.maxPrice],
+            price: [el.filter.minPrice, el.filter. maxPrice],
           };
         });
-      });
+      }); 
+      
   }, [currentFilter, currentPage]);
 
   //Конкретные выбранные фильтры
@@ -387,10 +392,12 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
             refCardsObjects={refCardsObjects}
           />
 
-          <div className="flex flex-col  items-center lg:items-center w-full justify-center ">
-            <h1 className="w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] text-black mt-[50px] font-semibold">
+
+          <div className="flex flex-col   items-center lg:items-center  w-full  justify-center ">
+            <h1 className={`w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] mt-[50px]
+               font-semibold ${theme === "dark"? "text-[white]":"text-[black]"} `}>
               Лучшие предложения для
-              <span className="text-[#54529F] border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F]">
+              <span className={` border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F] ${theme === "dark"? "text-[white]":"text-[#54529F]"} `}>
                 <br />
                 ВАШИХ КЛИЕНТОВ НА ОДНОМ САЙТЕ
               </span>
@@ -451,7 +458,15 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           setFavArr={setFavArr}
           resetPageAndReloadData={resetPageAndReloadData}
         />
+        
       </section>
+      <div className="hidden sm:flex">
+        <PaginationRow
+              currentPage={currentPage}
+              totalPages={allPages}
+              handlePageChange={handlePageChange}
+        />
+      </div>      
     </div>
   );
 }

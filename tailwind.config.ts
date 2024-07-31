@@ -13,6 +13,13 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      colors: {
+        'theme-light-bg': 'transparent',
+        'theme-dark-bg': '#000000',
+      },
+      boxShadow: {
+        'dark-2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.75)',
+      },
       screens: {
          
         'xs': '320px',
@@ -27,6 +34,7 @@ const config: Config = {
   
         'lg': '1440px',
         // => @media (min-width: 1440px) { ... }
+        'xll': '1640px',
       },
     },
   },

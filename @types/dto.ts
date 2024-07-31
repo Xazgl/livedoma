@@ -1,4 +1,5 @@
 import { InparseObjects, ObjectIntrum } from "@prisma/client";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { number } from "zod";
 
 export type FilterUserOptions = {
@@ -370,3 +371,16 @@ export type FilterInparseOptions = {
 export type FilterInparseProps = {
   streets: string[];
 };
+
+
+
+export type CommentsProviderProps = {
+  children: ReactNode;
+};
+
+
+export type ThemeContextProps = {
+  theme: string;
+  toggleTheme: () => void;
+  setTheme: Dispatch<SetStateAction<string>>;
+}

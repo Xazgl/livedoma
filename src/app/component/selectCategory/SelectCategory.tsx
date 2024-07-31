@@ -5,7 +5,12 @@ import bg1 from "/public/images/mainPage/2.webp";
 import bg2 from "/public/images/mainPage/5.webp";
 import bg4 from "/public/images/mainPage/4.webp";
 import Image from "next/image";
-import { Dispatch, RefObject, SetStateAction, useEffect } from "react";
+import {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useEffect,
+} from "react";
 import {
   categoryFilter,
   ceilingHeightFilter,
@@ -26,7 +31,8 @@ import {
 } from "../main-block-filter/filter-sidebar/myFilters";
 import { FilterUserOptions, allObjects } from "../../../../@types/dto";
 import { usePathname, useSearchParams } from "next/navigation";
-// import { Slide } from "@mui/material"
+import { SliderCategory } from "./SliderCategory";
+import { useTheme } from "../provider/ThemeProvider";
 
 type Props = {
   objects: allObjects;
@@ -36,15 +42,15 @@ type Props = {
   refCardsObjects: RefObject<HTMLDivElement>;
 };
 
-export function SelectCategory({objects,currentFilter,setCurrentFilter, setFilteredHouse,
-  refCardsObjects,}: Props) {
+export function SelectCategory({
+  objects,
+  currentFilter,
+  setCurrentFilter,
+  setFilteredHouse,
+  refCardsObjects,
+}: Props) {
 
-  
-  // const changeFilter = (filter: FilterUserOptions) => {
-  //   setCurrentFilter((prevFilterState) => {
-  //     return { ...prevFilterState, ...filter };
-  //   });
-  // };
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     setFilteredHouse(
@@ -84,11 +90,11 @@ export function SelectCategory({objects,currentFilter,setCurrentFilter, setFilte
 
       // Обновляем URL параметры
       const params = new URLSearchParams(searchParams);
-      params.delete('category');
-      newCategory.forEach(category => params.append('category', category));
+      params.delete("category");
+      newCategory.forEach((category) => params.append("category", category));
 
       const newUrl = `${pathname}?${params.toString()}`;
-      window.history.replaceState(null, '', newUrl);
+      window.history.replaceState(null, "", newUrl);
 
       return {
         ...prevFilterState,
@@ -96,31 +102,11 @@ export function SelectCategory({objects,currentFilter,setCurrentFilter, setFilte
       };
     });
     if (refCardsObjects.current) {
-      refCardsObjects.current.scrollIntoView({ behavior: 'smooth' });
+      refCardsObjects.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-
   
-  // const createCategoryHandler = (categoryName: string) => () => {
-  //   setCurrentFilter((prevFilterState) => {
-  //     const currentCategory = prevFilterState.category ?? [];
-  //     if (currentCategory.includes(categoryName)) {
-  //       return {
-  //         ...prevFilterState,
-  //         category: currentCategory.filter((el) => el !== categoryName),
-  //       };
-  //     }
-  //     return {
-  //       ...prevFilterState,
-  //       category: [...currentCategory, categoryName],
-  //     };
-  //   });
-  //   if (refCardsObjects.current) {
-  //     refCardsObjects.current.scrollIntoView({ behavior: "smooth" });
-  //   }
-  // };
-
   const categories = [
     {
       title: "Квартиры",
@@ -144,23 +130,31 @@ export function SelectCategory({objects,currentFilter,setCurrentFilter, setFilte
     },
   ];
 
-  const styleCard = `flex h-[95px]   w-[290px]  relative rounded
+  const styleCard = `flex  h-[100px] w-[180px]  relative rounded
+    xs:w-[250px] xs:h-[150px]
     sm:w-[350px] sm:h-[200px]
     md:w-[400px] md:h-[200px]
     lg:w-[600px] lg:h-[270px] 
     after:duration-[1000ms]   after:ease-in-out   overflow-hidden
     after:w-full after:h-full hover:after:bg-[#0000003f] hover:after:absolute`;
 
-  const title = "flex mt-[5px] w-full text-black text-[14px] md:text-[20px]";
+  const title = `flex mt-[5px] w-full text-[14px]  xs:text-[16px] md:text-[20px] ${
+    theme === 'dark' ? 'text-white' : 'text-black'
+  }`;
+
 
   return (
     <>
       <section className="flex  flex-col  h-full     w-full  items-center sm:items-stretch   sm:flex-row sm:flex-wrap justify-center  mt-[40px] gap-[10px]">
         {categories.map((category, index) => (
-          <div key={index}
-           className="flex flex-col-reverse sm:flex-col w-[auto] cursor-pointer"
+          <div
+            key={index}
+            className="hidden sm:flex flex-col-reverse sm:flex-col w-[auto] cursor-pointer"
           >
-            <div className={styleCard} onClick={createCategoryHandler(category.title)} >
+            <div
+              className={styleCard}
+              onClick={createCategoryHandler(category.title)}
+            >
               <Image
                 src={category.bgSrc}
                 alt={category.title}
@@ -177,25 +171,16 @@ export function SelectCategory({objects,currentFilter,setCurrentFilter, setFilte
             <h1 className={title}>{category.title}</h1>
           </div>
         ))}
+         
+         <SliderCategory
+          categories={categories}
+          styleCard={styleCard}
+          titleClass={title}
+          createCategoryHandler={createCategoryHandler}
+        />
       </section>
     </>
   );
 }
 
 
-
-{/* {categories.map((category, index) => (
-          <div key={index} className="flex  flex-col-reverse  sm:flex-col w-[auto] cursor-pointer">
-            <div
-              className={styleCard}
-              style={{ 
-                background: `url(${category.bgSrc})`,
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-              }}
-              onClick={createCategoryHandler(category.title)}
-            ></div>
-            <h1 className={title}>{category.title}</h1>
-          </div>
-        ))} */}

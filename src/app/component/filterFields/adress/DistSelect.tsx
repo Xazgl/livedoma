@@ -16,7 +16,7 @@ type Props = {
 };
 
 export function DistSelect({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
-    console.log(filteblackProps.districts)
+    // console.log(filteblackProps.districts)
   
     return (
     <Accordion defaultExpanded={false} sx={{ width: "100%" }}>

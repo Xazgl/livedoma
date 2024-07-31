@@ -4,6 +4,7 @@ import { Header } from "./component/header/Header";
 import { MobileHeader } from "./component/mainBarMobile/MobileBar";
 import { SuspenseFilter } from "./component/main-block-filter/SuspenseFilter";
 import { Metadata } from 'next'
+import { Footer } from "./component/folder/Footer";
  
 export const metadata: Metadata = {
   title: 'Мультилистинг Волгоград',
@@ -63,7 +64,11 @@ export default async function Home() {
       <Header />
       <MobileHeader />
       {objects && objects.length > 0 && 
+      <>
         <SuspenseFilter  objects={objects}  pages={pages} page={page}/>
+        <Footer/>
+      
+      </>
       }
     </>
   );

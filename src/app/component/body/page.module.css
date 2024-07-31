@@ -28,11 +28,11 @@
 
 /* Стили для темной темы */
 .darkBackground {
-  background-color: black; 
+  background-color: #111827 
 }
 
 .darkContent {
-  background-color: gray; 
+  background-color: #111827; 
 }
 
 .title {

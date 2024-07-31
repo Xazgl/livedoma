@@ -1,8 +1,0 @@
--- AlterTable
-ALTER TABLE "constructionApplications" ALTER COLUMN "translator" DROP NOT NULL,
-ALTER COLUMN "status" DROP NOT NULL,
-ALTER COLUMN "postMeetingStage" DROP NOT NULL,
-ALTER COLUMN "desc" DROP NOT NULL,
-ALTER COLUMN "contactedClient" DROP NOT NULL,
-ALTER COLUMN "phone" DROP NOT NULL,
-ALTER COLUMN "url" DROP NOT NULL;

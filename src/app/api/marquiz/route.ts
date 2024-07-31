@@ -88,6 +88,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
               },
             });
 
+            await db.managerQueue.create({
+              data: {
+                managerId:
+                  manager && manager !== ""
+                    ? manager
+                    : "Ошибка в выборе менеджера",
+                  url:  `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+                  type  : 'Marquiz'
+              }
+            });
+
             const queue = await db.wazzup.create({
               data: {
                 name: '',

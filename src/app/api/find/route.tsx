@@ -16,6 +16,8 @@ function splitArrayIntoChunks(array: InparseObjects[], parts: number) {
   return result;
 }
 const cpuCount = os.cpus().length;
+
+
 export async function GET(req: NextRequest) {
   if (req.method === "GET") {
     try {
