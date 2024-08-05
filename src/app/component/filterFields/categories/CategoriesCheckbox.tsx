@@ -3,6 +3,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {  FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
 import HouseIcon from "@mui/icons-material/House";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   filteblackProps: FilteblackProps;
@@ -12,10 +13,17 @@ type Props = {
 };
 
 export function CategoriesCheckbox({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
+  const { theme} = useTheme();
   return (
-    <Accordion defaultExpanded={true} sx={{ width: "100%" }}>
+    <Accordion defaultExpanded={true} 
+       sx={{ 
+        width: "100%",
+        bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+        color: theme === "dark" ? "white" : "black"
+      }}
+    >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/>}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
@@ -39,6 +47,7 @@ export function CategoriesCheckbox({filteblackProps,currentFilter,setCurrentFilt
                   }}
                 >
                   <Checkbox
+                    sx={{color: theme === "dark" ? "white" : "black"}}
                     color="default"
                     checked={currentFilter.category?.includes(category)}
                   />

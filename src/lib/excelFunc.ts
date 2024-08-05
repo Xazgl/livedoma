@@ -13,6 +13,8 @@ import { saveAs } from "file-saver";
 import { constructionApplicationsExcel } from "../../@types/dto";
 import { formatDate, formatDateTime, formatDateTimeToDDMMYYYYHHMMSS } from "./dateStr";
 import { comment } from "postcss";
+import { foundManager } from "./findManager";
+
 
 export async function generateExcel(transactions: Sales[]) {
   const workbook = new ExcelJS.Workbook();
@@ -181,11 +183,12 @@ export async function generateExcel2(applications: constructionApplications[]) {
     { name: "Трофимов Николай", id: "1140" },
     { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
+    { name: "Выходцева", id: "1944" },
   ];
 
   function findManager(id: string) {
     const manager = managers.find((manager) => manager.id === id);
-    return manager ? manager.name : "Нету";
+    return manager ? manager.name :   '';
   }
 
   

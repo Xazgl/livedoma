@@ -180,9 +180,16 @@ export function Filter({
         </div>
 
         <div className={filterRow}>
-          <Accordion>
+          <Accordion
+            sx={{
+              width: "100%",
+              bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+              color: theme === "dark" ? "white" : "black"
+            }}
+             
+          >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/>}
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
@@ -243,16 +250,16 @@ export function Filter({
         {favArr && favArr.length > 0 && (
           <div className={filterRow}>
             {favArr && favArr.length > 0 ? (
-              <div className={`flex justify-end  w-[100%]  text-[black] `}>
+              <div className={`flex justify-end  w-[100%]   ${theme === "dark"? "text-white":"text-black"}`}>
                 <div className="cursor-pointer  gap-[5px] items-center  transition  duration-700  ease-in-out ">
                   <Link
                     href={`/cart/${favArr[0].sessionId}`}
                     style={{ textDecoration: "none" }}
-                    className="w-[100%] h-[100%] text-black"
+                    className={`w-[100%] h-[100%]   ${theme === "dark"? "text-white":"text-black"}`} 
                   >
                     <a rel="noopener noreferrer">
                       <FavoriteBorderIcon sx={{ fontSize: "20px" }} />
-                      <span className="text-sm">{favArr.length}</span>
+                      <span className={`text-sm  ${theme === "dark"? "text-white":"text-black"}`}>{favArr.length}</span>
                     </a>
                   </Link>
                 </div>

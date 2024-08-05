@@ -7,6 +7,7 @@ import {  FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
 import ZoomInMapIcon from '@mui/icons-material/ZoomInMap';
 import { funcCity } from "@/lib/foundAdress";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   filteblackProps: FilteblackProps;
@@ -16,12 +17,17 @@ type Props = {
 };
 
 export function DistSelect({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
-    // console.log(filteblackProps.districts)
-  
+    const { theme} = useTheme();
     return (
-    <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
+    <Accordion defaultExpanded={false} 
+       sx={{ 
+        width: "100%",
+        bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+        color: theme === "dark" ? "white" : "black"
+        }}
+    >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/> }
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
@@ -48,6 +54,7 @@ export function DistSelect({filteblackProps,currentFilter,setCurrentFilter,reset
                   }}
                 >
                   <Checkbox
+                    sx={{color: theme === "dark" ? "white" : "black"}}
                     color="default"
                     checked={currentFilter.district?.includes(district)}
                   />

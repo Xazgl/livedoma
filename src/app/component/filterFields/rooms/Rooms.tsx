@@ -4,6 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SchemaIcon from "@mui/icons-material/Schema";
 import { FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   filteblackProps: FilteblackProps;
@@ -13,7 +14,7 @@ type Props = {
 };
 
 export function RoomsSelector({filteblackProps,currentFilter,setCurrentFilter, resetPageAndReloadData}: Props) {
-
+  const { theme } = useTheme();
   const roomOptions = filteblackProps.rooms
     .filter((room) => room.trim() !== "") // Exclude empty strings
     .sort((a, b) => {
@@ -37,9 +38,15 @@ export function RoomsSelector({filteblackProps,currentFilter,setCurrentFilter, r
     });
 
   return (
-    <Accordion  sx={{ width: "100%" }}>
+    <Accordion 
+            sx={{
+             width: "100%",
+             bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+             color: theme === "dark" ? "white" : "black"
+            }}
+    >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/>}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
@@ -51,24 +58,40 @@ export function RoomsSelector({filteblackProps,currentFilter,setCurrentFilter, r
       <AccordionDetails>
         <div className="flex flex-col w-full text-black">
 
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={currentFilter.rooms ?? []}
-            label=""
-            onChange={(event) => {
-              const selectedRoom = event.target.value as string; 
-              setCurrentFilter((prevFilterState) => {
-                const updatedRooms = prevFilterState.rooms?.includes(selectedRoom)
-                  ? prevFilterState.rooms.filter((room) => room !== selectedRoom)
-                  : [...(prevFilterState.rooms ?? []), selectedRoom];
-                return {
-                  ...prevFilterState,
-                  rooms: updatedRooms,
-                };
-              });
-              resetPageAndReloadData()
-            }}
+        <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={currentFilter.rooms ?? []}
+                label=""
+                onChange={(event) => {
+                    const selectedRoom = event.target.value as string;
+                    setCurrentFilter((prevFilterState) => {
+                        const updatedRooms = prevFilterState.rooms?.includes(selectedRoom)
+                            ? prevFilterState.rooms.filter((room) => room !== selectedRoom)
+                            : [...(prevFilterState.rooms ?? []), selectedRoom];
+                        return {
+                            ...prevFilterState,
+                            rooms: updatedRooms,
+                        };
+                    });
+                    resetPageAndReloadData();
+                }}
+                sx={{
+                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                    color: theme === "dark" ? "white" : "black",
+                    '& .MuiSvgIcon-root': {
+                        color: theme === "dark" ? "white" : "black",
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: theme === "dark" ? "white" : "black",
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: theme === "dark" ? "white" : "black",
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: theme === "dark" ? "white" : "black",
+                    }
+                }}
           >
             {roomOptions.map((room) => (
               <MenuItem key={room} value={room}>{room}</MenuItem>

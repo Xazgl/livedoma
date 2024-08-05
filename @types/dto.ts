@@ -331,7 +331,7 @@ export type constructionApplicationsExcel = {
   id: string;
   idApplicationIntrum: string;
   translator: string; //Источник
-  responsibleMain: string; //Главный отвественный
+  responsibleMain: string | Promise<any>; //Главный отвественный
   status: string; //статус
   postMeetingStage: string; //стадия после встречи
   desc: string; //описание

@@ -3,6 +3,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
 import StoreIcon from '@mui/icons-material/Store';
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
     filteblackProps: FilteblackProps,
@@ -13,11 +14,17 @@ type Props = {
 
 export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter,
  resetPageAndReloadData }: Props) {
-
+    const { theme} = useTheme();
     return <>
-        <Accordion sx={{ width: '100%' }}>
+        <Accordion 
+            sx={{
+             width: "100%",
+             bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+             color: theme === "dark" ? "white" : "black"
+            }}
+        >
             <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+                expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/>}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
@@ -32,6 +39,7 @@ export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter
                                     key={companyName}
                                     control={
                                         <Checkbox
+                                            sx={{color: theme === "dark" ? "white" : "black"}}
                                             color="default"
                                             checked={currentFilter.companyName?.includes(companyName) || false}
                                             onChange={() => {

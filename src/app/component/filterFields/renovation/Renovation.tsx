@@ -4,6 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 import { FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   filteblackProps: FilteblackProps;
@@ -12,8 +13,8 @@ type Props = {
 };
 
 export function Renovation ({filteblackProps,currentFilter,setCurrentFilter}: Props) {
-
-
+  const { theme } = useTheme();
+  
   const renovationOptions = filteblackProps.renovationTypes
     .map((renovation) => renovation.trim() === "" ? "Не указан" : renovation.trim()) 
     .sort((a, b) => {
@@ -31,28 +32,18 @@ export function Renovation ({filteblackProps,currentFilter,setCurrentFilter}: Pr
       }
     });
 
-  // const renovationOptions = filteblackProps.renovationTypes
-  //   .filter((renovation) => renovation.trim() !== "") 
-  //   .sort((a, b) => {
-  //     const isANumber = !isNaN(Number(a));
-  //     const isBNumber = !isNaN(Number(b));
-
-  //     if (isANumber && isBNumber) {
-  //       return Number(a) - Number(b);
-  //     } else if (isANumber) {
-  //       return -1;
-  //     } else if (isBNumber) {
-  //       return 1;
-  //     } else {
-  //       return a.localeCompare(b);
-  //     }
-  //   });
 
   return (
 
-    <Accordion  sx={{ width: "100%" }}>
+    <Accordion 
+      sx={{
+       width: "100%",
+       bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+       color: theme === "dark" ? "white" : "black"
+      }}
+    >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/>}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
@@ -80,6 +71,22 @@ export function Renovation ({filteblackProps,currentFilter,setCurrentFilter}: Pr
                   renovation: updatedRenovation,
                 };
               });
+            }}
+            sx={{
+              bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+              color: theme === "dark" ? "white" : "black",
+              '& .MuiSvgIcon-root': {
+                  color: theme === "dark" ? "white" : "black",
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: theme === "dark" ? "white" : "black",
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: theme === "dark" ? "white" : "black",
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: theme === "dark" ? "white" : "black",
+              }
             }}
           >
             {renovationOptions.map((el) => (

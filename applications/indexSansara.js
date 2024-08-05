@@ -75,7 +75,7 @@ async function start() {
       };
 
       const responsibleName = await foundName(application.employee_id);
-      const responsibleMain = responsibleName !== 'Нет' ? responsibleName : '';
+      const responsibleMain = responsibleName !== 'Нет' ? responsibleName : 'Отвественный не назначен';
 
       if (existingSale) {
         // Если сделка существует, обновляем ее поля

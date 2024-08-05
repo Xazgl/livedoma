@@ -1,12 +1,13 @@
 
 
-
+"use client";
 import {Accordion,AccordionDetails,AccordionSummary,Box,Checkbox,FormControlLabel,Typography,} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {  FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
 import LocationCityIcon from '@mui/icons-material/LocationCity';
 import { funcCity } from "@/lib/foundAdress";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   filteblackProps: FilteblackProps;
@@ -16,10 +17,17 @@ type Props = {
 };
 
 export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
+  const { theme} = useTheme();
   return (
-    <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
+    <Accordion defaultExpanded={false} 
+    sx={{
+     width: "100%",
+     bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+     color: theme === "dark" ? "white" : "black"
+     }}
+    >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/> }
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
@@ -46,6 +54,7 @@ export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,reset
                 >
                   <Checkbox
                     color="default"
+                    sx={{color: theme === "dark" ? "white" : "black"}}
                     checked={currentFilter.city?.includes(city)}
                   />
                   {/* <Avatar

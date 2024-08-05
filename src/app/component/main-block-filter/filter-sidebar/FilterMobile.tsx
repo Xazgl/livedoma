@@ -97,10 +97,9 @@ export function FilterMobile({
     }));
     resetPageAndReloadData();
   }
-  
+
   const { theme } = useTheme();
   const [expanded, setExpanded] = useState<string | false>(false);
-
 
   const handleChangeBar =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -114,7 +113,7 @@ export function FilterMobile({
           expanded={expanded === "panel1"}
           onChange={handleChangeBar("panel1")}
           sx={{
-            backgroundColor:  theme === "dark"? "#44546578" : "#131313f0" ,
+            backgroundColor: theme === "dark" ? "#445465fc" : "#131313f0",
             color: "white",
             margin: "1px",
             width: "100%",
@@ -148,9 +147,19 @@ export function FilterMobile({
               id={styles.aside}
             >
               <div className={filterRow}>
-                <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
+                <Accordion
+                  sx={{
+                    width: "100%",
+                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                    color: theme === "dark" ? "white" : "black",
+                  }}
+                >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={
+                      <ExpandMoreIcon
+                        sx={{ color: theme === "dark" ? "white" : "#0000008a" }}
+                      />
+                    }
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
@@ -175,9 +184,19 @@ export function FilterMobile({
                 </Accordion>
               </div>
               <div className={filterRow}>
-                <Accordion defaultExpanded={false} sx={{ width: "100%" }}>
+                <Accordion
+                  sx={{
+                    width: "100%",
+                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                    color: theme === "dark" ? "white" : "black",
+                  }}
+                >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={
+                      <ExpandMoreIcon
+                        sx={{ color: theme === "dark" ? "white" : "#0000008a" }}
+                      />
+                    }
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >
@@ -204,7 +223,7 @@ export function FilterMobile({
                   resetPageAndReloadData={resetPageAndReloadData}
                 />
               </div>
-              
+
               <div className={filterRow}>
                 <DistSelect
                   filteblackProps={filteblackProps}
@@ -265,9 +284,19 @@ export function FilterMobile({
               </div>
 
               <div className={filterRow}>
-                <Accordion sx={{ width: "100%" }}>
+                <Accordion
+                  sx={{
+                    width: "100%",
+                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                    color: theme === "dark" ? "white" : "black",
+                  }}
+                >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={
+                      <ExpandMoreIcon
+                        sx={{ color: theme === "dark" ? "white" : "#0000008a" }}
+                      />
+                    }
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                   >

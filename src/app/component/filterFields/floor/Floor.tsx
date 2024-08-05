@@ -4,6 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction } from "react";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
+import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
   filteblackProps: FilteblackProps;
@@ -12,7 +13,7 @@ type Props = {
 };
 
 export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) {
-
+  const { theme } = useTheme();
   const floorOptions = filteblackProps.floor
     .map((floor) => (floor.trim() === "" ? "Не указан" : floor.trim()))
     .sort((a, b) => {
@@ -49,9 +50,15 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
 
   return (
     <div className="flex flex-col  w-full gap-[5px]">
-      <Accordion sx={{ width: "100%" }}>
+        <Accordion 
+            sx={{
+             width: "100%",
+             bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+             color: theme === "dark" ? "white" : "black"
+            }}
+        >
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<ExpandMoreIcon  sx={{ color: theme === "dark" ? "white" : "#0000008a"  }}/>}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -64,7 +71,7 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
           <div className="flex flex-col w-full text-black">
             {currentFilter.category && currentFilter.category[0] !== "Дома, дачи, коттеджи" && (
               <>
-                <h4>Этаж</h4>
+                <h4 className={`${theme === "dark" ? "text-[white]" : "text-[black]"}`}>Этаж</h4>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -86,6 +93,22 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
                       };
                     });
                   }}
+                  sx={{
+                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                    color: theme === "dark" ? "white" : "black",
+                    '& .MuiSvgIcon-root': {
+                        color: theme === "dark" ? "white" : "black",
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: theme === "dark" ? "white" : "black",
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: theme === "dark" ? "white" : "black",
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: theme === "dark" ? "white" : "black",
+                    }
+                  }}
                 >
                   {floorOptions.map((el) => (
                     <MenuItem key={el} value={el}>
@@ -97,7 +120,7 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
             )}
 
 
-            <h4>Этажей в доме</h4>
+            <h4 className={`${theme === "dark" ? "text-[white]" : "text-[black]"}`}>Этажей в доме</h4>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -118,6 +141,22 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
                     floors: updatedFloors,
                   };
                 });
+              }}
+              sx={{
+                bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                color: theme === "dark" ? "white" : "black",
+                '& .MuiSvgIcon-root': {
+                    color: theme === "dark" ? "white" : "black",
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: theme === "dark" ? "white" : "black",
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: theme === "dark" ? "white" : "black",
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: theme === "dark" ? "white" : "black",
+                }
               }}
             >
               {floorsOptions.map((el) => (

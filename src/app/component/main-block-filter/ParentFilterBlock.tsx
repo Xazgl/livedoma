@@ -1,11 +1,7 @@
 "use client";
 import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  FavoriteObj,
-  FilteblackProps,
-  FilterUserOptions,
-} from "../../../../@types/dto";
+import { FavoriteObj,FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
 import { Filter } from "./filter-sidebar/Filter";
 import { ObjectsCardsTest } from "./objectsCards/ObjectsCardsTest";
 import { FilterMobile } from "./filter-sidebar/FilterMobile";
@@ -99,6 +95,18 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     }
     if (params.has("sortPrice")) {
       filter.sortPrice = params.getAll("sortPrice");
+    }
+    if (params.has("maxPrice")) {
+      const maxPriceParam = params.getAll("maxPrice");
+      if (maxPriceParam.length > 0) {
+        filter.maxPrice = Number(maxPriceParam[0]);
+      }
+    }
+    if (params.has("minPrice")) {
+      const minPriceParam = params.getAll("minPrice");
+      if (minPriceParam.length > 0) {
+        filter.minPrice = Number(minPriceParam[0]);
+      }
     }
     if (params.has("page")) {
       setCurrentPage(parseInt(params.getAll("page")[0], 10));

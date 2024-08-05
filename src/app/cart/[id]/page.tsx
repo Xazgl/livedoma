@@ -6,6 +6,7 @@ import { CircularProgress } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Header } from "@/app/component/header/Header";
 import { MobileHeader } from "@/app/component/mainBarMobile/MobileBar";
+import { Footer } from "@/app/component/folder/Footer";
 
 export default function ObjectPage({ params }: { params: { id: string } }) {
   const [favArr, setFavArr] = useState<FavoriteObj[]>([]);
@@ -33,9 +34,10 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
       {favArr.length > 0 ? (
         <>
           <ObjectsFavCards favArr={favArr} setFavArr={setFavArr} />
+          <Footer/>
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center w-[100%] h-[100vh] bg-[white]">
+        <div className="flex flex-col items-center justify-center w-[100%] h-[100vh] bg-[transparent]">
           <CircularProgress />
         </div>
       )}

@@ -11,7 +11,7 @@ const ProgressBar = () => {
 
   return (
     <Progress.Root
-      className="relative overflow-hidden bg-blackA6 rounded-full w-[70%] h-[30px]"
+      className="relative overflow-hidden bg-[transparent] rounded-full w-[70%] h-[30px]"
       style={{
         transform: 'translateZ(0)',
       }}

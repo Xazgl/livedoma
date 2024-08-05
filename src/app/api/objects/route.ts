@@ -100,7 +100,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
     });
 
     //Если фильтры не выбраны, то отсылаем все доступные значения для филтра по умолчанию
-    if (!category && !city && !rooms && !street && !district && !companyName && !renovation && !floors) {
+    if (!category && !city && !rooms && !street && !district && !companyName && !renovation && !floors ) {
       filter = {
         category: countCategory.map((el) => el.category),
         city:countCity.map((el) => el.city),
@@ -115,13 +115,11 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       };
     }
 
+
     //Объекты 10шт. которые увидит клиент на странице
     const allObjects = await db.objectIntrum.findMany({
       where: {
         active: true,
-        // thubmnail: {
-        //   isEmpty: false, // Проверка, что массив не пустой
-        // },
         ...(category ? { category: { contains: category } } : {}),
         ...(city ? { city: { contains: city } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
@@ -131,24 +129,24 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(floor ? { floor: { contains: floor } } : {}),
         ...(floors ? { floors: { contains: floors } } : {}),
-        ...(minPrice && maxPrice?
-            { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } } : {}),
+        ...(minPrice !== null && minPrice !== undefined && maxPrice !== null && maxPrice !== undefined 
+          ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
+          : minPrice !== null && minPrice !== undefined 
+          ? { price: { gte: parseInt(minPrice) } }
+          : maxPrice !== null && maxPrice !== undefined 
+          ? { price: { lte: parseInt(maxPrice) } }
+          : {}),
       },
-      // orderBy: {
-      //   createdAt: sortOrder
-      // },
       orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       skip: (page - 1) * 10,
       take: 10,
     });
 
+
     // Все отфильтрованные объекты (кроме тех 10,что увидит клиент) и определенные поля
     const allFilteredObject = await db.objectIntrum.findMany({
       where: {
         active: true,
-        // thubmnail: {
-        //   isEmpty: false, // Проверка, что массив не пустой
-        // },
         ...(category ? { category: { contains: category } } : {}),
         ...(city ? { city: { contains: city } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
@@ -158,13 +156,14 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(floor ? { floor: { contains: floor } } : {}),
         ...(floors ? { floors: { contains: floors } } : {}),
-        ...(minPrice && maxPrice
+        ...(minPrice !== null && minPrice !== undefined && maxPrice !== null && maxPrice !== undefined 
           ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
+          : minPrice !== null && minPrice !== undefined 
+          ? { price: { gte: parseInt(minPrice) } }
+          : maxPrice !== null && maxPrice !== undefined 
+          ? { price: { lte: parseInt(maxPrice) } }
           : {}),
       },
-      // orderBy: {
-      //   createdAt: sortOrder 
-      // },
       orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       select: {
         category: true,
@@ -180,9 +179,12 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       },
     });
 
+    const prices: number[] = allFilteredObject.map((obj) => obj.price).filter((price): price is number => price !== null);
+    const maxPriceAlternative = prices.length > 0 ? Math.max(...prices).toString() : null;
+    
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if (category || city || rooms || district ||street || companyName || renovation || floor || floors) {
+    if (category || city || rooms || district ||street || companyName || renovation || floor || floors || minPrice || maxPrice) {
       filter = {
         category: [...new Set(allFilteredObject.map((el) => el.category))],
         city: [...new Set(allFilteredObject.map((el) => el.city))],
@@ -190,6 +192,8 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         renovation: [...new Set(allFilteredObject.map((el) => el.renovation))],
         floor: [...new Set(allFilteredObject.map((el) => el.floor))],
         floors: [...new Set(allFilteredObject.map((el) => el.floors))],
+        maxPrice:maxPrice ? maxPrice :  maxPriceAlternative,
+        minPrice:minPrice? minPrice : 0,
         //@ts-ignore
         district : [...new Set(allFilteredObject.map((el) => el.district))],
         street: [...new Set(allFilteredObject.map((el) => el.street))],
@@ -200,19 +204,7 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
     }
 
     if (allObjects.length > 0) {
-      const prices = allFilteredObject.map((obj) => obj.price);
-      prices.length > 0 ? 
-        (filter = {
-            ...filter, // Копируем предыдущие свойства из filter
-            //@ts-ignore
-            maxPrice: Math.max(...prices).toString(),
-            //@ts-ignore
-            minPrice: minPrice ? Math.min(...prices).toString() : 0,
-          })
-        : null;
-
       const countObjects = allFilteredObject.length;
-
       return NextResponse.json({
         allObjects,
         filter,
