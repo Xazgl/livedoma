@@ -95,6 +95,7 @@ export function Filter({
       sortOrder: [],
     }));
     resetPageAndReloadData();
+
   }
 
   const { theme } = useTheme();

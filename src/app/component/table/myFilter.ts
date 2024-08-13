@@ -223,3 +223,41 @@ export const titles2: string[] = [
   "Агент покупателя НЕТ",
   "Ипотека"
 ];
+
+
+
+
+export const columnsSetsApplicationRansom: GridColDef[][] = [
+  [
+    { field: "createdAtCrm", headerName: "Дата", width: 200 },
+    { field: "url", headerName: "Ссылка на заявку", width: 300 },
+    { field: "phone", headerName: "Номер", width: 200 },
+    { field: "typeApplication", headerName: "Вид заявки", width: 200 },
+    { field: "translator", headerName: "Источник", width: 100 },
+    { field: "responsibleMain", headerName: "Менеджер", width: 200 },
+    { field: "dateFirstContact", headerName: "Передача в отдел рекламы", width: 200 },
+    { field: "timecallCenter", headerName: "Сколько заявка была в обработке у рекламы", width: 200 },
+    { field: "timesaletCenter", headerName: "Время + дата размещения в рекламе", width: 200 },
+    
+    { field: "status", headerName: "Статус из crm", width: 200 },
+    { field: "contactedClient", headerName: "Спец связался с клиентом?", width: 200 },
+    { field: "nextAction", headerName: "Дата след шага", width: 200 },
+    { field: "comment",headerName: "Комментарии", width: 200,},
+  ],  [
+    { field: "createdAtCrm", headerName: "Дата", width: 200 },
+    { field: "url", headerName: "Ссылка на заявку", width: 300 },
+    { field: "phone", headerName: "Номер", width: 200 },
+    { field: "typeApplication", headerName: "Вид заявки", width: 200 },
+    { field: "translator", headerName: "Источник", width: 100 },
+    { field: "responsibleMain", headerName: "Менеджер", width: 200 },
+    { field: "dateFirstContact", headerName: "Передача в отдел рекламы", width: 200 },
+    { field: "timecallCenter", headerName: "Сколько заявка была в обработке у рекламы", width: 200 },
+    { field: "timesaletCenter", headerName: "Время + дата размещения в рекламе", width: 200 },
+    
+    { field: "status", headerName: "Статус из crm", width: 200 },
+    { field: "contactedClient", headerName: "Спец связался с клиентом?", width: 200 },
+    { field: "nextAction", headerName: "Дата след шага", width: 200 },
+    { field: "comment",headerName: "Комментарии", width: 200,},
+  ]
+ 
+];

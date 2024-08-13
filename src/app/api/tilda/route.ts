@@ -22,7 +22,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
       //@ts-ignore
       if (answer.test == null) {
         const manager = await managerFind();
-        const name = answer.name ? answer.name : "Нету";
+        const name = answer.Name
+          ? answer.Name
+          : answer.name
+          ? answer.name
+          : "Нету";
         const phone = await normalizePhoneNumber(answer.Phone);
         const formid = answer.formid ? answer.formid : "Нету";
         const utm_medium = answer.utm_medium ? answer.utm_medium : "";
@@ -51,49 +55,61 @@ export async function POST(req: NextRequest, res: NextResponse) {
             },
           });
 
-          crmAnswer = await sendIntrumCrmTilda(newContact, double);
+          if (double.within24Hours == false) {
+            crmAnswer = await sendIntrumCrmTilda(
+              newContact,
+              double.isDuplicate
+            );
 
-          if (crmAnswer.status == "success") {
-            const updateStatus = await db.tilda.update({
-              where: {
-                id: newContact.id,
-              },
-              data: {
-                sendCrm: true,
-                intrumId: crmAnswer.data.request.toString(),
-                intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-              },
-            });
+            if (crmAnswer.status == "success") {
+              const updateStatus = await db.tilda.update({
+                where: {
+                  id: newContact.id,
+                },
+                data: {
+                  sendCrm: true,
+                  intrumId: crmAnswer.data.request.toString(),
+                  intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+                },
+              });
 
-            await db.managerQueue.create({
-              data: {
-                managerId:
-                  manager && manager !== ""
-                    ? manager
-                    : "Ошибка в выборе менеджера",
-                  url:  `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                  type  : 'Tilda'
+              if (double.isDuplicate == false) {
+                await db.managerQueue.create({
+                  data: {
+                    managerId:
+                      manager && manager !== ""
+                        ? manager
+                        : "Ошибка в выборе менеджера",
+                    url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+                    type: "Tilda",
+                  },
+                });
               }
-            });
 
-            const queue = await db.wazzup.create({
-              data: {
-                name: "",
-                phone: "",
-                text: "",
-                typeSend: "Очередь",
-                sendCrm: false,
-                managerId:
-                  manager && manager !== ""
-                    ? manager
-                    : "Ошибка в выборе менеджера",
-              },
-            });
+              const queue = await db.wazzup.create({
+                data: {
+                  name: "",
+                  phone: "",
+                  text: "",
+                  typeSend: "Очередь",
+                  sendCrm: false,
+                  managerId:
+                    manager && manager !== ""
+                      ? manager
+                      : "Ошибка в выборе менеджера",
+                },
+              });
+            }
+            return NextResponse.json(
+              { crmStatus: crmAnswer, contacts: newContact },
+              { status: 200 }
+            );
+          } else {
+            return NextResponse.json(
+              { answer: "Повторный дубль, отправленый подряд" },
+              { status: 200 }
+            );
           }
-          return NextResponse.json(
-            { crmStatus: crmAnswer, contacts: newContact },
-            { status: 200 }
-          );
         } catch (error) {
           return new Response(`Ошибка создания контакта ${phone}`, {
             status: 400,

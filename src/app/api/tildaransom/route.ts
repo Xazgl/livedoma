@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Marquiz, crmAnswer } from "../../../../@types/dto";
-import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { Tilda, crmAnswer } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
+import { managerFindRansom, sendIntrumCrmTildaRansom } from "@/lib/intrumRansomCrm";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -16,63 +16,38 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
       };
 
-      const answer: Marquiz = await req.json();
-      // console.log(answer);
+      const answer: Tilda = await req.json();
+      console.log(answer);
 
       //@ts-ignore
-      if (answer) {
-        const name = answer.contacts.name;
-        const phone = await normalizePhoneNumber(answer.contacts.phone);
-        const clientCallTime = answer.contacts.text;
-        const formid = answer.form.id ? answer.form.id : "Нету";
-        let utm_medium = "";
-        let utm_campaign = "";
-        let utm_content = "";
-        let utm_term = "";
-
-        if (answer.extra.utm) {
-          utm_medium = answer.extra.utm.medium ? answer.extra.utm.medium : "";
-          utm_campaign = answer.extra.utm.campaign
-            ? answer.extra.utm.campaign
-            : "";
-          utm_content = answer.extra.utm.content
-            ? answer.extra.utm.content
-            : "";
-          utm_term = answer.extra.utm.term ? answer.extra.utm.term : "";
-        }
-
-        // Функция для формирования строки
-        function formatQuestionsAndAnswers(answer: Marquiz) {
-          let resultString = "";
-          answer.answers.forEach((answer) => {
-            // Добавление вопроса и ответа к результату
-            resultString += `${answer.q} '${answer.a}'`;
-            // Добавление пробела после каждой связки вопроса и ответа
-            resultString += ", ";
-          });
-          // Удаление лишнего пробела в конце строки
-          resultString = resultString.trim();
-          return resultString;
-        }
-        const textAnswers = formatQuestionsAndAnswers(answer);
+      if (answer.test == null) {
+        const manager = await managerFindRansom();
+        const name = answer.Name
+          ? answer.Name
+          : answer.name
+          ? answer.name
+          : "Нету";
+        const phone = answer.Phone? await normalizePhoneNumber(answer.Phone) : answer.phone? await normalizePhoneNumber(answer.phone) : '';
+        const formid = answer.formid ? answer.formid : "Нету";
+        const utm_medium = answer.utm_medium ? answer.utm_medium : "";
+        const utm_campaign = answer.utm_campaign ? answer.utm_campaign : "";
+        const utm_content = answer.utm_content ? answer.utm_content : "";
+        const utm_term = answer.utm_term ? answer.utm_term : "";
 
         try {
           let double = await doubleFind(phone);
 
-          const manager = await managerFind();
           const newContact = await db.tilda.create({
             data: {
               name: name,
               phone: phone,
-              timeForClientCall: clientCallTime,
               formid: formid,
-              typeSend: "Marquiz",
+              typeSend: "Tilda Срочный Выкуп",
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,
               utm_content: utm_content,
               utm_term: utm_term,
               sendCrm: false,
-              answers: textAnswers,
               managerId:
                 manager && manager !== ""
                   ? manager
@@ -81,13 +56,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
           });
 
           if (double.within24Hours == false) {
-            crmAnswer = await sendIntrumCrmTilda(
+            crmAnswer = await sendIntrumCrmTildaRansom(
               newContact,
               double.isDuplicate
             );
+            console.log(crmAnswer);
 
             if (crmAnswer.status == "success") {
-              const updateStatus = await db.tilda.update({
+              await db.tilda.update({
                 where: {
                   id: newContact.id,
                 },
@@ -99,33 +75,18 @@ export async function POST(req: NextRequest, res: NextResponse) {
               });
 
               if (double.isDuplicate == false) {
-                await db.managerQueue.create({
+                await db.managerRansomQueue.create({
                   data: {
                     managerId:
                       manager && manager !== ""
                         ? manager
                         : "Ошибка в выборе менеджера",
                     url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                    type: "Marquiz",
+                    type: "Tilda Срочный Выкуп",
                   },
                 });
               }
-
-              const queue = await db.wazzup.create({
-                data: {
-                  name: "",
-                  phone: "",
-                  text: "",
-                  typeSend: "Очередь",
-                  sendCrm: false,
-                  managerId:
-                    manager && manager !== ""
-                      ? manager
-                      : "Ошибка в выборе менеджера",
-                },
-              });
             }
-
             return NextResponse.json(
               { crmStatus: crmAnswer, contacts: newContact },
               { status: 200 }

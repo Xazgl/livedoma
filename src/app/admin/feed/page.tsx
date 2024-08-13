@@ -7,7 +7,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchFeed = async () => {
-      const response = await fetch('/api/feed', { method: 'POST' });
+      const response = await fetch('/api/feed', { method: 'GET' });
       const data = await response.text();
       setFeed(data);
     };
@@ -18,7 +18,7 @@ export default function Home() {
   return (
     <>
       {feed ? (
-        <div dangerouslySetInnerHTML={{ __html: feed }} />
+        <div className='flex flex-col h-auto w-full text-white text-[14px] ' dangerouslySetInnerHTML={{ __html: feed }} />
       ) : (
         null
       )}

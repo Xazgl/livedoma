@@ -4,6 +4,7 @@ const axios = require('axios').default
 const { PrismaClient } = require("@prisma/client");
 const { AxiosError } = require("axios");
 const { foundName } = require("../report/lib");
+const { findPhone } = require("./lib");
 const { commentArr } = require("./funcComment");
 
 
@@ -72,6 +73,10 @@ async function start() {
       };
 
 
+      const phoneValue = getField(application.fields, "5033");
+      const phone = typeof phoneValue === 'string' ? phoneValue : await findPhone(application.customer_id);
+      
+
       if (existingSale) {
         // Если сделка существует, обновляем ее поля
         return await db.constructionApplications.update({
@@ -83,10 +88,11 @@ async function start() {
             translator: getField(application.fields, "4056") ? getField(application.fields, "4056") : '',
             responsibleMain: await foundName(application.employee_id) !== '0' || await foundName(application.employee_id) !== 0 ? application.employee_id.toString() : '',
             status: translateStatus(application.status),
-            postMeetingStage: getField(application.fields, "4058"),
+            postMeetingStage: getField(application.fields, "4058") ,
+            
             desc: application.request_name,
             typeApplication: getField(application.fields, "4059"),
-            contactedClient: getField(application.fields, "5079")? getField(application.fields, "5079") : getField(application.fields, "4994"),
+            contactedClient: getField(application.fields, "5079") && getField(application.fields, "5079") !== 'Не заполнено'? getField(application.fields, "5079") : getField(application.fields, "4994") !== '' ? getField(application.fields, "4994")  : 'Не заполнено' ,
             campaignUtm: getField(application.fields, "5001"),
             termUtm: getField(application.fields, "5000"),
             nextAction: getField(application.fields, "4057"),
@@ -96,7 +102,8 @@ async function start() {
             timecallCenter: getField(application.fields, "5003"),
             timesaletCenter: getField(application.fields, "4999"),
             dateFirstContact: getField(application.fields, "4997"),
-            phone: getField(application.fields, "5033"),
+            phone:phone,
+            // phone: typeof getField(application.fields, "5033") !== 'object' ? ( getField(application.fields, "5033")  ? getField(application.fields, "5033") : findPhone(application.customer_id)  ) : findPhone(application.customer_id),
             url: getField(application.fields, "5032"),
             comment: await commentArr(application.id),
             typeApplicationCrm:"ЖДД",
@@ -104,6 +111,7 @@ async function start() {
             createdAt: new Date(`${application.date_create}`)
           },
         });
+       
       } else {
         return await db.constructionApplications.create({
           data: {
@@ -114,7 +122,7 @@ async function start() {
             postMeetingStage: getField(application.fields, "4058"),
             desc: application.request_name,
             typeApplication: getField(application.fields, "4059"),
-            contactedClient: getField(application.fields, "5079")? getField(application.fields, "5079") : getField(application.fields, "4994"),
+            contactedClient: getField(application.fields, "5079")? getField(application.fields, "5079") : '',
             campaignUtm: getField(application.fields, "5001"),
             termUtm: getField(application.fields, "5000"),
             nextAction: getField(application.fields, "4057"),
@@ -124,7 +132,8 @@ async function start() {
             timecallCenter: getField(application.fields, "5003"),
             timesaletCenter: getField(application.fields, "4999"),
             dateFirstContact: getField(application.fields, "4997"),
-            phone: getField(application.fields, "5033"),
+            phone:phone,
+            // phone: typeof getField(application.fields, "5033") !== 'object' ? ( getField(application.fields, "5033")  ? getField(application.fields, "5033") : findPhone(application.customer_id)  ) : findPhone(application.customer_id),
             url: getField(application.fields, "5032"),
             comment: await commentArr(application.id),
             typeApplicationCrm:"ЖДД",

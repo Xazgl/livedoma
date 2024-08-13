@@ -22,7 +22,7 @@ const DynamicImage: React.FC<Props> = ({ src, alt }) => {
   const getContainerStyles = () => {
     if (aspectRatio) {
       return {
-        width: '100%', // Adjust as needed
+        width: '100%',
         paddingTop: `${100 / aspectRatio}%`,
         position: 'relative' as const,
       };

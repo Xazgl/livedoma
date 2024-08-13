@@ -64,17 +64,17 @@ export function PaginationRow({ currentPage, totalPages, handlePageChange }: Pro
               },
               '@media (max-width: 540px)': {
                 minWidth: '28px',
-                height: '28px',
-                fontSize: '0.75rem',
+                height: '35px',
+                fontSize: '0.80rem',
                 marginTop: '10px'
               },
               '@media (max-width: 420px)': {
-                minWidth: '25px',
+                minWidth: '35px',
                 height: '25px',
-                fontSize: '0.70rem',
+                fontSize: '0.75rem',
               },
               '@media (max-width: 370px)': {
-                minWidth: '20px',
+                minWidth: '25px',
                 height: '20px'
               },
             },

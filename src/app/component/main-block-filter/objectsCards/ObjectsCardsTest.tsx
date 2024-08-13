@@ -3,14 +3,7 @@ import { ObjectIntrum } from "@prisma/client";
 import Image from "next/image";
 import { getRoomsEnding, logoFind, numberWithSpaces } from "./functionCard";
 import ProgressBar from "../../progressBar/ProgressBar";
-import {
-  Dispatch,
-  Fragment,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch,Fragment,RefObject,SetStateAction,useEffect,useState } from "react";
 import { PaginationRow } from "../../paginationRow/PaginatiowRow";
 import PropertyInfo from "../../currentObjComponents/description/PropertyInfo";
 import size from "/public/svg/size.svg";
@@ -23,14 +16,11 @@ import { addToFavorite, deleteFavorite } from "@/lib/favoriteFunc";
 import { FavoriteObj, FilterUserOptions } from "../../../../../@types/dto";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import noPhoto from "/public/images/noPhoto.jpg";
-
-// import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import Link from "next/link";
 import DynamicCardImg from "./DynamicCardImg";
 import { SortDateSelect } from "../../filterFields/sortPrice/SortPriceSelect";
 import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
 import { useTheme } from "../../provider/ThemeProvider";
-
 
 type Props = {
   filteredHouse: ObjectIntrum[];
@@ -38,7 +28,6 @@ type Props = {
   allPages: number;
   currentPage: number;
   handlePageChange: (page: number) => void;
-  // handlePageChangeNew:(event: React.ChangeEvent<unknown>, value: number) => void
   setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
   refCardsObjects: RefObject<HTMLDivElement>;
@@ -47,27 +36,17 @@ type Props = {
   resetPageAndReloadData: () => void;
 };
 
-export function ObjectsCardsTest({
-  filteredHouse,
-  loading,
-  allPages,
-  currentPage,
-  handlePageChange,
-  setFavArr,
-  refCardsObjects,
-  favArr,
-  currentFilter,
-  setCurrentFilter,
-  resetPageAndReloadData,
+export function ObjectsCardsTest({ filteredHouse,loading,allPages,currentPage,
+  handlePageChange,setFavArr,refCardsObjects,favArr,currentFilter,setCurrentFilter,
+  resetPageAndReloadData 
 }: Props) {
+
   const [loadingImg, setLoadingImg] = useState(true);
   const { theme } = useTheme();
 
   let style = loading
     ? "flex-col items-center  h-[100vh]  justify-center  flex-nowrap"
     : "flex-row justify-center gap-[0px] sm:gap-[20px] lg:gap-[0px] md:items-center md:items-start   h-full  flex-wrap ";
-  //Если нужен скрол объектов
-  // : "flex-col  md:items-center md:items-start   h-full md:h-[100vh]  md:overflow-auto ";
 
   useEffect(() => {
     async function start() {
@@ -111,16 +90,13 @@ export function ObjectsCardsTest({
                 resetPageAndReloadData={resetPageAndReloadData}
               />
             </div>
-            {/* <div className="flex w-[100%] sticky">
-          <ShoppingBagIcon sx={{color:"black"}}/>
-          </div> */}
             {filteredHouse.map((object) => (
               <Fragment key={object.id}>
                 <div className="flex  justify-center  md:justify-start md:w-full  mt-[35px] md:mt-[0px]">
                   <article
                     key={object.id}
                     style={{ transition: "all 1s" }}
-                    className={`flex   flex-col  md:flex-row  h-[100%] w-[300px] xs:w-[310px] md:w-full  md:h-[250px] xxl:h-[300px]   sm:p-2  md:mt-[10px]  md:gap-[50px]
+                    className={`flex   flex-col  md:flex-row  h-[100%] w-[85vw]   sm:w-[320px] md:w-full  md:h-[250px] xxl:h-[300px]   sm:p-2  md:mt-[10px]  md:gap-[50px]
                                  md:border-none md:border-[transparent] md:border-[0px] 
                                 cursor-pointer   md:duration-700   md:ease-in-out    ${theme === "dark"? "dark:md:hover:shadow-dark-2xl":"md:hover:shadow-2xl"}`} 
                   >
@@ -178,7 +154,7 @@ export function ObjectsCardsTest({
                                   padding: "1px",
                                   borderRadius: "100%",
                                   color: "#d31717",
-                                  "&:hover": { color: "black" },
+                                  "&:hover": { color: "black" }
                                 }}
                                 onClick={() =>
                                   deleteFavorite(object.id, setFavArr)
@@ -210,17 +186,14 @@ export function ObjectsCardsTest({
                     <Link href={`/object/${object.id}`} className="w-[100%]">
                       <>
                         <div className={`flex mt-[5px] gap-[5px] md:mt-[0px] flex-col  w-full  h-full   items-start md:gap-[20px]  relative
-                          ${theme === "dark"? "text-[white]":"text-[black]"}`}>
-                          
-                          <h3 className="hidden md:flex  w-full text-sm ">
+                          ${theme === "dark"? "text-[white]":"text-[black]"}`}
+                        >
+                         <h3>
+                          <span className="hidden md:flex  w-full text-sm">
                             Категория: {object.category}
-                          </h3>
-
-                          <h3 className={`flex md:hidden w-full text-[15px] xs:text-[17px] md:text-sm  gap-[5px] items-center  ${theme === "dark"? "text-[white]":"text-[black]"}`}>
-                            {object.objectType
-                              ? object.objectType
-                              : object.category}
-
+                          </span>
+                          <span className={`flex md:hidden w-full text-[15px] xs:text-[17px] md:text-sm  gap-[5px] items-center  ${theme === "dark"? "text-[white]":"text-[black]"}`}>
+                            {object.objectType? object.objectType : object.category}
                             {object.square && (
                               <Circle
                                 sx={{
@@ -230,9 +203,7 @@ export function ObjectsCardsTest({
                                 }}
                               />
                             )}
-
                             {object.square ? `${object.square}м²` : null}
-
                             {object.rooms && (
                               <Circle
                                 sx={{
@@ -247,9 +218,10 @@ export function ObjectsCardsTest({
                                   object.rooms
                                 )}`
                               : null}
-                          </h3>
+                          </span>
+                         </h3>
 
-                          <h2 className="flex text-[#9da1ab] text-[13px]  md:text-[16px]">
+                          <p className="flex text-[#9da1ab] text-[13px]  md:text-[16px]">
                             {`${object.state}, ${object.city},${
                               object.street == "Не указана"
                                 ? ""
@@ -265,7 +237,7 @@ export function ObjectsCardsTest({
                                     ? ""
                                     : `, ${object.street}`
                                 }`}{" "}
-                          </h2>
+                          </p>
                           
                           <div className="flex md:hidden  w-full absolute bottom-0  justify-end">
                             <Image
@@ -278,9 +250,9 @@ export function ObjectsCardsTest({
                             />
                           </div>
 
-                          <h1 className="flex w-full  font-bold text-[25px] sm:text-[22px]">
+                          <span className="flex w-full  font-bold text-[25px] sm:text-[22px]">
                             {numberWithSpaces(Number(object.price))} ₽
-                          </h1>
+                          </span>
 
                           <div className="hidden md:flex  flex-col md:flex-row  gap-[5px]  md:gap-[40px]  mt-[5px]  md:mt-[30px]">
                             {object.square && (
@@ -361,7 +333,6 @@ export function ObjectsCardsTest({
                 </div>
               </Fragment>
             ))}
-
             <div className="flex mt-[35px] sm:hidden">
               <PaginationRow
                currentPage={currentPage}

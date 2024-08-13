@@ -101,6 +101,24 @@ model ManagerQueue {
   createdAt         DateTime @default(now())
 }
 
+
+model ManagerSansaraQueue {
+  id                String   @id @default(cuid())
+  managerId         String        
+  url               String? 
+  type              String?
+  createdAt         DateTime @default(now())
+}
+
+
+model ManagerRansomQueue {
+  id                String   @id @default(cuid())
+  managerId         String        
+  url               String? 
+  type              String?
+  createdAt         DateTime @default(now())
+}
+
 model Wazzup {
   id        String  @id @default(cuid())
   name      String?

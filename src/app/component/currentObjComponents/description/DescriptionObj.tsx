@@ -5,7 +5,7 @@ import floor from "/public/svg/floor.svg";
 import PropertyInfo from "./PropertyInfo";
 import Link from "next/link";
 import Image from "next/image";
-import { logoFind } from "../../main-block-filter/objectsCards/functionCard";
+import { logoFind, numberWithSpaces } from "../../main-block-filter/objectsCards/functionCard";
 import { useTheme } from "../../provider/ThemeProvider";
 
 type Props = {
@@ -68,11 +68,15 @@ export function DescriptionObj({ object }: Props) {
           height={100}
           loading="lazy"
         />
-        <span
+        <span className={`flex w-full  font-bold text-[25px] sm:text-[22px]  ${theme === "dark" ? "text-[white]" : "text-[#4c505b]"}`}>
+          {numberWithSpaces(Number(object.price))} ₽
+        </span>
+        <p
+          className="mt-[30px]"
           dangerouslySetInnerHTML={{
             __html: object.description ? object.description : "",
           }}
-        ></span>
+        ></p>
 
         {object.companyName  !== "Владис" && (
           <div className="flex mt-[20px]">
@@ -100,9 +104,6 @@ export function DescriptionObj({ object }: Props) {
           ${theme === "dark"? "md:text-[white] hover:text-[black] ":"md:text-[black] hover:text-[white] "}`}
           >
             Построить маршурт{"  "}
-            {/* <PinDropIcon
-              sx={{ display: "flex", fontSize: "18px", alignItems: "center" }}
-            /> */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"

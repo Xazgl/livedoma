@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Marquiz, crmAnswer } from "../../../../@types/dto";
+import {  MarquizRansom, crmAnswer } from "../../../../@types/dto";
 import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
+import { sendIntrumCrmTildaRansom } from "@/lib/intrumRansomCrm";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -16,8 +17,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
       };
 
-      const answer: Marquiz = await req.json();
-      // console.log(answer);
+      const answer: MarquizRansom= await req.json();
+      console.log(answer);
 
       //@ts-ignore
       if (answer) {
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         }
 
         // Функция для формирования строки
-        function formatQuestionsAndAnswers(answer: Marquiz) {
+        function formatQuestionsAndAnswers(answer: MarquizRansom) {
           let resultString = "";
           answer.answers.forEach((answer) => {
             // Добавление вопроса и ответа к результату
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               phone: phone,
               timeForClientCall: clientCallTime,
               formid: formid,
-              typeSend: "Marquiz",
+              typeSend: "Marquiz Срочный Выкуп",
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,
               utm_content: utm_content,
@@ -81,7 +82,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           });
 
           if (double.within24Hours == false) {
-            crmAnswer = await sendIntrumCrmTilda(
+            crmAnswer = await sendIntrumCrmTildaRansom(
               newContact,
               double.isDuplicate
             );
@@ -99,33 +100,18 @@ export async function POST(req: NextRequest, res: NextResponse) {
               });
 
               if (double.isDuplicate == false) {
-                await db.managerQueue.create({
+                await db.managerRansomQueue.create({
                   data: {
                     managerId:
                       manager && manager !== ""
                         ? manager
                         : "Ошибка в выборе менеджера",
                     url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                    type: "Marquiz",
+                    type: "Marquiz Срочный Выкуп",
                   },
                 });
               }
-
-              const queue = await db.wazzup.create({
-                data: {
-                  name: "",
-                  phone: "",
-                  text: "",
-                  typeSend: "Очередь",
-                  sendCrm: false,
-                  managerId:
-                    manager && manager !== ""
-                      ? manager
-                      : "Ошибка в выборе менеджера",
-                },
-              });
             }
-
             return NextResponse.json(
               { crmStatus: crmAnswer, contacts: newContact },
               { status: 200 }

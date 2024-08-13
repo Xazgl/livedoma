@@ -79,12 +79,6 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
           }
         }
 
-        @media (min-width: 600px) {
-          .dynamic-image-container {
-            height: 260px; /* Set a specific height for larger screens */
-          }
-        }
-
         @media (min-width: 1024px) {
           .dynamic-image-container {
             height: 400px; /* Set a specific height for larger screens */

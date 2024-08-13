@@ -15,7 +15,7 @@ const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату
-  const prevDay = new Date(currentDate.getTime() - (31 * 24 * 60 * 60 * 1000)); // Вычитаем 30 дней
+  const prevDay = new Date(currentDate.getTime() - (90 * 24 * 60 * 60 * 1000)); // Вычитаем 30 дней
   const formattedPrevDate = prevDay.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
 
   const day = new Date(currentDate.getTime());
@@ -23,12 +23,12 @@ async function start() {
 
   const params = new URLSearchParams();
   params.append("apikey", "9a75fc323d968db797ec0ab848572aad");
-  params.append("params[types][0]", "14");
+  params.append("params[types][0]", "3");
   params.append("params[publish]", "1");
   params.append("params[limit]", "499")
   params.append("params[date][from]", formattedPrevDate);
   params.append("params[date][to]", formattedDateCurrent);
-  params.append("params[fields][0][id]", "5060");
+  params.append("params[fields][0][id]", "3667");
   params.append("params[fields][0][value]", '1');
 
   try {
@@ -78,7 +78,7 @@ async function start() {
       const responsibleName = await foundName(application.employee_id);
       const responsibleMain = responsibleName !== 'Нет' ? responsibleName : 'Отвественный не назначен';
 
-      const phoneValue = getField(application.fields, "5073");
+      const phoneValue = getField(application.fields, "5158");
       const phone = typeof phoneValue === 'string' ? phoneValue : await findPhone(application.customer_id);
 
       if (existingSale) {
@@ -89,27 +89,21 @@ async function start() {
           },
           data: {
             idApplicationIntrum: application.id,
-            translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
+            translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
             responsibleMain: responsibleMain,
             status: translateStatus(application.status),
-            // postMeetingStage: getField(application.fields, "5020"),
-            postMeetingStage: getField(application.fields, "5020") == 'Бронь' ? getField(application.fields, "5020") + (getField(application.fields, "5081") ? ` Квартира${getField(application.fields, "5081")}` : 'Не указана') : getField(application.fields, "5020"), desc: application.request_name,
-            typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
+            typeApplication:'Прием объекта Срочный Выкуп',
             contactedClient: getField(application.fields, "5069"),
-            campaignUtm: 'нету',
-            termUtm: 'нету',
+            campaignUtm: getField(application.fields, "5150")? getField(application.fields, "5150") : '',
+            termUtm: getField(application.fields, "5152")? getField(application.fields, "5152") : '',
             nextAction: getField(application.fields, "1404"),
-            rejection: '',//отклонение работы с заявок
-            //errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false, исправлена ошибка 
-            datecallCenter: getField(application.fields, "5068"),
-            timecallCenter: getField(application.fields, "5067"),
-            timesaletCenter: getField(application.fields, "5071"),
-            dateFirstContact: getField(application.fields, "5072"),
+            timecallCenter: getField(application.fields, "4630"), //Сколько заявка была в обработке у рекламы.
+            timesaletCenter: getField(application.fields, "4629"), // Время + дата размещения в рекламе
+            dateFirstContact: getField(application.fields, "1327"), // Передача в отдел рекламы
             phone: phone,
-            // phone: typeof getField(application.fields, "5073") !== 'object' ? ( getField(application.fields, "5073")  ? getField(application.fields, "5073") : findPhone(application.customer_id)  ) : findPhone(application.customer_id),
             url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
             comment: await commentArr(application.id),
-            typeApplicationCrm: "Сансара",
+            typeApplicationCrm: "Срочный выкуп",
             createdAtCrm: application.date_create,
             createdAt: new Date(`${application.date_create}`)
           },
@@ -118,25 +112,21 @@ async function start() {
         return await db.constructionApplications.create({
           data: {
             idApplicationIntrum: application.id,
-            translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '', responsibleMain: responsibleMain, status: translateStatus(application.status),
-            // postMeetingStage: getField(application.fields, "5074"),
-            postMeetingStage: getField(application.fields, "5020") == 'Бронь' ? getField(application.fields, "5020") + (getField(application.fields, "5081") ? ` Квартира${getField(application.fields, "5081")}` : 'Не указана') : getField(application.fields, "5020"),
-            desc: application.request_name,
-            typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
+            translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
+            responsibleMain: responsibleMain,
+            status: translateStatus(application.status),
+            typeApplication:'Прием объекта Срочный Выкуп',
             contactedClient: getField(application.fields, "5069"),
-            campaignUtm: 'нету',
-            termUtm: 'нету',
+            campaignUtm: getField(application.fields, "5150")? getField(application.fields, "5150") : '',
+            termUtm: getField(application.fields, "5152")? getField(application.fields, "5152") : '',
             nextAction: getField(application.fields, "1404"),
-            rejection: '',//отклонение работы с заявок
-            //errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false, исправлена ошибка 
-            datecallCenter: getField(application.fields, "5068"),
-            timecallCenter: getField(application.fields, "5067"),
-            timesaletCenter: getField(application.fields, "5071"),
-            dateFirstContact: getField(application.fields, "5072"),
+            timecallCenter: getField(application.fields, "4630"), //Сколько заявка была в обработке у рекламы.
+            timesaletCenter: getField(application.fields, "4629"), // Время + дата размещения в рекламе
+            dateFirstContact: getField(application.fields, "1327"), // Передача в отдел рекламы
             phone: phone,
-            // phone: typeof getField(application.fields, "5073") !== 'object' ? ( getField(application.fields, "5073")  ? getField(application.fields, "5073") : findPhone(application.customer_id)  ) : findPhone(application.customer_id),            url: getField(application.fields, "5075") ? getField(application.fields, "5075") :`https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request` ,
+            url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
             comment: await commentArr(application.id),
-            typeApplicationCrm: "Сансара",
+            typeApplicationCrm: "Срочный выкуп",
             createdAtCrm: application.date_create,
             createdAt: new Date(`${application.date_create}`)
           },

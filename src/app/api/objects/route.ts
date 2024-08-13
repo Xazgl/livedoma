@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "../../../../prisma";
+import db, { ObjectIntrum } from "../../../../prisma";
 
-export async function GET(request: NextRequest,{ params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const searchParams = request.nextUrl.searchParams;
 
   //params
@@ -19,8 +22,11 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
   const sPage = searchParams.get("page");
   const page = sPage ? +sPage : 1;
   const sortOrder = searchParams.get("sortOrder") === "asc" ? "asc" : "desc"; // По умолчанию сортируем по убыванию
-  const sortPrice =  searchParams.get("sortPrice")? (searchParams.get("sortPrice") === "asc" ? "asc" : "desc") : null; // По умолчанию сортируем по убыванию
-
+  const sortPrice = searchParams.get("sortPrice")
+    ? searchParams.get("sortPrice") === "asc"
+      ? "asc"
+      : "desc"
+    : null; // По умолчанию сортируем по убыванию
 
   //создаем пустой объекты фильтра, куда потом буду попадать все значения фильтра
   let filter = {};
@@ -58,11 +64,11 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       },
     });
 
-    const countDistrict  = await db.objectIntrum.groupBy({
+    const countDistrict = await db.objectIntrum.groupBy({
       by: ["district"],
       _count: true,
       where: {
-        ...(district  ? { district : { contains: district  } } : {}),
+        ...(district ? { district: { contains: district } } : {}),
       },
     });
 
@@ -82,7 +88,6 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       },
     });
 
-
     const countFloor = await db.objectIntrum.groupBy({
       by: ["floor"],
       _count: true,
@@ -100,14 +105,16 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
     });
 
     //Если фильтры не выбраны, то отсылаем все доступные значения для филтра по умолчанию
-    if (!category && !city && !rooms && !street && !district && !companyName && !renovation && !floors ) {
+    if ( !category && !city &&!rooms &&!street && !district &&
+        !companyName && !renovation && !floors
+    ) {
       filter = {
         category: countCategory.map((el) => el.category),
-        city:countCity.map((el) => el.city),
+        city: countCity.map((el) => el.city),
         rooms: countRooms.map((el) => el.rooms),
         renovation: countRenovation.map((el) => el.renovation),
         //@ts-ignore
-        district:countDistrict.map((el) => el.district),
+        district: countDistrict.map((el) => el.district),
         street: countStreet.map((el) => el.street),
         companyName: countCompanyName.map((el) => el.companyName),
         floor: countFloor.map((el) => el.floor),
@@ -115,33 +122,73 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
       };
     }
 
-
     //Объекты 10шт. которые увидит клиент на странице
-    const allObjects = await db.objectIntrum.findMany({
-      where: {
-        active: true,
-        ...(category ? { category: { contains: category } } : {}),
-        ...(city ? { city: { contains: city } } : {}),
-        ...(rooms ? { rooms: { contains: rooms } } : {}),
-        ...(renovation ? { renovation: { contains: renovation } } : {}),
-        ...(district ? { district: { contains: district } } : {}),
-        ...(street ? { street: { contains: street } } : {}),
-        ...(companyName ? { companyName: { contains: companyName } } : {}),
-        ...(floor ? { floor: { contains: floor } } : {}),
-        ...(floors ? { floors: { contains: floors } } : {}),
-        ...(minPrice !== null && minPrice !== undefined && maxPrice !== null && maxPrice !== undefined 
-          ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
-          : minPrice !== null && minPrice !== undefined 
-          ? { price: { gte: parseInt(minPrice) } }
-          : maxPrice !== null && maxPrice !== undefined 
-          ? { price: { lte: parseInt(maxPrice) } }
-          : {}),
-      },
-      orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
-      skip: (page - 1) * 10,
-      take: 10,
-    });
-
+    let allObjects: ObjectIntrum[] = [];
+    //Если фильтры не выбраны и страница 1 то отдает первыми с скачеными фото
+    if ( page == 1 && !category &&!city && !rooms && !street &&
+      !district && !companyName && !renovation && !floors
+      &&!sortOrder && !sortPrice
+    ) {
+      allObjects = await db.objectIntrum.findMany({
+        where: {
+          active: true,
+          ...(category ? { category: { contains: category } } : {}),
+          ...(city ? { city: { contains: city } } : {}),
+          ...(rooms ? { rooms: { contains: rooms } } : {}),
+          ...(renovation ? { renovation: { contains: renovation } } : {}),
+          ...(district ? { district: { contains: district } } : {}),
+          ...(street ? { street: { contains: street, mode: "insensitive" } } : {}),
+          ...(companyName ? { companyName: { contains: companyName } } : {}),
+          ...(floor ? { floor: { contains: floor } } : {}),
+          ...(floors ? { floors: { contains: floors } } : {}),
+          ...(minPrice !== null &&
+          minPrice !== undefined &&
+          maxPrice !== null &&
+          maxPrice !== undefined
+            ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
+            : minPrice !== null && minPrice !== undefined
+            ? { price: { gte: parseInt(minPrice) } }
+            : maxPrice !== null && maxPrice !== undefined
+            ? { price: { lte: parseInt(maxPrice) } }
+            : {}),
+          thubmnail: {
+            isEmpty: false, // Убедитесь, что массив пустой
+          },
+        },
+        orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
+        skip: (page - 1) * 10,
+        take: 10,
+      });
+    } else {
+      //Если фильтры  выбраны то по новым вне зависимости от фото
+      allObjects = await db.objectIntrum.findMany({
+        where: {
+          active: true,
+          ...(category ? { category: { contains: category } } : {}),
+          ...(city ? { city: { contains: city } } : {}),
+          ...(rooms ? { rooms: { contains: rooms } } : {}),
+          ...(renovation ? { renovation: { contains: renovation } } : {}),
+          ...(district ? { district: { contains: district } } : {}),
+          ...(street ? { street: { contains: street, mode: "insensitive" } } : {}),
+          ...(companyName ? { companyName: { contains: companyName } } : {}),
+          ...(floor ? { floor: { contains: floor } } : {}),
+          ...(floors ? { floors: { contains: floors } } : {}),
+          ...(minPrice !== null &&
+          minPrice !== undefined &&
+          maxPrice !== null &&
+          maxPrice !== undefined
+            ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
+            : minPrice !== null && minPrice !== undefined
+            ? { price: { gte: parseInt(minPrice) } }
+            : maxPrice !== null && maxPrice !== undefined
+            ? { price: { lte: parseInt(maxPrice) } }
+            : {}),
+        },
+        orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
+        skip: (page - 1) * 10,
+        take: 10,
+      });
+    }
 
     // Все отфильтрованные объекты (кроме тех 10,что увидит клиент) и определенные поля
     const allFilteredObject = await db.objectIntrum.findMany({
@@ -152,39 +199,57 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(district ? { district: { contains: district } } : {}),
-        ...(street ? { street: { contains: street } } : {}),
+        ...(street ? { street: { contains: street,mode: "insensitive" } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
         ...(floor ? { floor: { contains: floor } } : {}),
         ...(floors ? { floors: { contains: floors } } : {}),
-        ...(minPrice !== null && minPrice !== undefined && maxPrice !== null && maxPrice !== undefined 
+        ...(minPrice !== null &&
+        minPrice !== undefined &&
+        maxPrice !== null &&
+        maxPrice !== undefined
           ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
-          : minPrice !== null && minPrice !== undefined 
+          : minPrice !== null && minPrice !== undefined
           ? { price: { gte: parseInt(minPrice) } }
-          : maxPrice !== null && maxPrice !== undefined 
+          : maxPrice !== null && maxPrice !== undefined
           ? { price: { lte: parseInt(maxPrice) } }
           : {}),
       },
       orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       select: {
         category: true,
-        city:true,
+        city: true,
         rooms: true,
-        renovation:true,
-        district:true,
+        renovation: true,
+        district: true,
         street: true,
         companyName: true,
-        floor:true,
-        floors:true,
+        floor: true,
+        floors: true,
         price: true,
       },
     });
 
-    const prices: number[] = allFilteredObject.map((obj) => obj.price).filter((price): price is number => price !== null);
-    const maxPriceAlternative = prices.length > 0 ? Math.max(...prices).toString() : null;
-    
+    const prices: number[] = allFilteredObject
+      .map((obj) => obj.price)
+      .filter((price): price is number => price !== null);
+    const maxPriceAlternative =
+      prices.length > 0 ? Math.max(...prices).toString() : null;
+
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if (category || city || rooms || district ||street || companyName || renovation || floor || floors || minPrice || maxPrice) {
+    if (
+      category ||
+      city ||
+      rooms ||
+      district ||
+      street ||
+      companyName ||
+      renovation ||
+      floor ||
+      floors ||
+      minPrice ||
+      maxPrice
+    ) {
       filter = {
         category: [...new Set(allFilteredObject.map((el) => el.category))],
         city: [...new Set(allFilteredObject.map((el) => el.city))],
@@ -192,10 +257,10 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
         renovation: [...new Set(allFilteredObject.map((el) => el.renovation))],
         floor: [...new Set(allFilteredObject.map((el) => el.floor))],
         floors: [...new Set(allFilteredObject.map((el) => el.floors))],
-        maxPrice:maxPrice ? maxPrice :  maxPriceAlternative,
-        minPrice:minPrice? minPrice : 0,
+        maxPrice: maxPrice ? maxPrice : maxPriceAlternative,
+        minPrice: minPrice ? minPrice : 0,
         //@ts-ignore
-        district : [...new Set(allFilteredObject.map((el) => el.district))],
+        district: [...new Set(allFilteredObject.map((el) => el.district))],
         street: [...new Set(allFilteredObject.map((el) => el.street))],
         companyName: [
           ...new Set(allFilteredObject.map((el) => el.companyName)),
@@ -205,12 +270,23 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
 
     if (allObjects.length > 0) {
       const countObjects = allFilteredObject.length;
-      return NextResponse.json({
-        allObjects,
-        filter,
-        totalPages: Math.ceil(countObjects / 10),
-        countObjects: countObjects,
-      });
+      if (street) {
+        return NextResponse.json({
+          allObjects,
+          filter,
+          totalPages: Math.ceil(countObjects / 10),
+          countObjects: countObjects,
+          allFilteredObject: allFilteredObject,
+        });
+      } else {
+        return NextResponse.json({
+          allObjects,
+          filter,
+          totalPages: Math.ceil(countObjects / 10),
+          countObjects: countObjects,
+          allFilteredObject: [],
+        });
+      }
     } else {
       return new Response("'В базе нету объектов'", { status: 404 });
     }
@@ -219,14 +295,6 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
     return new Response("'Запрос не может быть выполнен'", { status: 500 });
   }
 }
-
-
-
-
-
-
-
-
 
 // import { NextRequest, NextResponse } from "next/server";
 // import db, { ObjectIntrum } from "../../../../prisma";
@@ -325,8 +393,6 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
 //       ORDER BY ${sortPrice ? `price ${sortPrice}` : `"createdAt" ${sortOrder}`}
 //     `);
 
-
-
 //     // Если есть значения в фильтре, то сохраняем их в объект filter, беря их из всех объектов, а не только с первой страницы из 10 объектов
 //     if (category || city || rooms || district || street || companyName || renovation || floor || floors) {
 //       filter = {
@@ -354,8 +420,6 @@ export async function GET(request: NextRequest,{ params }: { params: { id: strin
 
 //       const countObjects = allFilteredObject.length;
 
-   
- 
 //       return NextResponse.json({
 //         allObjects,
 //         filter,

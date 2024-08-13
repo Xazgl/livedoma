@@ -145,9 +145,12 @@ export function SelectCategory({
 
   return (
     <>
-      <section className="flex  flex-col  h-full     w-full  items-center sm:items-stretch   sm:flex-row sm:flex-wrap justify-center  mt-[40px] gap-[10px]">
+      <section 
+        className={`flex  flex-col  h-full  w-full  items-center sm:items-stretch  
+        sm:flex-row sm:flex-wrap justify-center  mt-[40px] gap-[10px]`}
+      >
         {categories.map((category, index) => (
-          <div
+          <figure
             key={index}
             className="hidden sm:flex flex-col-reverse sm:flex-col w-[auto] cursor-pointer"
           >
@@ -168,8 +171,8 @@ export function SelectCategory({
                  90vw"
               />
             </div>
-            <h1 className={title}>{category.title}</h1>
-          </div>
+            <figcaption className={title}>{category.title}</figcaption>
+          </figure>
         ))}
          
          <SliderCategory

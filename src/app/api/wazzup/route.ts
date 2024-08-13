@@ -11,9 +11,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
       let crmAnswer: crmAnswer = {
         status: "no",
         data: {
-           customer:'',
-           request:''
-        }
+          customer: "",
+          request: "",
+        },
       };
       const answer: MessagesResponse = await req.json();
       console.log(answer);
@@ -22,8 +22,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const allContacts = await Promise.all(
           messages.map(async (message) => {
             if (message.chatId) {
-              const manager = await managerFind()
-              console.log({managerid:manager} )
+              const manager = await managerFind();
+              console.log({ managerid: manager });
               const name = message.contact.name ? message.contact.name : "Нету";
               // const phone = message.authorName;
               const phone = await normalizeWazzupNumber(message.chatId);
@@ -31,8 +31,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               const text = message.text ? message.text : "Нету";
               if (phone !== "Admin") {
                 try {
-                  
-                  let double = await doubleFind(phone)
+                  let double = await doubleFind(phone);
 
                   const newContact = await db.wazzup.create({
                     data: {
@@ -41,54 +40,70 @@ export async function POST(req: NextRequest, res: NextResponse) {
                       text: text,
                       typeSend: chatType,
                       sendCrm: false,
-                      managerId: manager && manager !==''? manager : "Ошибка в выборе менеджера"
+                      managerId:
+                        manager && manager !== ""
+                          ? manager
+                          : "Ошибка в выборе менеджера",
                     },
                   });
 
-                  crmAnswer = await sendIntrumCrm(newContact, double);
-                  console.log(crmAnswer)
+                  if (double.within24Hours == false) {
+                    crmAnswer = await sendIntrumCrm(
+                      newContact,
+                      double.isDuplicate
+                    );
+                    console.log(crmAnswer);
 
-                  if (crmAnswer.status == "success") {
-                    console.log(crmAnswer)
-                    const updateStatus = await db.wazzup.update({
-                      where: {
-                        id: newContact.id,
-                      },
-                      data: {
-                        sendCrm: true,
-                        intrumId: crmAnswer.data.request.toString(),
-                        intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                      },
-                    });
+                    if (crmAnswer.status == "success") {
+                      console.log(crmAnswer);
+                      const updateStatus = await db.wazzup.update({
+                        where: {
+                          id: newContact.id,
+                        },
+                        data: {
+                          sendCrm: true,
+                          intrumId: crmAnswer.data.request.toString(),
+                          intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+                        },
+                      });
 
-                    await db.managerQueue.create({
-                      data: {
-                        managerId:
-                          manager && manager !== ""
-                            ? manager
-                            : "Ошибка в выборе менеджера",
-                          url:  `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                          type  : 'Wazzup'
+                      if (double.isDuplicate == false) {
+                        await db.managerQueue.create({
+                          data: {
+                            managerId:
+                              manager && manager !== ""
+                                ? manager
+                                : "Ошибка в выборе менеджера",
+                            url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+                            type: "Wazzup",
+                          },
+                        });
                       }
-                    });
 
-
-                    const queue = await db.tilda.create({
-                      data: {
-                        name: '',
-                        phone:'',
-                        formid: '',
-                        typeSend:'Очередь',
-                        utm_medium: '',
-                        utm_campaign: '',
-                        utm_content:'',
-                        utm_term: '',
-                        sendCrm: false,
-                        managerId: manager && manager !==''? manager : "Ошибка в выборе менеджера"
-                      }
-                    })
+                      const queue = await db.tilda.create({
+                        data: {
+                          name: "",
+                          phone: "",
+                          formid: "",
+                          typeSend: "Очередь",
+                          utm_medium: "",
+                          utm_campaign: "",
+                          utm_content: "",
+                          utm_term: "",
+                          sendCrm: false,
+                          managerId:
+                            manager && manager !== ""
+                              ? manager
+                              : "Ошибка в выборе менеджера",
+                        },
+                      });
+                    }
+                  } else {
+                    return NextResponse.json(
+                      { answer: "Повторный дубль, отправленый подряд" },
+                      { status: 200 }
+                    );
                   }
-
                 } catch (error) {
                   return new Response(`Ошибка создания контакта ${phone}`, {
                     status: 400,
@@ -121,6 +136,3 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return NextResponse.json("Only POST requests allowed", { status: 405 });
   }
 }
-
-
-

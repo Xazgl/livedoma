@@ -94,6 +94,56 @@ export type Marquiz = {
   result: {};
 };
 
+
+export type MarquizRansom = {
+  raw: { q: string; a: string | number | string[] }[];
+  answers: {
+    q: string;
+    t: string;
+    a: string | number | string[];
+  }[];
+  quiz: {
+    id: string;
+    name: string;
+  };
+  created: string;
+  extra: {
+    href: string;
+    userAgent: string;
+    cookies: {
+      _ym_uid: string;
+      _ga: string;
+    };
+    lng: string;
+    currency: string;
+    notify: string;
+    timezone: number;
+    lang: string;
+    referrer: string;
+    ip: string;
+    city: string;
+    country: string;
+    utm?: {
+      campaign: string;
+      content: string;
+      medium: string;
+      source: string;
+      term: string;
+      name: string;
+    };
+  };
+  form: {
+    id: string;
+  };
+  contacts: {
+    name: string;
+    phone: string;
+    text?: string;
+  };
+  result: {};
+};
+
+
 // {
 //     raw: [
 //       { q: 'UudhPun5j1', a: 'ua5F6VMqm8' },
@@ -176,7 +226,9 @@ export type Marquiz = {
 
 export type Tilda = {
   Phone: string;
+  phone: string;
   name: string;
+  Name: string;
   tranid: string;
   formid: string;
   utm_source: string;
@@ -185,6 +237,8 @@ export type Tilda = {
   utm_content: string;
   utm_term: string;
 };
+
+
 
 export type Message = {
   messageId: string;

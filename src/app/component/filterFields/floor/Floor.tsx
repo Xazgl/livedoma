@@ -68,8 +68,55 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
+
           <div className="flex flex-col w-full text-black">
-            {currentFilter.category && currentFilter.category[0] !== "Дома, дачи, коттеджи" && (
+            <h4 className={`${theme === "dark" ? "text-[white]" : "text-[black]"}`}>Этажей в доме</h4>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={currentFilter.floors ?? []}
+              label=""
+              onChange={(event) => {
+                const selectedFloors = event.target.value as string;
+                setCurrentFilter((prevFilterState) => {
+                  const updatedFloors = prevFilterState.floors?.includes(
+                    selectedFloors
+                  )
+                    ? prevFilterState.floors.filter(
+                        (flr) => flr !== selectedFloors
+                      )
+                    : [...(prevFilterState.floors ?? []), selectedFloors];
+                  return {
+                    ...prevFilterState,
+                    floors: updatedFloors,
+                  };
+                });
+              }}
+              sx={{
+                bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                color: theme === "dark" ? "white" : "black",
+                '& .MuiSvgIcon-root': {
+                    color: theme === "dark" ? "white" : "black",
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: theme === "dark" ? "white" : "black",
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: theme === "dark" ? "white" : "black",
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: theme === "dark" ? "white" : "black",
+                }
+              }}
+            >
+              {floorsOptions.map((el) => (
+                <MenuItem key={el} value={el}>
+                  {el}
+                </MenuItem>
+              ))}
+            </Select>
+
+            {currentFilter.floors && currentFilter.floors.length > 0 && currentFilter.category && currentFilter.category[0] !== "Дома, дачи, коттеджи" && (
               <>
                 <h4 className={`${theme === "dark" ? "text-[white]" : "text-[black]"}`}>Этаж</h4>
                 <Select
@@ -118,53 +165,6 @@ export function Floor({ filteblackProps,currentFilter,setCurrentFilter}: Props) 
                 </Select>
               </>
             )}
-
-
-            <h4 className={`${theme === "dark" ? "text-[white]" : "text-[black]"}`}>Этажей в доме</h4>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={currentFilter.floors ?? []}
-              label=""
-              onChange={(event) => {
-                const selectedFloors = event.target.value as string;
-                setCurrentFilter((prevFilterState) => {
-                  const updatedFloors = prevFilterState.floors?.includes(
-                    selectedFloors
-                  )
-                    ? prevFilterState.floors.filter(
-                        (flr) => flr !== selectedFloors
-                      )
-                    : [...(prevFilterState.floors ?? []), selectedFloors];
-                  return {
-                    ...prevFilterState,
-                    floors: updatedFloors,
-                  };
-                });
-              }}
-              sx={{
-                bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-                color: theme === "dark" ? "white" : "black",
-                '& .MuiSvgIcon-root': {
-                    color: theme === "dark" ? "white" : "black",
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: theme === "dark" ? "white" : "black",
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: theme === "dark" ? "white" : "black",
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: theme === "dark" ? "white" : "black",
-                }
-              }}
-            >
-              {floorsOptions.map((el) => (
-                <MenuItem key={el} value={el}>
-                  {el}
-                </MenuItem>
-              ))}
-            </Select>
           </div>
         </AccordionDetails>
       </Accordion>

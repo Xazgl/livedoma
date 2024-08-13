@@ -23,21 +23,7 @@ async function getObjects(page?: string) {
       where: {
         active: true,
         operationType:'Продам',
-        // thubmnail: {
-        //   isEmpty: false, // Проверка, что массив не пустой
-        // },
-        // OR: [
-        //   {
-        //     thubmnail: {
-        //       equals: [],
-        //     },
-        //   },
-        //   {
-        //     thubmnail: {
-        //       equals: null,
-        //     },
-        //   },
-        // ],
+       
       },
       orderBy: {
         createdAt: "desc",
@@ -46,7 +32,24 @@ async function getObjects(page?: string) {
       take: 10,
     });
 
-    return { objects: objects, pages: Math.ceil(objectsNum / 10), page: curPage };
+    const maxPriceDb = await db.objectIntrum.aggregate({
+      _max: {
+        price: true
+      },
+      where: {
+        active: true,
+        operationType: 'Продам'
+      }
+    });
+    let priceMax = maxPriceDb._max.price!== undefined  ? maxPriceDb._max.price  : 100000000 ;
+    if (priceMax && priceMax >= 1000000000) {
+      priceMax = 100000000;
+    }
+
+    return { 
+      objects: objects, pages: Math.ceil(objectsNum / 10), 
+      page: curPage, priceMax: priceMax 
+    };
    
   } catch (error) {
     console.error(error);
@@ -57,18 +60,17 @@ async function getObjects(page?: string) {
 
 export default async function Home() {
 
-  const {objects, pages, page}  = await getObjects('1');
+  const {objects, pages, page, priceMax}  = await getObjects('1');
 
   return (
     <>
       <Header />
       <MobileHeader />
-      {objects && objects.length > 0 && 
-      <>
-        <SuspenseFilter  objects={objects}  pages={pages} page={page}/>
-        <Footer/>
-      
-      </>
+      { objects && objects.length > 0 && priceMax &&
+       <>
+         <SuspenseFilter priceMax={priceMax} objects={objects}  pages={pages} page={page}/>
+         <Footer/>
+       </>
       }
     </>
   );

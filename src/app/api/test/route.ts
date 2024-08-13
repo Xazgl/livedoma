@@ -43,7 +43,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                     },
                   });
 
-                  crmAnswer = await sendIntrumCrm(newContact, double );
+                  crmAnswer = await sendIntrumCrm(newContact, double.isDuplicate );
                   console.log(crmAnswer.status)
 
                   if (crmAnswer.status == "success") {

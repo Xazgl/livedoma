@@ -10,7 +10,7 @@ export const BodyComp = ({ children }: CommentsProviderProps) => {
   return (
     <div
       style={{ transition: "all 0.5s" }}
-      className={`${styles.background} ${
+      className={`max-h-full min-h-[100vh] ${styles.background} ${
         theme === "dark" ? styles.darkBackground : styles.lightBackground
       }`}
     >

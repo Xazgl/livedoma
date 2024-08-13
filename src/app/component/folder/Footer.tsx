@@ -18,13 +18,12 @@ export function Footer({}) {
             <img
               key={index}
               src={el.img}
-              className="flex h-7 items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
+              className="flex h-5 md:h-7 items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
               alt={el.img}
             />
-            // <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
         ))}
        </div>
-          <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
+          <ul className="flex flex-col  justify-center sm:flex-row sm:justify-start flex-wrap md:items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
             <li>
               <a href="https://jivem-doma.ru" className="hover:underline me-4 md:me-6">
                 Живем Дома

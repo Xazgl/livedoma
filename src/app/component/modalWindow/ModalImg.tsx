@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import MobileStepper from '@mui/material/MobileStepper';
 import Button from '@mui/material/Button';
@@ -11,6 +11,7 @@ type ModelProps = {
   setShowModalImg: (show: boolean) => void;
   houseImg: string[];
   houseStepImg: string;
+  
 };
 
 export function ModalImg({
@@ -26,7 +27,14 @@ export function ModalImg({
       ? houseImg.indexOf(houseStepImg)
       : 0
   );
+  const [isVisible, setIsVisible] = useState(showModalImg);
   const maxSteps = houseImg.length;
+
+  useEffect(() => {
+    if (showModalImg) {
+      setIsVisible(true);
+    }
+  }, [showModalImg]);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -40,21 +48,24 @@ export function ModalImg({
     setCloseStarting(true);
     setTimeout(() => {
       setShowModalImg(false);
+      setIsVisible(false);
       setCloseStarting(false);
     }, 500);
   }
 
-  const backgroundEl = useRef(null);
+  const backgroundEl = useRef<HTMLDivElement | null>(null);
   const className = [
     "modalBackground",
-    showModalImg ? "modalBackground_show" : "",
+    isVisible ? "modalBackground_show" : "",
     closeStarting ? "modalBackground_close-starting" : "",
-  ];
+  ].join(" ");
+
+  if (!isVisible) return null;
 
   return (
     <>
       <div
-        className={className.join(" ")}
+        className={className}
         style={{ color: "black" }}
         id="modalBackground"
         ref={backgroundEl}
@@ -77,7 +88,7 @@ export function ModalImg({
               width: '100%',
               position: 'absolute',
               bottom: 0,
-              background: 'rgba(0, 0, 0, 0.5)', // Фон для контрастности
+              background: 'rgba(0, 0, 0, 0.5)', 
               color: 'white',
             }}
             variant="text"
@@ -89,7 +100,7 @@ export function ModalImg({
                 size="small"
                 onClick={handleNext}
                 disabled={activeStep === maxSteps - 1}
-                sx={{ color: 'white' }} // Цвет текста кнопки
+                sx={{ color: 'white' }} 
               >
                 <KeyboardArrowRight />
               </Button>
@@ -99,7 +110,7 @@ export function ModalImg({
                 size="small"
                 onClick={handleBack}
                 disabled={activeStep === 0}
-                sx={{ color: 'white' }} // Цвет текста кнопки
+                sx={{ color: 'white' }} 
               >
                 <KeyboardArrowLeft />
               </Button>
@@ -147,12 +158,12 @@ export function ModalImg({
           }
 
           .modalBackground_show {
-            animation: modalBackground-open 0.5s;
+            animation: modalBackground-open 0.5s forwards;
             display: flex;
           }
 
           .modalBackground_close-starting {
-            animation: modalBackground-close 0.5s;
+            animation: modalBackground-close 0.5s forwards;
           }
 
           .modalWindow {
@@ -172,8 +183,8 @@ export function ModalImg({
           @media (max-width: 600px) {
             .modalWindow {
               width: 100%;
-              height: 100%;
               border-radius: 0;
+              background: transparent;
             }
           }
         `}

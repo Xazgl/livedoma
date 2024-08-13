@@ -23,14 +23,7 @@ export function SliderCategory({
   titleClass,
   createCategoryHandler,
 }: SliderProps) {
-  const [showIcon, setShowIcon] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowIcon(false);
-    }, 1500);
-    return () => clearTimeout(timer); 
-  }, []);
+  const [showIcon, setShowIcon] = useState(false);
 
   const settings = {
     dots: true,
@@ -48,7 +41,7 @@ export function SliderCategory({
     <div className="sm:hidden w-full relative overflow-hidden">
       <Slider {...settings}>
         {categories.map((category, index) => (
-          <div key={index} className="cursor-pointer">
+          <figure key={index} className="cursor-pointer">
             <div
               className={`${styleCard} h-[200px] sm:h-[270px] `}
               onClick={createCategoryHandler(category.title)}
@@ -64,8 +57,8 @@ export function SliderCategory({
                 (max-width: 1080px) 100vw, 100vw"
               />
             </div>
-            <h1 className={titleClass}>{category.title}</h1>
-          </div>
+            <figcaption className={titleClass}>{category.title}</figcaption>
+          </figure>
         ))}
       </Slider>
       {showIcon && (

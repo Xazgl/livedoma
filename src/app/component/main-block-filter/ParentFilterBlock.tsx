@@ -1,7 +1,11 @@
 "use client";
 import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FavoriteObj,FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
+import {
+  FavoriteObj,
+  FilteblackProps,
+  FilterUserOptions,
+} from "../../../../@types/dto";
 import { Filter } from "./filter-sidebar/Filter";
 import { ObjectsCardsTest } from "./objectsCards/ObjectsCardsTest";
 import { FilterMobile } from "./filter-sidebar/FilterMobile";
@@ -28,25 +32,30 @@ import {
 import { usePathname, useSearchParams } from "next/navigation";
 import { PaginationRow } from "../paginationRow/PaginatiowRow";
 import { useTheme } from "../provider/ThemeProvider";
+import Link from "next/link";
+import ObjectsMap from "../mapObject/objectsMap";
 
 type Props = {
   objects: ObjectIntrum[];
   pages: number;
   page: number;
+  priceMax: number;
 };
 
-export function ParentFilterBlock({ objects, pages, page }: Props) {
-
+export function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
   const { theme } = useTheme();
   const refCardsObjects = useRef<HTMLDivElement>(null);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   //Отфильтрованные Квартиры, по умолчанию все квартиры
   const [filteredHouse, setFilteredHouse] = useState<ObjectIntrum[]>(
     objects.length > 0 ? objects.slice(0, 30) : []
   );
+  const [mapObj, setMapObj] = useState<ObjectIntrum[]>();
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(
-    Math.max(...objects.map((object) => (object.price ? object.price : 0)))
+    priceMax
+    // Math.max(... objectsr.map((object) => (object.price ? object.price : 0)))
   );
   const [loading, setLoading] = useState<boolean>(true); // загрузка при фильтрации
   const [favArr, setFavArr] = useState<FavoriteObj[]>([]); //массив избранного из базы
@@ -115,15 +124,58 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
   }, [searchParams]);
 
   //Устанавливаем их в состояние currentFilter из url
+  // useEffect(() => {
+  //   setCurrentFilter((prevFilterState) => {
+  //     const newFilterState = { ...prevFilterState, ...filterFromParams };
+  //     if (JSON.stringify(prevFilterState) !== JSON.stringify(newFilterState)) {
+  //       return newFilterState;
+  //     }
+  //     return prevFilterState;
+  //   });
+  // }, [filterFromParams]);
+
   useEffect(() => {
-    setCurrentFilter((prevFilterState) => {
-      const newFilterState = { ...prevFilterState, ...filterFromParams };
-      if (JSON.stringify(prevFilterState) !== JSON.stringify(newFilterState)) {
-        return newFilterState;
+    if (isFirstRender) {
+      setCurrentFilter((prevFilterState) => {
+        const newFilterState = { ...prevFilterState, ...filterFromParams };
+        if (JSON.stringify(prevFilterState) !== JSON.stringify(newFilterState)) {
+          return newFilterState;
+        }
+        return prevFilterState;
+      });
+
+      // Проверяем, совпадают ли параметры в currentFilter с URL и отправляем запрос
+      const urlParamsCount = Array.from(new URLSearchParams(searchParams).keys()).length;
+      const currentFilterParamsCount = Object.keys(filterFromParams).length;
+
+      if (urlParamsCount === currentFilterParamsCount) {
+        // Запрос при первом рендере
+        const params = new URLSearchParams(searchParams);
+        fetch("/api/objects/?" + params.toString())
+          .then((res) => res.json())
+          .then((el) => {
+            setCountObjects(el.countObjects);
+            setAllPages(el.totalPages);
+            setFilteredHouse(el.allObjects);
+            setMapObj(el.allFilteredObject);
+            setFilteblackProps((prevFilterState) => ({
+              ...prevFilterState,
+              categories: el.filter.category,
+              cities: el.filter.city,
+              rooms: el.filter.rooms,
+              renovationTypes: el.filter.renovation,
+              floor: el.filter.floor,
+              floors: el.filter.floors,
+              districts: el.filter.district,
+              streets: el.filter.street,
+              companyNames: el.filter.companyName,
+              price: [el.filter.minPrice, el.filter.maxPrice],
+            }));
+          });
+        setIsFirstRender(false); // Отмечаем, что первый рендер завершен
       }
-      return prevFilterState;
-    });
-  }, [filterFromParams]);
+    }
+  }, [filterFromParams, isFirstRender, searchParams]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -157,12 +209,23 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     sortPrice: [],
   });
 
-  //Загрузка при изменении фильтра и сброс страницы на 1
+  // Инициализация currentFilter при первом рендере
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    if (isFirstRender) {
+      setCurrentFilter((prevFilterState) => ({
+        ...prevFilterState,
+        ...filterFromParams,
+      }));
+      setIsFirstRender(false);
+    }
+  }, [filterFromParams, isFirstRender]);
+
+  //Загрузка при изменении фильтра и сброс страницы на 1
+ useEffect(() => {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
   }, [currentFilter]);
 
   const resetPageAndReloadData = () => {
@@ -228,89 +291,189 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
     );
   }, [currentFilter]);
 
+  // useEffect(() => {
+  //   const params = new URLSearchParams();
+    
+  //   //параметры запроса к api для фильтра
+  //   if (currentFilter.category) {
+  //     currentFilter.category.forEach((cat) => {
+  //       params.append("category", cat);
+  //     });
+  //   }
+  //   if (currentFilter.city) {
+  //     currentFilter.city.forEach((cit) => {
+  //       params.append("city", cit);
+  //     });
+  //   }
+  //   if (currentFilter.rooms) {
+  //     currentFilter.rooms.forEach((room) => {
+  //       params.append("rooms", room);
+  //     });
+  //   }
+  //   if (currentFilter.renovation) {
+  //     currentFilter.renovation.forEach((renovation) => {
+  //       params.append("renovation", renovation);
+  //     });
+  //   }
+  //   if (currentFilter.district) {
+  //     currentFilter.district.forEach((dist) => {
+  //       params.append("district", dist);
+  //     });
+  //   }
+  //   if (currentFilter.street) {
+  //     currentFilter.street.forEach((str) => {
+  //       params.append("street", str);
+  //     });
+  //   }
+  //   if (currentFilter.companyName) {
+  //     currentFilter.companyName.forEach((compName) => {
+  //       params.append("companyName", compName);
+  //     });
+  //   }
+  //   if (currentFilter.floor) {
+  //     currentFilter.floor.forEach((flr) => {
+  //       params.append("floor", flr);
+  //     });
+  //   }
+  //   if (currentFilter.floors) {
+  //     currentFilter.floors.forEach((flr) => {
+  //       params.append("floors", flr);
+  //     });
+  //   }
+  //   // Взаимоисключающие условия для sortOrder и sortPrice
+  //   if (
+  //     currentFilter.sortOrder &&
+  //     (!currentFilter.sortPrice || currentFilter.sortPrice.length === 0)
+  //   ) {
+  //     currentFilter.sortOrder.forEach((dateSort) => {
+  //       params.append("sortOrder", dateSort);
+  //     });
+  //   } else if (
+  //     currentFilter.sortPrice &&
+  //     (!currentFilter.sortOrder || currentFilter.sortOrder.length === 0)
+  //   ) {
+  //     currentFilter.sortPrice.forEach((priceSort) => {
+  //       params.append("sortPrice", priceSort);
+  //     });
+  //   }
+  //   if (currentFilter.minPrice) {
+  //     params.append("minPrice", String(currentFilter.minPrice));
+  //   }
+  //   if (currentFilter.maxPrice) {
+  //     params.append("maxPrice", String(currentFilter.maxPrice));
+  //   }
+  //   if (currentPage) {
+  //     params.append("page", String(currentPage));
+  //   }
+  //   window.history.replaceState(null, "", `${pathname}?${params}`);
+  //   // console.log('запрос')
+  //   fetch("/api/objects/?" + params)
+  //     .then((res) => res.json())
+  //     .then((el) => {
+  //       setCountObjects(el.countObjects);
+  //       setAllPages(el.totalPages);
+  //       setFilteredHouse(el.allObjects);
+  //       setMapObj(el.allFilteredObject)
+  //       setFilteblackProps((prevFilterState) => {
+  //         return {
+  //           ...prevFilterState,
+  //           categories: el.filter.category,
+  //           cities: el.filter.city,
+  //           rooms: el.filter.rooms,
+  //           renovationTypes: el.filter.renovation,
+  //           floor: el.filter.floor,
+  //           floors: el.filter.floors,
+  //           districts: el.filter.district,
+  //           streets: el.filter.street,
+  //           companyNames: el.filter.companyName,
+  //           price: [el.filter.minPrice, el.filter.maxPrice],
+  //         };
+  //       });
+  //     });
+  // }, [currentFilter, currentPage]);
+
+
   useEffect(() => {
-    const params = new URLSearchParams();
-    //параметры запроса к api для фильтра
-    if (currentFilter.category) {
-      currentFilter.category.forEach((cat) => {
-        params.append("category", cat);
-      });
-    }
-    if (currentFilter.city) {
-      currentFilter.city.forEach((cit) => {
-        params.append("city", cit);
-      });
-    }
-    if (currentFilter.rooms) {
-      currentFilter.rooms.forEach((room) => {
-        params.append("rooms", room);
-      });
-    }
-    if (currentFilter.renovation) {
-      currentFilter.renovation.forEach((renovation) => {
-        params.append("renovation", renovation);
-      });
-    }
-    if (currentFilter.district) {
-      currentFilter.district.forEach((dist) => {
-        params.append("district", dist);
-      });
-    }
-    if (currentFilter.street) {
-      currentFilter.street.forEach((str) => {
-        params.append("street", str);
-      });
-    }
-    if (currentFilter.companyName) {
-      currentFilter.companyName.forEach((compName) => {
-        params.append("companyName", compName);
-      });
-    }
-    if (currentFilter.floor) {
-      currentFilter.floor.forEach((flr) => {
-        params.append("floor", flr);
-      });
-    }
-    if (currentFilter.floors) {
-      currentFilter.floors.forEach((flr) => {
-        params.append("floors", flr);
-      });
-    }
-    // Взаимоисключающие условия для sortOrder и sortPrice
-    if (
-      currentFilter.sortOrder &&
-      (!currentFilter.sortPrice || currentFilter.sortPrice.length === 0)
-    ) {
-      currentFilter.sortOrder.forEach((dateSort) => {
-        params.append("sortOrder", dateSort);
-      });
-    } else if (
-      currentFilter.sortPrice &&
-      (!currentFilter.sortOrder || currentFilter.sortOrder.length === 0)
-    ) {
-      currentFilter.sortPrice.forEach((priceSort) => {
-        params.append("sortPrice", priceSort);
-      });
-    }
-    if (currentFilter.minPrice) {
-      params.append("minPrice", String(currentFilter.minPrice));
-    }
-    if (currentFilter.maxPrice) {
-      params.append("maxPrice", String(currentFilter.maxPrice));
-    }
-    if (currentPage) {
-      params.append("page", String(currentPage));
-    }
-    window.history.replaceState(null, "", `${pathname}?${params}`);
-    // console.log('запрос')
-    fetch("/api/objects/?" + params)
-      .then((res) => res.json())
-      .then((el) => {
-        setCountObjects(el.countObjects);
-        setAllPages(el.totalPages);
-        setFilteredHouse(el.allObjects);
-        setFilteblackProps((prevFilterState) => {
-          return {
+    if (!isFirstRender) { // Логика для обычного обновления после первого рендера
+      const params = new URLSearchParams();
+
+      if (currentFilter.category) {
+        currentFilter.category.forEach((cat) => {
+          params.append("category", cat);
+        });
+      }
+      if (currentFilter.city) {
+        currentFilter.city.forEach((cit) => {
+          params.append("city", cit);
+        });
+      }
+      if (currentFilter.rooms) {
+        currentFilter.rooms.forEach((room) => {
+          params.append("rooms", room);
+        });
+      }
+      if (currentFilter.renovation) {
+        currentFilter.renovation.forEach((renovation) => {
+          params.append("renovation", renovation);
+        });
+      }
+      if (currentFilter.district) {
+        currentFilter.district.forEach((dist) => {
+          params.append("district", dist);
+        });
+      }
+      if (currentFilter.street) {
+        currentFilter.street.forEach((str) => {
+          params.append("street", str);
+        });
+      }
+      if (currentFilter.companyName) {
+        currentFilter.companyName.forEach((compName) => {
+          params.append("companyName", compName);
+        });
+      }
+      if (currentFilter.floor) {
+        currentFilter.floor.forEach((flr) => {
+          params.append("floor", flr);
+        });
+      }
+      if (currentFilter.floors) {
+        currentFilter.floors.forEach((flr) => {
+          params.append("floors", flr);
+        });
+      }
+      if (currentFilter.sortOrder && (!currentFilter.sortPrice || currentFilter.sortPrice.length === 0)) {
+        currentFilter.sortOrder.forEach((dateSort) => {
+          params.append("sortOrder", dateSort);
+        });
+      } else if (
+        currentFilter.sortPrice &&
+        (!currentFilter.sortOrder || currentFilter.sortOrder.length === 0)
+      ) {
+        currentFilter.sortPrice.forEach((priceSort) => {
+          params.append("sortPrice", priceSort);
+        });
+      }
+      if (currentFilter.minPrice) {
+        params.append("minPrice", String(currentFilter.minPrice));
+      }
+      if (currentFilter.maxPrice) {
+        params.append("maxPrice", String(currentFilter.maxPrice));
+      }
+      if (currentPage) {
+        params.append("page", String(currentPage));
+      }
+
+      window.history.replaceState(null, "", `${pathname}?${params}`);
+      // Выполняем запрос с текущими параметрами фильтра
+      fetch("/api/objects/?" + params.toString())
+        .then((res) => res.json())
+        .then((el) => {
+          setCountObjects(el.countObjects);
+          setAllPages(el.totalPages);
+          setFilteredHouse(el.allObjects);
+          setMapObj(el.allFilteredObject);
+          setFilteblackProps((prevFilterState) => ({
             ...prevFilterState,
             categories: el.filter.category,
             cities: el.filter.city,
@@ -321,12 +484,11 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
             districts: el.filter.district,
             streets: el.filter.street,
             companyNames: el.filter.companyName,
-            price: [el.filter.minPrice, el.filter. maxPrice],
-          };
+            price: [el.filter.minPrice, el.filter.maxPrice],
+          }));
         });
-      }); 
-      
-  }, [currentFilter, currentPage]);
+    }
+  }, [currentFilter, currentPage, isFirstRender]);
 
   //Конкретные выбранные фильтры
   const [filteblackProps, setFilteblackProps] = useState<FilteblackProps>({
@@ -400,17 +562,25 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
             refCardsObjects={refCardsObjects}
           />
 
-
           <div className="flex flex-col   items-center lg:items-center  w-full  justify-center ">
-            <h1 className={`w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] mt-[50px]
-               font-semibold ${theme === "dark"? "text-[white]":"text-[black]"} `}>
+            <h1
+              className={`w-[90%] text-[16px] sm:text-[25px] md:text-[30px] lg:text-[35px] xl:text-[40px] mt-[50px]
+               font-semibold ${
+                 theme === "dark" ? "text-[white]" : "text-[black]"
+               } `}
+            >
               Лучшие предложения для
-              <span className={` border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F] ${theme === "dark"? "text-[white]":"text-[#54529F]"} `}>
+              <span
+                className={` border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F] ${
+                  theme === "dark" ? "text-[white]" : "text-[#54529F]"
+                } `}
+              >
                 <br />
                 ВАШИХ КЛИЕНТОВ НА ОДНОМ САЙТЕ
               </span>
             </h1>
           </div>
+          <ObjectsMap  currentFilter={currentFilter} mapObj={mapObj}/>
         </>
       )}
 
@@ -466,15 +636,14 @@ export function ParentFilterBlock({ objects, pages, page }: Props) {
           setFavArr={setFavArr}
           resetPageAndReloadData={resetPageAndReloadData}
         />
-        
       </section>
       <div className="hidden sm:flex">
         <PaginationRow
-              currentPage={currentPage}
-              totalPages={allPages}
-              handlePageChange={handlePageChange}
+          currentPage={currentPage}
+          totalPages={allPages}
+          handlePageChange={handlePageChange}
         />
-      </div>      
+      </div>
     </div>
   );
 }

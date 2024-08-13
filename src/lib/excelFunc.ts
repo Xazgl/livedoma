@@ -6,6 +6,7 @@ import {
   titles2,
   columnsSets2,
   columnsSetsApplicationSansara,
+  columnsSetsApplicationRansom,
 } from "@/app/component/table/myFilter";
 import { Sales, constructionApplications } from "@prisma/client";
 import ExcelJS from "exceljs";
@@ -1048,67 +1049,117 @@ export async function generateExcel5(applications: constructionApplications[]) {
   saveAs(new Blob([buffer]), "application.xlsx");
 }
 
-// export async function generateExcel3(transactions: Sales[]) {
-//   const workbook = new ExcelJS.Workbook();
 
-//   // Проходимся по каждому набору столбцов и создаем новый лист для каждого
-//   columnsSets2.forEach((columns, index) => {
-//     const worksheet = workbook.addWorksheet(titles2[index]);
 
-//     // Английские названия колонок (используются для доступа к свойствам объекта transaction)
-//     const columnFields = columns.map(col => col.field);
 
-//     // Добавление заголовков столбцов для текущего набора
-//     const russianColumns = columns.map(col => col.headerName);
-//     worksheet.addRow(russianColumns);
+export async function generateExcel6(applications: constructionApplications[]) {
+  const workbook = new ExcelJS.Workbook();
+  const applicationsNew = applications.map((appl) => ({
+    id: appl.id,
+    idApplicationIntrum: appl.idApplicationIntrum,
+    translator: appl.translator ? appl.translator : "",
+    responsibleMain: appl.responsibleMain,
+    status: appl.status ? appl.status : "",
+    postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
+    desc: appl.desc ? appl.desc : "",
+    typeApplication: appl.typeApplication ? appl.typeApplication : "",
+    contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
+    campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
+    termUtm: appl.termUtm ? appl.termUtm : "",
+    nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
+    rejection: appl.rejection ? appl.rejection : "",
+    errorReejctionDone: appl.errorReejctionDone == true ? "Да" : "Нет", // Ошибка исправлена?
+    datecallCenter: appl.datecallCenter ? appl.datecallCenter : "", //Дата обработки заявки колл центром String? //Дата обработки заявки колл центром
+    timecallCenter: appl.timecallCenter
+      ? parseFloat(appl.timecallCenter).toLocaleString("ru-RU")
+      : "",
+    okCallCenter: appl.timecallCenter
+      ? appl.timecallCenter < "0.15"
+        ? "✓"
+        : "👎🏻"
+      : "", // ОК КЦ
+    timesaletCenter: appl.timesaletCenter
+      ? parseFloat(appl.timesaletCenter).toLocaleString("ru-RU")
+      : "", // время ОП
+    okSaleCenter: appl.timesaletCenter
+      ? appl.timesaletCenter < "0.15"
+        ? "✓"
+        : "👎🏻"
+      : "", // ОК ОП
+    dateFirstContact: appl.dateFirstContact ? appl.dateFirstContact : "",
+    phone: appl.phone ? appl.phone : "",
+    comment: appl.comment ? appl.comment : [],
+    url: appl.url
+      ? appl.url
+      : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${appl.idApplicationIntrum}#request`,
+    createdAtCrm: appl.createdAtCrm ? appl.createdAtCrm.replace(/-/g, ".") : "", // Дата в формате 2024-05-07 11:25:23 нужно убрать - на .
+    createdAt: appl.createdAt ? formatDateTime(new Date(appl.createdAt)) : "",
+  }));
+  // Фильтрация данных по типу заявки
+  let applicationsByType: Record<string, constructionApplicationsExcel[]> = {};
+  applicationsNew.forEach((application) => {
+    const type = application.typeApplication || "Заявка без типа";
+    if (!applicationsByType[type]) {
+      applicationsByType[type] = [];
+    }
+    applicationsByType[type].push(application);
+  });
 
-//     const transactionsNew = transactions.map((transaction) => ({
-//       id: transaction.id,
-//       idSalesIntrum: transaction.idSalesIntrum,
-//       responsibleMain: transaction.responsibleMain,
-//       partCommissionSeller: transaction.partCommissionSeller == null || transaction.partCommissionSeller == '0' || transaction.partCommissionSeller == '' ? null : transaction.partCommissionSeller.split('.')[0],
-//       sumCommissionBuyer: transaction.sumCommissionBuyer == null || transaction.sumCommissionBuyer == '0' || transaction.sumCommissionBuyer == '' ? null : transaction.sumCommissionBuyer.split('.')[0],
-//       agentSellerName: transaction.agentSellerName ? transaction.agentSellerName.split(' ')[0] : '',
-//       agentSellerCommission:  transaction.agentSellerCommission == '0' || transaction.agentSellerCommission == '' || transaction.agentSellerCommission == '0.00' ? null : transaction.agentSellerCommission ? transaction.agentSellerCommission.split('.')[0] : null,
+  // Создание вкладок Excel для каждого типа заявки
+  Object.entries(applicationsByType).forEach(([type, data]) => {
+    if (type !== "Заявка без типа") {
+      const worksheet = workbook.addWorksheet(type);
+      // Добавление заголовков столбцов
+      let columns = columnsSetsApplicationRansom[type === "Заявка" ? 0 : 1];
+      // Удаление колонок "campaignUtm" и "termUtm" на вкладках "Кампания" и "Звонок"
+      if (type === "Прием объекта Срочный Выкуп" ) {
+        columns = columns.filter(
+          (col) =>
+            col.field !== "campaignUtm" &&
+            col.field !== "termUtm" &&
+            col.field !== "rejection" &&
+            col.field !== "postMeetingStage" &&
+            col.field !== "desc" &&
+            col.field !== "contactedClient" &&
+            col.field !== "contactedClient" &&
+            col.field !== "errorReejctionDone"
+        );
+      }
 
-//       lawyerName: transaction.lawyerName ? transaction.lawyerName.split(' ')[0] : '',
-//       lawyerCommission:   transaction.lawyerCommission == '0' || transaction.lawyerCommission == ''|| transaction.lawyerCommission == '0.00' ? null : transaction.lawyerCommission? transaction.lawyerCommission.split('.')[0] : null,
+      const russianColumns = columns.map((col) => col.headerName);
+      worksheet.addRow(russianColumns);
+      // Добавление данных в таблицу
+      data.forEach((application) => {
+        const row: Array<string | undefined> = [];
+        columns.forEach((col) => {
+          const value =
+            application[col.field as keyof constructionApplicationsExcel];
+          row.push(value?.toString());
+        });
+        worksheet.addRow(row);
+      });
 
-//       agentBuyerName: transaction.agentBuyerName ? transaction.agentBuyerName.split(' ')[0] : '',
-//       agentBuyerCommission:  transaction.agentBuyerCommission == '0' || transaction.agentBuyerCommission == '' || transaction.agentBuyerCommission == '0.00' ? null : transaction.agentBuyerCommission? transaction.agentBuyerCommission.split('.')[0] : null,
+      // Управление стилями для колонки "URL"
+      const postUrlColumn = columns.find((col) => col.field === "url");
+      if (postUrlColumn) {
+        const postUrlColumnIndex =
+          columns.findIndex((col) => col.field === "url") + 1;
+        worksheet.getColumn(postUrlColumnIndex).eachCell((cell) => {
+          const cellValue = cell.text;
+          if (cellValue) {
+            cell.value = { text: cellValue, hyperlink: cellValue };
+            cell.font = {
+              underline: true,
+              color: { argb: "FF0000FF" },
+            };
+          }
+        });
+      }
+    }
+  });
 
-//       lawyerCommission2:   transaction.lawyerCommission2 == '0' || transaction.lawyerCommission2 == '' || transaction.lawyerCommission2 == '0.00' ? null : transaction.lawyerCommission2? transaction.lawyerCommission2.split('.')[0] : null,
-//       adress: transaction.adress,
-//       lawyerSumm: transaction.lawyerSumm == '0' || transaction.lawyerSumm == ''|| transaction.lawyerSumm == '0.00' ? null : transaction.lawyerSumm? transaction.lawyerSumm.split('.')[0] : null,
-//       lawyerSumm1: transaction.lawyerSumm1 == '0' || transaction.lawyerSumm1 == ''|| transaction.lawyerSumm1 == '0.00' ? null : transaction.lawyerSumm1? transaction.lawyerSumm1.split('.')[0] : null,
-//       lawyerSalaryDone: transaction.lawyerSalaryDone == '1' ? 'Да' : 'Нет',
-//       lawyerFormula: transaction.lawyerFormula? transaction.lawyerFormula :'',
-
-//       agentBuyerFormul: transaction.agentBuyerFormul? transaction.agentBuyerFormul   : '',
-//       agentBuyerSalaryDone: transaction.agentBuyerSalaryDone == '1' ? 'Да' : 'Нет',
-
-//       agentSellerFormula:transaction.agentSellerFormula? transaction.agentSellerFormula:'',
-//       agentSellerSalaryDone:transaction.agentSellerSalaryDone == '1' ? 'Да' : 'Нет',
-
-//       dateStage: transaction.dateStage,
-//       createdAt: transaction.createdAt,
-//       updatedAt: transaction.updatedAt
-//     }));
-
-//     // Добавление данных из transactions в таблицу для текущего набора
-//     transactionsNew.forEach((transaction) => {
-//       const row: Array<string | undefined> = [];
-//       columnFields.forEach((field) => {
-//         //@ts-ignore
-//         row.push(transaction[field] || '');
-//       });
-//       worksheet.addRow(row);
-//     });
-//   });
-
-//   // Создание файла Excel
-//   const buffer = await workbook.xlsx.writeBuffer();
-
-//   // Сохранение файла на стороне клиента
-//   saveAs(new Blob([buffer]), 'salary.xlsx');
-// }
+  // Создание файла Excel
+  const buffer = await workbook.xlsx.writeBuffer();
+  // Сохранение файла на стороне клиента
+  saveAs(new Blob([buffer]), "ransom.xlsx");
+}

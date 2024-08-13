@@ -4,8 +4,6 @@ import React from 'react';
 import Carousel from 'react-material-ui-carousel'
 import { ImgCard } from "./ImgCard";
 
-
-
 type Props = {
     showModalImg: boolean,
     setShowModalImg: Dispatch<SetStateAction<boolean>>,
@@ -56,22 +54,39 @@ export function SwiperImg({ showModalImg, img, setShowModalImg, setHouseStepImg 
 
     const resultArr = houseArrImg.reduce((resultArray:string[][], item, index) => {
         const chunkIndex = Math.floor(index / itemsPerPage);
-
         if (!resultArray[chunkIndex]) {
             resultArray[chunkIndex] = [];
         }
-
         resultArray[chunkIndex].push(item);
         return resultArray;
     }, []);
 
 
     return (
-
         <section className="w-[100%] m-[0 auto] bg-[transparent] gap-[0px] p-[20px] justify-center">
             {houseArrImg.length > 0  ?
-                <Carousel sx={{ height: 'auto' }} animation="slide" autoPlay={false} swipe indicators cycleNavigation fullHeightHover
-                    navButtonsAlwaysVisible
+                <Carousel 
+                   sx={{ height: 'auto' }} 
+                   animation="slide"
+                   autoPlay={false} 
+                   swipe 
+                   indicators 
+                   cycleNavigation 
+                   fullHeightHover
+                   navButtonsAlwaysVisible
+                   navButtonsProps={{
+                    style: {
+                      backgroundColor: '#0000009e',
+                      color: 'white',
+                      borderRadius: '50%',
+                    },
+                   }}
+                   navButtonsWrapperProps={{
+                    style: {
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                    },
+                   }}
                 >
                     {resultArr.map((houseArrImg, index) =>
                         <Item
@@ -109,11 +124,6 @@ export function SwiperImg({ showModalImg, img, setShowModalImg, setHouseStepImg 
                     )
                 }
             </div>
-
-
         )
     }
-
-
-
 }
