@@ -41,14 +41,20 @@ const managers = [
   { name: "Княжева", id: "1243" },
   { name: "Бабенко*", id: "1849" },
   { name: "Шепилов", id: "44" },
+  { name: "Игнатова", id: "964" },
+  { name: "Тихомиров", id: "123" },
+  { name: "Ефремов", id: "13" },
+  { name: "Мухина m", id: "13" },
 ];
 
 async function foundName(id) {
   if (id !== '0' && id !== 0 && id !== undefined && id !== null && id !== '2109') {
-    // Проверяем, существует ли ID в массиве managers
+    // Проверяем, ID в массиве managers
     const manager = managers.find(manager => manager.id === id);
     if (manager) {
-      return manager.surname ? manager.surname : manager.name;
+      return manager.surname ?
+        manager.surname == 'Костенко' ? `${manager.surname} ${manager.name}`
+          : manager.surname : manager.name;
     } else {
 
       const params = new URLSearchParams();
@@ -63,24 +69,39 @@ async function foundName(id) {
           }
         });
 
-        // Проверяем, существует ли response.data.data и response.data.data[id]
-        if (response.data && response.data.data && response.data.data[id] && response.data.length> 0) {
+        if (response.data && response.data.data && response.data.data[id] && response.data.length > 0) {
           const person = response.data.data[id];
           return person.surname ? person.surname : person.name;
         } else {
-          console.error(`Данные не найдены для id ${id}, запрос ${response.data.data}`);
-          return `Сбой Intrum ФИО у https://jivemdoma.intrumnet.com/crm/tools/#UserProfile-${id}`;
-          // return `Сбой ФИО у  https://jivemdoma.intrumnet.com/crm/tools/#UserProfile-${id}`;
+          console.error(`Данные не найдены для id ${id}, запрос ${response.data.data}. Запускаем 2 попытку`);       
+          //Таймаут перед повторным запросом
+          await new Promise(resolve => setTimeout(resolve, 100000));
+          
+          const responseTwo = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/worker/filter',
+            params, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          });
+
+          if (responseTwo.data && responseTwo.data.data && responseTwo.data.data[id] ) {
+            const person = response.data.data[id];
+            return person.surname ? person.surname : person.name;
+          } else {
+            return `Сбой ФИО Intrum https://jivemdoma.intrumnet.com/crm/tools/#UserProfile-${id}`;
+          }
         }
       } catch (error) {
         console.error(`Ошибка при выполнении запроса у ${id}:`, error);
-        throw error; // Пробрасываем ошибку выше для обработки
+        throw error; 
       }
     }
   } else {
     return 'Нет';
   }
 }
+
+
 
 async function findPhone(customer_id) {
   const params = new URLSearchParams();

@@ -205,7 +205,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
     desc: appl.desc ? appl.desc : "",
     typeApplication: appl.typeApplication ? appl.typeApplication : "",
-    contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
+    contactedClient: appl.contactedClient ? appl.contactedClient : "",
     campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
     termUtm: appl.termUtm ? appl.termUtm : "",
     nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
