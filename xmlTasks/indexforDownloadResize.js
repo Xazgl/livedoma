@@ -26,10 +26,11 @@ shell.mkdir('objects')
 
 // Функция загрузки и сохранения изображений
 async function downloadAndSaveImages(cleanLinks, folderPath) {
-    /** @type {{thumbnail: string[], full: string[]}} */
+    /** @type {{ thumbnail: string[],thumbnailMobile: string[], full: string[]}} */
     const imgs = {
         full: [],
-        thumbnail: []
+        thumbnail: [],
+        thumbnailMobile:[]
     }
     const downloadFolder = path.join(folderPath, `download`)
     try {
@@ -74,6 +75,7 @@ async function downloadAndSaveImages(cleanLinks, folderPath) {
         // clearTimeout(timer)
         await execPromise(command, { timeout: 5000 })
         await fs.mkdir(path.join(folderPath, `thumbnail`), { recursive: true });
+        await fs.mkdir(path.join(folderPath, `thumbnailMobile`), { recursive: true });
         await fs.mkdir(path.join(folderPath, `full`), { recursive: true });
         let command2 = []
 
@@ -82,13 +84,16 @@ async function downloadAndSaveImages(cleanLinks, folderPath) {
             // const thumbnailFilename = `${img.split('/').slice(0, -2).join('/')}/thumbnail/${imageFileName}.webp`
             // const thumbnailFilename = `${folderPath}/thumbnail/${imageFileName}.webp`
             const thumbnailFilename = path.join(folderPath, `thumbnail/${imageFileName}.webp`)
+            const thumbnailFileMobilename = path.join(folderPath, `thumbnailMobile/${imageFileName}.webp`)
             const fullFilename = path.join(folderPath, `full/${imageFileName}.webp`)
-
+             
+            imgs.thumbnailMobile.push(thumbnailFileMobilename.replace(/\\+/g, '/').replace(/.*?static/, '/static'))
             imgs.thumbnail.push(thumbnailFilename.replace(/\\+/g, '/').replace(/.*?static/, '/static'))
             imgs.full.push(fullFilename.replace(/\\+/g, '/').replace(/.*?static/, '/static'))
             // exec(`magick convert .${img} -resize 800x ${thumbnailFilename}`)
             // exec(`magick convert .${img} -resize 1200x ${fullFilename}`)
             command2.push(execPromise(`magick convert ${img} -resize 800x ${thumbnailFilename}`, { timeout: 5000 }))
+            command2.push(execPromise(`magick convert ${img} -resize 400x ${thumbnailFileMobilename}`, { timeout: 5000 }))
             command2.push(execPromise(`magick convert ${img} -resize 1200x ${fullFilename}`, { timeout: 5000 }))
         }
         // await execPromise(command2.join('&&'), { timeout: 5000 })
@@ -219,6 +224,9 @@ async function objHandler(adObject) {
                     thubmnail: {
                         set: cleanLinksNew.thumbnail
                     },
+                    thubmnailMobile: {
+                        set: cleanLinksNew.thumbnailMobile
+                    },
                     rooms: adObject.Rooms ? String(adObject.Rooms[0]) : '',
                     square: adObject.Square ? String(adObject.Square[0]) : '',
                     floors: adObject.Floors ? String(adObject.Floors[0]) : '',
@@ -271,6 +279,9 @@ async function objHandler(adObject) {
                         },
                         thubmnail: {
                             set: cleanLinksNew.thumbnail
+                        },
+                        thubmnailMobile: {
+                            set: cleanLinksNew.thumbnailMobile
                         },
                     },
                 })
