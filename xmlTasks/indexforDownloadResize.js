@@ -183,7 +183,7 @@ async function objHandler(adObject) {
     });
     console.log(findObject)
     if (findObject === null) {
-        console.log(`Создаем объект ${adObject.Id[0]}`)
+        console.log(`Создаем объект ${adObject.Id[0]}` )
         try {
             const cleanLinks = adObject.Images[0].Image.map(image => image.$.url);
             const roomArr = adObject.RoomType ? adObject.RoomType.map(room => room.Option[0]) : [];
@@ -257,7 +257,7 @@ async function objHandler(adObject) {
             console.log(adObject.Id[0] + ' ' + parts);
         }
     } else {
-        if (findObject.thubmnail.length > 0) {
+        if (findObject.thubmnail.length > 0 ) {
             console.log(`Не обновляем т.к. тут уже есть thubmnail  ${adObject.Id[0]}`)
         } else {
             try {
