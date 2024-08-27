@@ -12,8 +12,7 @@ import floor from "/public/svg/floor.svg";
 import styles from "./Object.module.css";
 import { Circle } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { addToFavorite, deleteFavorite } from "@/lib/favoriteFunc";
-import { FavoriteObj, FilterUserOptions } from "../../../../../@types/dto";
+import { FilterUserOptions } from "../../../../../@types/dto";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import noPhoto from "/public/images/noPhoto.jpg";
 import Link from "next/link";
@@ -21,6 +20,9 @@ import DynamicCardImg from "./DynamicCardImg";
 import { SortDateSelect } from "../../filterFields/sortPrice/SortPriceSelect";
 import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
 import { useTheme } from "../../provider/ThemeProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/redux/store";
+import { addFavorite, deleteFavorite, fetchFavorites } from "@/app/redux/slice/favoriteSlice";
 
 type Props = {
   filteredHouse: ObjectIntrum[];
@@ -28,8 +30,6 @@ type Props = {
   allPages: number;
   currentPage: number;
   handlePageChange: (page: number) => void;
-  setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
-  favArr: FavoriteObj[];
   refCardsObjects: RefObject<HTMLDivElement>;
   currentFilter: FilterUserOptions;
   setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
@@ -37,13 +37,13 @@ type Props = {
 };
 
 export function ObjectsCardsTest({ filteredHouse,loading,allPages,currentPage,
-  handlePageChange,setFavArr,refCardsObjects,favArr,currentFilter,setCurrentFilter,
+  handlePageChange, refCardsObjects,currentFilter,setCurrentFilter,
   resetPageAndReloadData 
 }: Props) {
 
   const [loadingImg, setLoadingImg] = useState(true);
   const { theme } = useTheme();
-
+  
   let style = loading
     ? "flex-col items-center  h-[100vh]  justify-center  flex-nowrap"
     : "flex-row justify-center gap-[0px] sm:gap-[20px] lg:gap-[0px] md:items-center md:items-start   h-full  flex-wrap ";
@@ -65,6 +65,23 @@ export function ObjectsCardsTest({ filteredHouse,loading,allPages,currentPage,
     }
     start();
   }, []);
+
+
+  //Redux
+  const dispatch = useDispatch<AppDispatch>(); // Используй типизированный dispatch
+  const { favorites, error } = useSelector((state: RootState) => state.favorite);
+
+  useEffect(() => {
+    dispatch(fetchFavorites());  
+  }, [dispatch]);
+
+  const handleAddFavorite = (id: string) => {
+    dispatch(addFavorite(id));
+  };
+
+  const handleDeleteFavorite = (id: string) => {
+    dispatch(deleteFavorite(id));
+  };
 
 
   return (
@@ -141,7 +158,7 @@ export function ObjectsCardsTest({ filteredHouse,loading,allPages,currentPage,
                         </Link>
                         {loadingImg == false && (
                           <div className="flex absolute w-[100%] justify-end p-[4px]">
-                            {favArr.find(
+                            {favorites.find(
                               (obj) => obj.object.id === object.id
                             ) ? (
                               <FavoriteIcon
@@ -156,9 +173,10 @@ export function ObjectsCardsTest({ filteredHouse,loading,allPages,currentPage,
                                   color: "#d31717",
                                   "&:hover": { color: "black" }
                                 }}
-                                onClick={() =>
-                                  deleteFavorite(object.id, setFavArr)
-                                }
+                                // onClick={() =>
+                                //   deleteFavorite(object.id, setFavArr)
+                                // }
+                                onClick={() => handleDeleteFavorite(object.id)}
                               />
                             ) : (
                               <FavoriteBorderIcon
@@ -173,9 +191,10 @@ export function ObjectsCardsTest({ filteredHouse,loading,allPages,currentPage,
                                   color: "white",
                                   "&:hover": { color: "#bc3737bd" },
                                 }}
-                                onClick={() =>
-                                  addToFavorite(object.id, setFavArr)
-                                }
+                                // onClick={() =>
+                                //   addToFavorite(object.id, setFavArr)
+                                // }
+                                onClick={() => handleAddFavorite(object.id)}
                               />
                             )}
                           </div>

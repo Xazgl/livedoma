@@ -122,7 +122,8 @@ async function start() {
             idApplicationIntrum: application.id,
             translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '', responsibleMain: responsibleMain, status: translateStatus(application.status),
             // postMeetingStage: getField(application.fields, "5074"),
-            postMeetingStage: getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ? getField(application.fields, "5020") + (getField(application.fields, "5081") ? + ' '+ ` ${getField(application.fields, "5081")}` : 'Не указана') : getField(application.fields, "5020"),
+            postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
+                  (getField(application.fields, "5081") ?  getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),            
             desc: application.request_name,
             typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
             contactedClient: getField(application.fields, "5069"),

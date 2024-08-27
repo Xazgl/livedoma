@@ -15,7 +15,7 @@ import { useTheme } from "../provider/ThemeProvider";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 
-export function MobileHeader({}) {
+export default function MobileHeader({}) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { theme, toggleTheme } = useTheme();

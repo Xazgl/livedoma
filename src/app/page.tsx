@@ -1,10 +1,11 @@
 import "server-only";
 import db from "../../prisma";
-import { Header } from "./component/header/Header";
-import { MobileHeader } from "./component/mainBarMobile/MobileBar";
 import { SuspenseFilter } from "./component/main-block-filter/SuspenseFilter";
 import { Metadata } from 'next'
-import { Footer } from "./component/folder/Footer";
+//  import { Footer } from "./component/folder/Footer";
+import { AllHeader } from "./component/allHeader/AllHeader";
+import dynamicImport from 'next/dynamic';
+const Footer = dynamicImport(() => import("./component/folder/Footer"));
  
 export const metadata: Metadata = {
   title: 'Мультилистинг Волгоград',
@@ -23,7 +24,9 @@ async function getObjects(page?: string) {
       where: {
         active: true,
         operationType:'Продам',
-       
+        thubmnail: {
+          isEmpty: false,
+        },
       },
       orderBy: {
         createdAt: "desc",
@@ -64,8 +67,7 @@ export default async function Home() {
 
   return (
     <>
-      <Header />
-      <MobileHeader />
+      <AllHeader/>
       { objects && objects.length > 0 && priceMax &&
        <>
          <SuspenseFilter priceMax={priceMax} objects={objects}  pages={pages} page={page}/>

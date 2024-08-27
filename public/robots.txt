@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /admin/
+
+# Host
+Host: https://mls-vlg.ru
+
+# Sitemaps
+Sitemap: https://mls-vlg.ru/sitemap.xml

@@ -1,31 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
 import db, { InparseObjects } from "../../../../prisma";
 import { isExactMatchThree } from "@/lib/foundAdress";
-import { Worker, isMainThread, parentPort, workerData } from 'worker_threads'
+import { Worker, isMainThread, parentPort, workerData } from "worker_threads";
 // import { normalizeAddressApi } from "@/lib/inparseExcel";
 import { performance } from "perf_hooks";
-import consola from 'consola'
-import os from 'os'
-import path from 'path'
+import consola from "consola";
+import os from "os";
+import path from "path";
 
 function splitArrayIntoChunks(array: InparseObjects[], parts: number) {
   let result = [];
   for (let i = parts; i > 0; i--) {
-      result.push(array.splice(0, Math.ceil(array.length / i)));
+    result.push(array.splice(0, Math.ceil(array.length / i)));
   }
   return result;
 }
 const cpuCount = os.cpus().length;
 
-
 export async function GET(req: NextRequest) {
   if (req.method === "GET") {
     try {
+      //объекты за 7 дней
+      const fourteenDaysAgo = new Date();
+      fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 1);
+
       // Загружаем все объекты из баз данных параллельно
       // const start = performance.now();
       // const memoryBefore = process.memoryUsage();
+
       const [allInparseObjects, allIntumAddresses] = await Promise.all([
-        db.inparseObjects.findMany(),
+        db.inparseObjects.findMany({
+          where: {
+            createdAt: {
+              gte: fourteenDaysAgo,
+            },
+          },
+        }),
         db.objectIntrum
           .findMany({
             select: { street: true },
@@ -39,18 +49,21 @@ export async function GET(req: NextRequest) {
       // let results: InparseObjects[] = [];
       const chunks = splitArrayIntoChunks(allInparseObjects, cpuCount);
       const promises = chunks.map((chunk, index) => {
-          return new Promise((resolve, reject) => {
-              consola.info(path.join(process.cwd(), './worker/worker.js'));
-              const worker = new Worker(path.join(process.cwd(), './worker/worker.js'), { workerData: { chunk, allIntumAddresses } });
-              worker.on('message', resolve);
-              worker.on('error', reject);
-              worker.on('exit', (code) => {
-                  if (code !== 0) {
-                    reject(new Error(`Worker stopped with exit code ${code}`))
-                    consola.fail(code)
-                  };
-              });
+        return new Promise((resolve, reject) => {
+          consola.info(path.join(process.cwd(), "./worker/worker.js"));
+          const worker = new Worker(
+            path.join(process.cwd(), "./worker/worker.js"),
+            { workerData: { chunk, allIntumAddresses } }
+          );
+          worker.on("message", resolve);
+          worker.on("error", reject);
+          worker.on("exit", (code) => {
+            if (code !== 0) {
+              reject(new Error(`Worker stopped with exit code ${code}`));
+              consola.fail(code);
+            }
           });
+        });
       });
 
       const results = (await Promise.all(promises)).flat();
@@ -64,22 +77,22 @@ export async function GET(req: NextRequest) {
       // for (let i = 0; i < allInparseObjects.length / 10; i += batchSize) {
       //   const start = performance.now();
       //   const batch = allInparseObjects.slice(i, i + batchSize);
-        // console.log(inparseObj.idInparse);
+      // console.log(inparseObj.idInparse);
 
-        // for (const inparseObj of batch) {
-        //   const isUnique = allIntumAddresses.map((address) => {
-        //       return isExactMatchThree(address!, inparseObj.address);
-        //     }).every((match) => match === false);
-        //   // const isUnique = await Promise.all(
-        //   //   allIntumAddresses.map(async (address) => {
-        //   //     return await isExactMatchThree(address!, inparseObj.address);
-        //   //   })
-        //   // ).then((matches) => matches.every((match) => match === false));
+      // for (const inparseObj of batch) {
+      //   const isUnique = allIntumAddresses.map((address) => {
+      //       return isExactMatchThree(address!, inparseObj.address);
+      //     }).every((match) => match === false);
+      //   // const isUnique = await Promise.all(
+      //   //   allIntumAddresses.map(async (address) => {
+      //   //     return await isExactMatchThree(address!, inparseObj.address);
+      //   //   })
+      //   // ).then((matches) => matches.every((match) => match === false));
 
-        //   if (isUnique) {
-        //     results.push(inparseObj);
-        //   }
-        // }
+      //   if (isUnique) {
+      //     results.push(inparseObj);
+      //   }
+      // }
       //   const end = performance.now();
       //   const totalTime = end - start;
       //   consola.info('totalTime: ' + totalTime)

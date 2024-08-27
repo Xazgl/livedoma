@@ -44,7 +44,7 @@ const managers = [
   { name: "Игнатова", id: "964" },
   { name: "Тихомиров", id: "123" },
   { name: "Ефремов", id: "13" },
-  { name: "Мухина m", id: "13" },
+  { name: "Мухина m", id: "2354" },
 ];
 
 async function foundName(id) {

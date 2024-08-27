@@ -127,7 +127,7 @@ export async function GET(
     //Если фильтры не выбраны и страница 1 то отдает первыми с скачеными фото
     if ( page == 1 && !category &&!city && !rooms && !street &&
       !district && !companyName && !renovation && !floors
-      &&!sortOrder && !sortPrice
+      && !searchParams.get("sortOrder") && !searchParams.get("sortPrice")
     ) {
       allObjects = await db.objectIntrum.findMany({
         where: {
@@ -152,7 +152,7 @@ export async function GET(
             ? { price: { lte: parseInt(maxPrice) } }
             : {}),
           thubmnail: {
-            isEmpty: false, // Убедитесь, что массив пустой
+            isEmpty: false, // Где массив не пустой
           },
         },
         orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },

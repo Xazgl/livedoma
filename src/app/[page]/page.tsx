@@ -1,9 +1,11 @@
 import "server-only";
-import { Header } from "./../component/header/Header";
+// import { Header } from "./../component/header/Header";
 import { ParentFilterBlock } from "./../component/main-block-filter/ParentFilterBlock";
 import { FilterUserOptions } from "../../../@types/dto";
 import db from "../../../prisma";
-import { MobileHeader } from "../component/mainBarMobile/MobileBar";
+import { AllHeader } from "../component/allHeader/AllHeader";
+// import { MobileHeader } from "../component/mainBarMobile/MobileBar";
+
 
 export const dynamic = "force-dynamic";
 
@@ -64,8 +66,7 @@ export default async function Home({ params }: { params: { page?: string } }) {
 
   return (
     <>
-      <Header />
-      <MobileHeader />
+      <AllHeader/>
       {objects && objects.length > 0 && priceMax && (
         <ParentFilterBlock
           objects={objects}

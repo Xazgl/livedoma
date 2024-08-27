@@ -1,13 +1,11 @@
 import "server-only";
 import db from "../../../../prisma";
-import { TableFirst } from "@/app/component/table/TableFirst";
 import { CircularProgress } from "@mui/material";
 import checkSession from "@/lib/checkCookie";
-import { getCookie, getCookies } from "cookies-next";
+import { getCookie} from "cookies-next";
 
 import { cookies } from "next/headers";
 import { AuthForm } from "@/app/component/admin/auth/Auth";
-import { TableSecond } from "@/app/component/table/TableSecond";
 import { TableFour } from "@/app/component/table/TableFour";
 
 export const dynamic = "force-dynamic";

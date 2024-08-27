@@ -4,6 +4,8 @@ import JSZip from "jszip";
 import FileSaver from "file-saver";
 import { isExactMatchTwo } from "./foundAdress";
 import { InparseObjects, SmartAgentObjects } from "@prisma/client";
+import {formatISODate } from "./dateStr";
+import { getInparseCategory } from "./inparseCategoryFind";
 
 type GroupedByManager = {
   manager: string;
@@ -257,6 +259,7 @@ export async function createExcelUniqObj(objectsInparse: InparseObjects[]) {
       "Ссылка",
       "Продавец",
       "Источник",
+      "Дата добавления"
     ];
     const worksheetData: any[][] = [headers];
   
@@ -264,7 +267,7 @@ export async function createExcelUniqObj(objectsInparse: InparseObjects[]) {
     objectsInparse.forEach((item) => {
       const row: any[] = [
         item.idInparse,
-        item.categoryId,
+        getInparseCategory(item.categoryId),
         item.title,
         item.address ,
         item.floor || '',
@@ -279,6 +282,7 @@ export async function createExcelUniqObj(objectsInparse: InparseObjects[]) {
         item.url,
         item.agent || '',
         item.source || '',
+        item.createdAt? formatISODate(item.createdAt) : '',
       ];
       worksheetData.push(row); // Добавляем строку в данные листа
     });
@@ -287,7 +291,7 @@ export async function createExcelUniqObj(objectsInparse: InparseObjects[]) {
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(worksheetData);
   
     // Добавляем worksheet в workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Объекты за 2 дня");
   
     // Преобразуем workbook в бинарный формат
     const excelBuffer = XLSX.write(workbook, {

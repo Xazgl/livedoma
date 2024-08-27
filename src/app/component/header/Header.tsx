@@ -7,7 +7,7 @@ import { useTheme } from "../provider/ThemeProvider";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 
-export function Header({}) {
+export default function Header({}) {
   const style = `flex relative  text-white text-base md:text-[18px] 
     after:absolute after:width-[0%] after:h-[1px] after:bg-[white] after:left-[50%] after:bottom-[-1px;] 
     after:hover:w-[100%]  after:hover:left-[0]  after:ease-in-out   after:duration-300   after:delay-0 

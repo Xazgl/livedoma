@@ -50,9 +50,10 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
         ref={imgRef}
         src={src}
         alt={alt}
+        
         className="dynamic-image"
         style={getImageStyles()}
-        loading="lazy"
+        // loading="lazy"
       />
 
       <style jsx>{`
@@ -75,13 +76,13 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
 
         @media (max-width: 600px) {
           .dynamic-image-container {
-            height: 200px; /* Set a specific height for mobile view */
+            height: 200px; 
           }
         }
 
         @media (min-width: 1024px) {
           .dynamic-image-container {
-            height: 400px; /* Set a specific height for larger screens */
+            height: 400px;
           }
         }
       `}</style>

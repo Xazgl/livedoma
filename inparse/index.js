@@ -6,8 +6,9 @@ const { AxiosError } = require("axios");
 const db = new PrismaClient()
 
 async function start() {
-      // Удаляем все объекты из базы данных
-      await db.inparseObjects.deleteMany();
+  // Удаляем все объекты из базы данных
+  await db.inparseObjects.deleteMany();
+
   try {
     const arrHoods = [
       {
@@ -82,6 +83,13 @@ async function start() {
       },
     ]
 
+    // Получаем текущую дату 
+    let currentDate = new Date();
+    // Вычитаем 30 дней
+    let timeStartDate = new Date(currentDate.getTime() - (30 * 24 * 60 * 60 * 1000));
+    // Преобразуем дату в UNIX-time и получает за 30 дней по полю updated
+    let timeStart = Math.floor(timeStartDate.getTime() / 1000);
+    // console.log(timeStart)
 
     let arrObjects = []
 
@@ -92,13 +100,15 @@ async function start() {
       const lngFrom = lowerCorner[0];
       const latFrom = lowerCorner[1];
       const lngTo = upperCorner[0];
-      const latTo = upperCorner[1]; 
+      const latTo = upperCorner[1];
 
-      const url = `https://inpars.ru/api/v2/estate?sortBy=created_desc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000`
+      const url = `https://inpars.ru/api/v2/estate?sortBy=created_desc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000&timeStart=${timeStart}`
 
       const response = await axios(
-        `https://inpars.ru/api/v2/estate?sortBy=created_desc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000`
+        `https://inpars.ru/api/v2/estate?sortBy=created_desc&regionId=34&access-token=_aPxqTB4ch1YHWR3q72bcNLTgMYMC-Iv&latFrom=${latFrom}&lngFrom=${lngFrom}&lngTo=${lngTo}&latTo=${latTo}&limit=1000&timeStart=${timeStart}`
       );
+
+      // console.log({ url })
 
       // if (!response.ok) {
       //   throw new Error(`Ошибка запроса для ${obj.hood}`);
@@ -106,30 +116,12 @@ async function start() {
 
       const data = response.data.data
 
+      // console.log({ url })
+
       const arr = data.map(el => arrObjects.push(el))
     }
 
-    // //  // Получаем все объекты из базы данных
-    // const dbObjects = await db.inparseObjects.findMany();
-    // // Получаем идентификаторы объектов из базы данных
-    // const dbObjectIds = dbObjects.map(obj => obj.idInparse);
-    // // Получаем идентификаторы объектов из XML-файлов
-    // const xmlObjectIds = arrObjects.map(obj => obj.id);
-
-    //  // Удаляем объекты из базы данных, которых нет в XML-файлах
-    // const objectsToDelete = dbObjectIds.filter(id => !xmlObjectIds.includes(id));
-    // await Promise.all(objectsToDelete.map(async (id) => {
-    //   await db.inparseObjects.delete({
-    //     where: {
-    //       idInparse: id
-    //     }
-    //   });
-    //   console.log(`Объект удален из базы с  ${id}  т.к. он не найден в фиде`);
-    // }));
-
-
     for (const adObject of arrObjects) {
-
       const findObject = await db.inparseObjects.findUnique({
         where: {
           idInparse: String(adObject.id),
@@ -166,10 +158,12 @@ async function start() {
               phones: {
                 set: phoneArr
               },
-              url: String(adObject.url ? adObject.url : ''),
+              url: String(adObject.url ? (adObject.url.startsWith('//youla.ru') ? adObject.url.replace('//youla.ru', 'https://www.youla.ru') : adObject.url) : ''),
               agent: String(adObject.agent ? adObject.agent : ''),
               source: String(adObject.source ? adObject.source : ''),
-              sourceId: String(adObject.sourceId ? adObject.sourceId : '')
+              sourceId: String(adObject.sourceId ? adObject.sourceId : ''),
+              createdAt: adObject.created?  new Date(adObject.created) : null,
+              updatedAt: adObject.updated?  new Date(adObject.updated) : null,
             }
           })
           console.log(newAdObject.id + " скачен")
@@ -202,14 +196,15 @@ async function start() {
               phones: {
                 set: phoneArr
               },
-              url: String(adObject.url ? adObject.url : ''),
+              url: String(adObject.url ? (adObject.url.startsWith('//youla.ru') ? adObject.url.replace('//youla.ru', 'https://www.youla.ru') : adObject.url) : ''),
               agent: String(adObject.agent ? adObject.agent : ''),
               source: String(adObject.source ? adObject.source : ''),
-              sourceId: String(adObject.sourceId ? adObject.sourceId : '')
+              sourceId: String(adObject.sourceId ? adObject.sourceId : ''),
+              createdAt: adObject.created?  new Date(adObject.created) : null,
+              updatedAt: adObject.updated?  new Date(adObject.updated) : null,
             }
           })
           console.log(updateObject.id + " обновлен")
-
         }
       } catch (error) {
         console.error('Ошибка при выполнении запроса:', error);

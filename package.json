@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "xml:init:db": "nodemon --watch ./xmlTasks ./xmlTasks/index.js",
@@ -26,7 +27,7 @@
     "start6": "node insurance/index.js",
     "start7": "node xmlTasks/testImg.js",
     "start8": "node inparse/index.js",
-    "start9": "node inparse/test.js",
+    "start9": "node inparse/send.js",
     "start10": "node prisma/wazzup.js",
     "start11": "node xmlTasks/test.js"
   },
@@ -62,6 +63,7 @@
     "jszip": "^3.10.1",
     "next": "^14.2.3",
     "next-sitemap": "^4.2.3",
+    "nodemailer": "^6.9.14",
     "nodemon": "^3.0.1",
     "npm": "^10.8.1",
     "prisma": "^5.11.0",

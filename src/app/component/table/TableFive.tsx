@@ -17,13 +17,16 @@ type Props = {
 export function TableFive({ applications }: { applications: constructionApplications[] }) {
   const [applicationsArr, setApplicationsArr] = useState<constructionApplications[]>(applications);
   const [applicationsExcel, setApplicationsExcel] = useState<constructionApplications[]>(applications);
-  const [value, setValue] = useState<Dayjs | null>(dayjs());
+  // const [value, setValue] = useState<Dayjs | null>(dayjs());
+  const [value, setValue] = useState<Dayjs | null>(dayjs("2024-04-01")); // Установка даты на 1 апреля 2024 года
+
   const [valueEnd, setValueEnd] = useState<Dayjs | null>(dayjs());
   const [table, setTable] = useState(1);
 
-  useEffect(() => {
-    setValue(dayjs().subtract(30, 'day'));
-  }, []);
+  // useEffect(() => {
+  //   //setValue(dayjs().subtract(90, 'day'));
+  //   setValue("2024-04-01")
+  // }, []);
 
   useEffect(() => {
     const params = new URLSearchParams();

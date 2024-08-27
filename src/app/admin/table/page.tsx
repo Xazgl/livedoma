@@ -3,7 +3,7 @@ import db from "../../../../prisma";
 import { TableFirst } from "@/app/component/table/TableFirst";
 import { CircularProgress } from "@mui/material";
 import checkSession from "@/lib/checkCookie";
-import { getCookie, getCookies } from "cookies-next";
+import { getCookie } from "cookies-next";
 
 import { cookies } from "next/headers";
 import { AuthForm } from "@/app/component/admin/auth/Auth";

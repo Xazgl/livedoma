@@ -7,7 +7,6 @@ import plan from "/public/svg/plan.svg";
 import floor from "/public/svg/floor.svg";
 import { Circle } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { addToFavorite, deleteFavorite} from "@/lib/favoriteFunc";
 import { FavoriteObj } from "../../../../../@types/dto";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Link from "next/link";
@@ -15,15 +14,28 @@ import { getRoomsEnding, logoFind, numberWithSpaces } from "../../main-block-fil
 import { useTheme } from "../../provider/ThemeProvider";
 import DynamicCardImg from "../../main-block-filter/objectsCards/DynamicCardImg";
 import noPhoto from "/public/images/noPhoto.jpg";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/redux/store";
+import { addFavorite, deleteFavorite, fetchFavorites } from "@/app/redux/slice/favoriteSlice";
 
 type Props = {
-  setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
   favArr: FavoriteObj[];
 };
 
-export function ObjectsFavCards({ setFavArr, favArr }: Props) {
+export function ObjectsFavCards({ favArr }: Props) {
   const [loadingImg, setLoadingImg] = useState(true);
+  const { theme } = useTheme();
+  const dispatch = useDispatch<AppDispatch>(); 
   
+  const handleAddFavorite = (id: string) => {
+    dispatch(addFavorite(id));
+  };
+
+  const handleDeleteFavorite = (id: string) => {
+    dispatch(deleteFavorite(id)).then(() => {
+      dispatch(fetchFavorites()); // Обновляем список избранного после удаления
+    });
+  };
   useEffect(() => {
     async function start() {
       await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -34,23 +46,14 @@ export function ObjectsFavCards({ setFavArr, favArr }: Props) {
         },
       });
       if (res.ok) {
-        const answer = await res.json();
-        // console.log(answer);
+        await res.json();
         setLoadingImg(false);
       }
     }
     start();
   }, []);
 
-
   let style = "flex-row justify-center gap-[0px] sm:gap-[20px] lg:gap-[0px] md:items-center md:items-start  max-h-[full]  min-h-[100vh]  flex-wrap ";
-
-  useEffect(() => {
-    // console.log(favArr.length);
-  }, [favArr]);
-
-  const { theme } = useTheme();
-
 
   return (
     <>
@@ -92,8 +95,6 @@ export function ObjectsFavCards({ setFavArr, favArr }: Props) {
                           href={`/object/${object.object.id}`}
                           className="w-[100%] h-[100%]"
                         >
-                        
-                          
                           <DynamicCardImg
                             alt={object.object.category}
                             src={
@@ -125,9 +126,7 @@ export function ObjectsFavCards({ setFavArr, favArr }: Props) {
                                   color: "#d31717",
                                   "&:hover": { color: "black" },
                                 }}
-                                onClick={() =>
-                                  deleteFavorite(object.object.id, setFavArr)
-                                }
+                                onClick={() => handleDeleteFavorite(object.object.id)}
                               />
                             ) : (
                               <FavoriteBorderIcon
@@ -142,9 +141,7 @@ export function ObjectsFavCards({ setFavArr, favArr }: Props) {
                                   color: "white",
                                   "&:hover": { color: "#bc3737bd" },
                                 }}
-                                onClick={() =>
-                                  addToFavorite(object.object.id, setFavArr)
-                                }
+                                onClick={() => handleAddFavorite(object.object.id)}
                               />
                             )}
                           </div>

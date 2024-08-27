@@ -12,7 +12,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
             const publicDir = path.join(__dirname.split(".next")[0], "public/images/objects", id);
             fs.readdir(publicDir, (error, files) => {
                 if (error) {
-                    return new Response(
+                    return NextResponse.json(
                         "'Не получилось найти подходящий объект'",
                         { status: 404 }
                     );
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
                     const filePath = path.join(publicDir, firstFile);
                     fs.readFile(filePath, (error, data) => {
                         if (error) {
-                            return new Response(
+                            return   NextResponse.json(
                                 "'Не удалось прочитать файл'",
                                 { status: 500 }
                             );
@@ -31,21 +31,21 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
                         return NextResponse.json({ data },  { status: 200});
                     });
                 } else {
-                    return new Response(
+                    return NextResponse.json(
                         "'Папка пуста'",
                         { status: 404 }
                     );
                 }
             });
         } else {
-            return new Response(
+            return NextResponse.json(
                 "'Не получилось найти подходящий объект'",
                 { status: 404 }
             );
         }
     } catch (error) {
         console.error(error);
-        return new Response(
+        return NextResponse.json(
             "'Не получилось найти подходящий объект'",
             { status: 500 }
         );

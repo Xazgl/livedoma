@@ -1,14 +1,14 @@
 'use client'
+import { AllHeader } from "@/app/component/allHeader/AllHeader"
 import { DescriptionObj } from "@/app/component/currentObjComponents/description/DescriptionObj"
 import YandexMap from "@/app/component/currentObjComponents/map/YandexMap"
 import { SwiperImg } from "@/app/component/currentObjComponents/slider/SwiperImg"
-import { Footer } from "@/app/component/folder/Footer"
-import { Header } from "@/app/component/header/Header"
-import { MobileHeader } from "@/app/component/mainBarMobile/MobileBar"
 import { ModalImg } from "@/app/component/modalWindow/ModalImg"
 import { ObjectIntrum } from "@prisma/client"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
+import dynamic from 'next/dynamic';
+const Footer = dynamic(() => import("@/app/component/folder/Footer"));
 
 
 export default function ObjectPage({ params }: { params: { id: string } }) {
@@ -39,8 +39,7 @@ export default function ObjectPage({ params }: { params: { id: string } }) {
 
 
     return <>
-        <Header />
-        <MobileHeader />
+        <AllHeader/>
         {object &&
             <>
             {object.imgUrl.length > 0  && object.imgUrl[0] !== "" &&        

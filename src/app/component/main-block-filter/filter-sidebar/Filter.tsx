@@ -2,7 +2,6 @@
 
 import { ObjectIntrum } from "@prisma/client";
 import {
-  FavoriteObj,
   FilteblackProps,
   FilterUserOptions,
   allObjects,
@@ -20,7 +19,6 @@ import RangeSlider from "../../filterFields/price/RangeSlider";
 import { CategoriesCheckbox } from "../../filterFields/categories/CategoriesCheckbox";
 import { StreetSelect } from "../../filterFields/adress/StreetSelect";
 import styles from "./Filter.module.css";
-// import { CitySelect } from "../../filterFields/adress/CitySelect";
 import { CompanySelect } from "../../filterFields/company/CompanySelect";
 import CurrencyRubleIcon from "@mui/icons-material/CurrencyRuble";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
@@ -31,6 +29,8 @@ import { Floor } from "../../filterFields/floor/Floor";
 import { CitySelect } from "../../filterFields/adress/CitySelect";
 import { DistSelect } from "../../filterFields/adress/DistSelect";
 import { useTheme } from "../../provider/ThemeProvider";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 type Props = {
   objects: allObjects;
@@ -46,14 +46,12 @@ type Props = {
   valueSliderPrice: [number, number];
   setValueSliderPrice: Dispatch<SetStateAction<[number, number]>>;
   countObjects: number;
-  setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
-  favArr: FavoriteObj[];
   resetPageAndReloadData: () => void;
 };
 
 const filterRow = "flex w-full p-4 h-auto ";
 
-export function Filter({
+export default function Filter({
   filteblackProps,
   objects,
   currentFilter,
@@ -66,10 +64,12 @@ export function Filter({
   valueSliderPrice,
   setValueSliderPrice,
   countObjects,
-  setFavArr,
-  favArr,
   resetPageAndReloadData,
 }: Props) {
+
+  const { favorites } = useSelector((state: RootState) => state.favorite);
+  const { theme } = useTheme();
+
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -97,9 +97,6 @@ export function Filter({
     resetPageAndReloadData();
 
   }
-
-  const { theme } = useTheme();
-
   return (
     <>
       <aside
@@ -248,19 +245,19 @@ export function Filter({
           )}
         </div>
 
-        {favArr && favArr.length > 0 && (
+        {favorites && favorites.length > 0 && (
           <div className={filterRow}>
-            {favArr && favArr.length > 0 ? (
+            {favorites && favorites.length > 0 ? (
               <div className={`flex justify-end  w-[100%]   ${theme === "dark"? "text-white":"text-black"}`}>
                 <div className="cursor-pointer  gap-[5px] items-center  transition  duration-700  ease-in-out ">
                   <Link
-                    href={`/cart/${favArr[0].sessionId}`}
+                    href={`/cart/${favorites[0].sessionId}`}
                     style={{ textDecoration: "none" }}
                     className={`w-[100%] h-[100%]   ${theme === "dark"? "text-white":"text-black"}`} 
                   >
                     <a rel="noopener noreferrer">
                       <FavoriteBorderIcon sx={{ fontSize: "20px" }} />
-                      <span className={`text-sm  ${theme === "dark"? "text-white":"text-black"}`}>{favArr.length}</span>
+                      <span className={`text-sm  ${theme === "dark"? "text-white":"text-black"}`}>{favorites.length}</span>
                     </a>
                   </Link>
                 </div>

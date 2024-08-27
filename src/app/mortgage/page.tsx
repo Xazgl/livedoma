@@ -1,8 +1,9 @@
 import "server-only";
-import { Header } from "../component/header/Header";
-import { MobileHeader } from "../component/mainBarMobile/MobileBar";
 import { Metadata } from "next";
 import { Mortgage } from "../component/mortgage/Mortgage";
+import { AllHeader } from "../component/allHeader/AllHeader";
+import dynamic from 'next/dynamic';
+const Footer = dynamic(() => import("@/app/component/folder/Footer"));
 
  
 export const metadata: Metadata = {
@@ -19,9 +20,9 @@ export default async function Home() {
 
   return (
     <>
-      <Header />
-      <MobileHeader />
+      <AllHeader/>
       <Mortgage/>
+      <Footer/>
  
     </>
   );

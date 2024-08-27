@@ -15,7 +15,7 @@ const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату
-  const prevDay = new Date(currentDate.getTime() - (90 * 24 * 60 * 60 * 1000)); // Вычитаем 30 дней
+  const prevDay = new Date(currentDate.getTime() - (120 * 24 * 60 * 60 * 1000)); // Вычитаем 120 дней
   const formattedPrevDate = prevDay.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
 
   const day = new Date(currentDate.getTime());
@@ -81,6 +81,7 @@ async function start() {
       const phoneValue = getField(application.fields, "5158");
       const phone = typeof phoneValue === 'string' ? phoneValue : await findPhone(application.customer_id);
 
+      console.log(getField(application.fields, "4629"))
       if (existingSale) {
         // Если сделка существует, обновляем ее поля
         return await db.constructionApplications.update({

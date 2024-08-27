@@ -1070,17 +1070,13 @@ export async function generateExcel6(applications: constructionApplications[]) {
     rejection: appl.rejection ? appl.rejection : "",
     errorReejctionDone: appl.errorReejctionDone == true ? "Да" : "Нет", // Ошибка исправлена?
     datecallCenter: appl.datecallCenter ? appl.datecallCenter : "", //Дата обработки заявки колл центром String? //Дата обработки заявки колл центром
-    timecallCenter: appl.timecallCenter
-      ? parseFloat(appl.timecallCenter).toLocaleString("ru-RU")
-      : "",
+    timecallCenter: appl.timecallCenter? appl.timecallCenter  : "", // Сколько заявка была в обработке у рекламы
     okCallCenter: appl.timecallCenter
       ? appl.timecallCenter < "0.15"
         ? "✓"
         : "👎🏻"
       : "", // ОК КЦ
-    timesaletCenter: appl.timesaletCenter
-      ? parseFloat(appl.timesaletCenter).toLocaleString("ru-RU")
-      : "", // время ОП
+      timesaletCenter: appl.timesaletCenter?  appl.timesaletCenter : "", //Время + дата размещения в реклам
     okSaleCenter: appl.timesaletCenter
       ? appl.timesaletCenter < "0.15"
         ? "✓"

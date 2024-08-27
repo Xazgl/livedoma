@@ -36,6 +36,7 @@ model ObjectIntrum {
   imgUrl            String[] //Фото квартиры с внешний источников
   img               String[] //Фото квартиры  скачен
   thubmnail         String[] //Превью квартиры  скачен
+  thubmnailMobile   String[] //Превью квартиры для телефона скачен
   rooms             String? //Кол-во комнат
   square            String? //Площадь
   landArea          String? //Земельный участок
@@ -322,8 +323,8 @@ model InparseObjects {
   sourceId    String?
   active      Boolean  @default(true)
 
-  // createdAt DateTime @default(now())
-  // updatedAt DateTime @updatedAt
+  createdAt  DateTime?
+  updatedAt  DateTime?
 }
 
 model SmartAgentObjects {

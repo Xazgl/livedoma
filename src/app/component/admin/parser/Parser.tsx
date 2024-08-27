@@ -2,7 +2,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { createArchiveNew, createExcelUniqObj, createExcelUniqObjTwo} from "@/lib/inparseExcel";
+import {
+  createArchiveNew,
+  createExcelUniqObj,
+  createExcelUniqObjTwo,
+} from "@/lib/inparseExcel";
 // import logoBG from "/public/images/inparse/logo.jpg";
 import exampleBG from "/public/images/inparse/example.png";
 import cupImg from "/public/images/inparse/cup.png";
@@ -90,64 +94,55 @@ export function Parser() {
     reader.readAsArrayBuffer(file);
   };
 
+  const handleChange2 = async () => {
+    try {
+      // Устанавливаем состояние загрузки
+      setLoading(true);
 
-  
-const handleChange2 = async () => {
-  try {
-    // Устанавливаем состояние загрузки
-    setLoading(true);
-
-    const res = await axios.get(
-      "/api/find",
-      {
+      const res = await axios.get("/api/find", {
         headers: {
           "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
-    console.log(res.data.results)
+      console.log(res.data.results);
 
-    const objectsRes: InparseObjects[] = res.data.results;
+      const objectsRes: InparseObjects[] = res.data.results;
 
-    // Убираем состояние загрузки
-    setLoading(false);
+      // Убираем состояние загрузки
+      setLoading(false);
 
-    await createExcelUniqObj(objectsRes);
-  } catch (error) {
-    console.error("Error processing file:", error);
-    setLoading(false);
-  }
-};
+      await createExcelUniqObj(objectsRes);
+    } catch (error) {
+      console.error("Error processing file:", error);
+      setLoading(false);
+    }
+  };
 
+  const handleChange3 = async () => {
+    try {
+      // Устанавливаем состояние загрузки
+      setLoading(true);
 
-const handleChange3 = async () => {
-  try {
-    // Устанавливаем состояние загрузки
-    setLoading(true);
-
-    const res = await axios.get(
-      "/api/findtwo",
-      {
+      const res = await axios.get("/api/findtwo", {
         headers: {
           "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
-    console.log(res.data.results)
+      console.log(res.data.results);
 
-    const objectsRes: SmartAgentObjects[] = res.data.results;
+      const objectsRes: SmartAgentObjects[] = res.data.results;
 
-    // Убираем состояние загрузки
-    setLoading(false);
+      // Убираем состояние загрузки
+      setLoading(false);
 
-    await createExcelUniqObjTwo(objectsRes);
-  } catch (error) {
-    console.error("Error processing file:", error);
-    setLoading(false);
-  }
-};
+      await createExcelUniqObjTwo(objectsRes);
+    } catch (error) {
+      console.error("Error processing file:", error);
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="flex flex-col w-full h-[100%]">
@@ -172,23 +167,61 @@ const handleChange3 = async () => {
           Цена
         </h3>
 
-        <div className="flex w-full items-center gap-[10px]">
-          <label htmlFor="file-upload" className="mt-[10px]">
-            <Input
-              id="file-upload"
-              type="file"
-              onChange={handleChange}
-              inputProps={{ accept: ".xlsx, .xls" }}
-              style={{ display: "none" }}
-            />
+        <div className="flex flex-col w-[100%] sm:w-[350px] relative">
+          <div className="flex w-full items-center gap-[10px]">
+            <label htmlFor="file-upload" className="mt-[10px] w-full">
+              <Input
+                id="file-upload"
+                type="file"
+                onChange={handleChange}
+                inputProps={{ accept: ".xlsx, .xls" }}
+                style={{ display: "none" }}
+              />
+              <Button
+                variant="contained"
+                component="span"
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#01ca7c",
+                  transition: "all 0.7s",
+                  ":hover": {
+                    backgroundColor: "#943c82",
+                    transform: "scale(0.99)",
+                  },
+                }}
+              >
+                Загрузить объекты Биг{" "}
+                <FileUploadIcon sx={{ fontSize: "22px" }} />
+              </Button>
+            </label>
+            <div className="flex w-[78px] h-[90px] top-[0.30px]  right-[-80px] mt-[20px] absolute ">
+              <Image
+                className="display: block;-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms "
+                src={cupImg.src}
+                alt={"cup"}
+                layout="fill"
+                sizes="(max-width: 750px) 80vw,
+                  (max-width: 828px) 80vw,
+                  (max-width: 1080px) 90vw,90vw"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <div className="flex w-full items-center gap-[10px] mt-[10px]">
             <Button
               variant="contained"
               component="span"
+              onClick={handleChange2}
               sx={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 backgroundColor: "#01ca7c",
+                width: "100%",
                 transition: "all 0.7s",
                 ":hover": {
                   backgroundColor: "#943c82",
@@ -196,61 +229,32 @@ const handleChange3 = async () => {
                 },
               }}
             >
-              Загрузить объекты Биг <FileUploadIcon sx={{ fontSize: "22px" }} />
+              Уникальные объекты Inparse
             </Button>
-          </label>
-          <div className="flex w-[78px] h-[90px]   mt-[20px] relative ">
-            <Image
-              className="display: block;-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms "
-              src={cupImg.src}
-              alt={"cup"}
-              layout="fill"
-              sizes="(max-width: 750px) 80vw,
-           (max-width: 828px) 80vw,
-           (max-width: 1080px) 90vw,90vw"
-              loading="lazy"
-            />
           </div>
-        </div>
 
-        <div className="flex w-full items-center gap-[10px]">
-          <Button
-            variant="contained"
-            component="span"
-            onClick={handleChange2}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#01ca7c",
-              transition: "all 0.7s",
-              ":hover": {
-                backgroundColor: "#943c82",
-                transform: "scale(0.99)",
-              },
-            }}
-          >Уникальные объекты Inparse</Button>
+          {/* <div className="flex w-full items-center gap-[10px] mt-[10px]">
+            <Button
+              variant="contained"
+              component="span"
+              onClick={handleChange3}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#01ca7c",
+                transition: "all 0.7s",
+                width: "100%",
+                ":hover": {
+                  backgroundColor: "#943c82",
+                  transform: "scale(0.99)",
+                },
+              }}
+            >
+              Уникальные объекты Smart agent
+            </Button>
+          </div> */}
         </div>
-
-        <div className="flex w-full items-center gap-[10px] mt-[10px]">
-          <Button
-            variant="contained"
-            component="span"
-            onClick={handleChange3}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#01ca7c",
-              transition: "all 0.7s",
-              ":hover": {
-                backgroundColor: "#943c82",
-                transform: "scale(0.99)",
-              },
-            }}
-          >Уникальные объекты Smart agent</Button>
-        </div>
-
         <div className="flex w-full mt-[5px] justify-center sm:justify-start ">
           {loading == true && (
             <CircularProgress sx={{ fontSize: "22px", color: "#943c82" }} />
@@ -260,7 +264,3 @@ const handleChange3 = async () => {
     </section>
   );
 }
-
-
-
-

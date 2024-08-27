@@ -2,7 +2,6 @@
 
 import { ObjectIntrum } from "@prisma/client";
 import {
-  FavoriteObj,
   FilteblackProps,
   FilterUserOptions,
   allObjects,
@@ -33,6 +32,8 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { RoomsSelector } from "../../filterFields/rooms/Rooms";
 import { DistSelect } from "../../filterFields/adress/DistSelect";
 import { useTheme } from "../../provider/ThemeProvider";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
 
 type Props = {
   objects: allObjects;
@@ -48,14 +49,12 @@ type Props = {
   valueSliderPrice: [number, number];
   setValueSliderPrice: Dispatch<SetStateAction<[number, number]>>;
   countObjects: number;
-  setFavArr: Dispatch<SetStateAction<FavoriteObj[]>>;
-  favArr: FavoriteObj[];
   resetPageAndReloadData: () => void;
 };
 
 const filterRow = "flex  w-full  p-4  h-auto";
 
-export function FilterMobile({
+export default function FilterMobile({
   filteblackProps,
   objects,
   currentFilter,
@@ -68,10 +67,12 @@ export function FilterMobile({
   valueSliderPrice,
   setValueSliderPrice,
   countObjects,
-  favArr,
-  setFavArr,
   resetPageAndReloadData,
 }: Props) {
+  const { favorites } = useSelector((state: RootState) => state.favorite);
+  const { theme } = useTheme();
+  const [expanded, setExpanded] = useState<string | false>(false);
+  
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -97,9 +98,6 @@ export function FilterMobile({
     }));
     resetPageAndReloadData();
   }
-
-  const { theme } = useTheme();
-  const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleChangeBar =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -127,10 +125,10 @@ export function FilterMobile({
           >
             <h1 className="flex w-[100%] text-[14px] s:text-[16px]">
               Параметры поиска
-              {favArr && favArr.length > 0 ? (
+              { favorites  &&  favorites .length > 0 ? (
                 <div className="flex pl-[10%] md:pl-[50%] items-center gap-[3px]">
                   <FavoriteBorderIcon sx={{ fontSize: "18px" }} />{" "}
-                  {favArr.length}
+                  { favorites .length}
                 </div>
               ) : (
                 ""
@@ -316,11 +314,11 @@ export function FilterMobile({
                 </Accordion>
               </div>
 
-              {favArr && favArr.length > 0 && (
+              { favorites &&  favorites .length > 0 && (
                 <div className={filterRow}>
-                  {favArr && favArr.length > 0 ? (
+                  { favorites  &&  favorites .length > 0 ? (
                     <Link
-                      href={`/cart/${favArr[0].sessionId}`}
+                      href={`/cart/${favorites[0].sessionId}`}
                       className="w-[100%] h-[100%] text-white"
                       style={{ textDecoration: "none" }}
                     >
@@ -334,7 +332,7 @@ export function FilterMobile({
                           <>
                             Избранное
                             <FavoriteBorderIcon sx={{ fontSize: "15px" }} />
-                            <span className="text-sm">{favArr.length}</span>
+                            <span className="text-sm">{ favorites.length}</span>
                           </>
                         </button>
                       </a>

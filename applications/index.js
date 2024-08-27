@@ -92,7 +92,7 @@ async function start() {
             
             desc: application.request_name,
             typeApplication: getField(application.fields, "4059"),
-            contactedClient: getField(application.fields, "5079") && getField(application.fields, "5079") !== 'Не заполнено'? getField(application.fields, "5079") : getField(application.fields, "4994") !== '' ? getField(application.fields, "4994")  : 'Не заполнено' ,
+            contactedClient: getField(application.fields, "5079")? getField(application.fields, "5079")  : 'Не заполнено' ,
             campaignUtm: getField(application.fields, "5001"),
             termUtm: getField(application.fields, "5000"),
             nextAction: getField(application.fields, "4057"),
@@ -122,7 +122,7 @@ async function start() {
             postMeetingStage: getField(application.fields, "4058"),
             desc: application.request_name,
             typeApplication: getField(application.fields, "4059"),
-            contactedClient: getField(application.fields, "5079")? getField(application.fields, "5079") : '',
+            contactedClient: getField(application.fields, "5079")? getField(application.fields, "5079")  : 'Не заполнено' ,
             campaignUtm: getField(application.fields, "5001"),
             termUtm: getField(application.fields, "5000"),
             nextAction: getField(application.fields, "4057"),

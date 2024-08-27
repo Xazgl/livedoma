@@ -2,7 +2,7 @@
 import { logoArr } from "../header/navEl";
 import { useTheme } from "../provider/ThemeProvider";
 
-export function Footer({}) {
+export default function Footer({}) {
 
   const { theme } = useTheme();
 
