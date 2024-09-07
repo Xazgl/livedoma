@@ -2,7 +2,6 @@ import {
   columnsSets,
   columnsSetsApplication,
   titles,
-  titlesApplication,
   titles2,
   columnsSets2,
   columnsSetsApplicationSansara,
@@ -12,10 +11,12 @@ import { Sales, constructionApplications } from "@prisma/client";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { constructionApplicationsExcel } from "../../@types/dto";
-import { formatDate, formatDateTime, formatDateTimeToDDMMYYYYHHMMSS } from "./dateStr";
+import {
+  formatDate,
+  formatDateTime,
+  formatDateTimeToDDMMYYYYHHMMSS,
+} from "./dateStr";
 import { comment } from "postcss";
-import { foundManager } from "./findManager";
-
 
 export async function generateExcel(transactions: Sales[]) {
   const workbook = new ExcelJS.Workbook();
@@ -134,45 +135,6 @@ export async function generateExcel(transactions: Sales[]) {
   saveAs(new Blob([buffer]), "transactions.xlsx");
 }
 
-// export async function generateExcel2(applications: constructionApplications[]) {
-//   const workbook = new ExcelJS.Workbook();
-
-//   // Фильтрация данных по типу заявки
-//   const applicationsByType: Record<string, constructionApplications[]> = {};
-//   applications.forEach(application => {
-//     const type = application.typeApplication || 'Unknown';
-//     if (!applicationsByType[type]) {
-//       applicationsByType[type] = [];
-//     }
-//     applicationsByType[type].push(application);
-//   });
-
-//   // Создание вкладок Excel для каждого типа заявки
-//   Object.entries(applicationsByType).forEach(([type, data]) => {
-//     const worksheet = workbook.addWorksheet(type);
-
-//     // Добавление заголовков столбцов
-//     const columns = columnsSetsApplication[type === 'Заявка' ? 0 : 1];
-//     const russianColumns = columns.map(col => col.headerName);
-//     worksheet.addRow(russianColumns);
-
-//     // Добавление данных в таблицу
-//     data.forEach(application => {
-//       const row: Array<string | undefined> = [];
-//       columns.forEach(col => {
-//         const value = application[col.field as keyof constructionApplications];
-//         row.push(value?.toString());
-//       });
-//       worksheet.addRow(row);
-//     });
-//   });
-
-//   // Создание файла Excel
-//   const buffer = await workbook.xlsx.writeBuffer();
-
-//   // Сохранение файла на стороне клиента
-//   saveAs(new Blob([buffer]), 'applications.xlsx');
-// }
 
 export async function generateExcel2(applications: constructionApplications[]) {
   const workbook = new ExcelJS.Workbook();
@@ -189,10 +151,8 @@ export async function generateExcel2(applications: constructionApplications[]) {
 
   function findManager(id: string) {
     const manager = managers.find((manager) => manager.id === id);
-    return manager ? manager.name :   '';
+    return manager ? manager.name : "";
   }
-
-  
 
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
@@ -208,21 +168,24 @@ export async function generateExcel2(applications: constructionApplications[]) {
     contactedClient: appl.contactedClient ? appl.contactedClient : "",
     campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
     termUtm: appl.termUtm ? appl.termUtm : "",
+    prodinfo: appl.prodinfo ? appl.prodinfo : "",
     nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
     rejection: appl.rejection ? appl.rejection : "",
     errorReejctionDone: appl.errorReejctionDone == true ? "Да" : "Нет", // Ошибка исправлена?
     datecallCenter: appl.datecallCenter ? appl.datecallCenter : "", //Дата обработки заявки колл центром String? //Дата обработки заявки колл центром
-    timecallCenter: appl.timecallCenter
-      ? parseFloat(appl.timecallCenter).toLocaleString("ru-RU")
-      : "",
+    timecallCenter:
+      appl.timecallCenter &&
+      appl.timecallCenter !== "КЦ не проставил Статус =  на согласование"
+        ? parseFloat(appl.timecallCenter).toLocaleString("ru-RU")
+        : "КЦ не проставил Статус =  на согласование",
     okCallCenter: appl.timecallCenter
       ? appl.timecallCenter < "0.15"
         ? "✓"
         : "👎🏻"
       : "", // ОК КЦ
-    timesaletCenter: appl.timesaletCenter
+    timesaletCenter: appl.timesaletCenter && appl.timesaletCenter !== 'Специалист связался с клиентом_NEW не проставили ДА' 
       ? parseFloat(appl.timesaletCenter).toLocaleString("ru-RU")
-      : "", // время ОП
+      : "Специалист связался с клиентом_NEW не проставили ДА", // время ОП
     okSaleCenter: appl.timesaletCenter
       ? appl.timesaletCenter < "0.15"
         ? "✓"
@@ -234,7 +197,9 @@ export async function generateExcel2(applications: constructionApplications[]) {
     url: appl.url
       ? appl.url
       : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${appl.idApplicationIntrum}#request`,
-    createdAtCrm: appl.createdAtCrm ?  formatDateTimeToDDMMYYYYHHMMSS(appl.createdAtCrm.replace(/-/g, ".")) : "", // Дата в формате 2024-05-07 11:25:23 нужно убрать - на .
+    createdAtCrm: appl.createdAtCrm
+      ? formatDateTimeToDDMMYYYYHHMMSS(appl.createdAtCrm.replace(/-/g, "."))
+      : "", // Дата в формате 2024-05-07 11:25:23 нужно убрать - на .
     createdAt: appl.createdAt ? formatDateTime(new Date(appl.createdAt)) : "",
   }));
 
@@ -276,28 +241,6 @@ export async function generateExcel2(applications: constructionApplications[]) {
         });
         worksheet.addRow(row);
       });
-
-      // Установка формата для колонки nextAction
-      // const nextActionColumn = columns.findIndex(col => col.field === 'nextAction') + 1;
-      // worksheet.getColumn(nextActionColumn).eachCell((cell) => {
-      //   const cellValue = cell.dataValidation;
-      // });
-
-      //   // Установка числового формата для timecallCenter и timesaletCenter
-      //   const timecallCenterColumn = columns.findIndex(col => col.field === 'timecallCenter') + 1;
-      //   worksheet.getColumn(timecallCenterColumn).eachCell((cell) => {
-      //     if (typeof cell.value === 'number') {
-      //       cell.value = +cell.value
-      //       // cell.numFmt = '#,##0.0';
-      //     }
-      // });
-
-      // const timesaletCenterColumn = columns.findIndex(col => col.field === 'timesaletCenter') + 1;
-      //   worksheet.getColumn(timesaletCenterColumn).eachCell((cell) => {
-      //     if (typeof cell.value === 'number') {
-      //       // cell.numFmt = '#,##0.0';
-      //     }
-      // });
 
       // Управление стилями для колонки "URL"
       const postUrlColumn = columns.find((col) => col.field === "url");
@@ -457,101 +400,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
       }
     }
   });
-  // Object.entries(applicationsByType).forEach(([type, data]) => {
-  //   if (type !== 'Заявка без типа') {
-  //   const worksheet = workbook.addWorksheet(type);
-
-  //   // Добавление заголовков столбцов
-  //   const columns = columnsSetsApplication[type === 'Заявка' ? 0 : 1];
-  //   const russianColumns = columns.map(col => col.headerName);
-  //   worksheet.addRow(russianColumns);
-
-  //   // Добавление данных в таблицу
-  //   data.forEach(application => {
-  //     const row: Array<string | undefined> = [];
-  //     columns.forEach(col => {
-  //       const value = application[col.field as keyof  constructionApplicationsExcel];
-  //       row.push(value?.toString());
-  //     });
-  //     worksheet.addRow(row);
-  //   });
-
-  //   // Управление стилями для колонки "Ссылка"
-  //   const postUrlColumn = columns.find(col => col.field === 'url');
-
-  //   if (postUrlColumn) {
-  //     const postUrlColumnIndex = columns.findIndex(col => col.field === 'url') + 1;
-  //     worksheet.getColumn(postUrlColumnIndex).eachCell((cell) => {
-  //       const cellValue = cell.text;
-  //       if (cellValue) {
-  //         cell.value = { text: cellValue, hyperlink: cellValue };
-  //         cell.font = {
-  //           underline: true,
-  //           color: { argb: 'FF0000FF' },
-  //         };
-  //       }
-  //     });
-  //   }
-
-  //   // Управление стилями для колонки "Стадия после встречи"
-  //   const postMeetingStageColumn = columns.find(col => col.field === 'postMeetingStage');
-
-  //   if (postMeetingStageColumn) {
-  //     const postMeetingStageColumnIndex = columns.findIndex(col => col.field === 'postMeetingStage') + 1;
-  //     worksheet.getColumn(postMeetingStageColumnIndex).eachCell((cell) => {
-  //       const cellValue = cell.text;
-
-  //       switch (cellValue) {
-  //         case 'Встреча не состоялась':
-  //           cell.fill = {
-  //             type: 'pattern',
-  //             pattern: 'solid',
-  //             fgColor: { argb: 'FFFFFFFF' }, // белый
-  //           };
-  //           break;
-  //         case 'Думает':
-  //           cell.fill = {
-  //             type: 'pattern',
-  //             pattern: 'solid',
-  //             fgColor: { argb: 'FFFFA500' } // оранжевый
-  //           };
-  //           break;
-  //         case 'Отказался':
-  //           cell.fill = {
-  //             type: 'pattern',
-  //             pattern: 'solid',
-  //             fgColor: { argb: 'FFFF0000' } // красный
-  //           };
-  //           break;
-  //         case 'Отправлен расчет':
-  //           cell.fill = {
-  //             type: 'pattern',
-  //             pattern: 'solid',
-  //             fgColor: { argb: 'FFFFFF00' } // желтый
-  //           };
-  //           break;
-  //         case 'Подготовка расчета':
-  //           cell.fill = {
-  //             type: 'pattern',
-  //             pattern: 'solid',
-  //             fgColor: { argb: 'FF0000FF' } // синий
-  //           };
-  //           break;
-  //         case 'Договор':
-  //           cell.fill = {
-  //             type: 'pattern',
-  //             pattern: 'solid',
-  //             fgColor: { argb: 'FF008000' } // зеленый
-  //           };
-  //           break;
-  //         default:
-  //           // оставить по умолчанию
-  //           break;
-  //       }
-  //     });
-  //   }
-  // }
-  // });
+  
 
   // Создание файла Excel
   const buffer = await workbook.xlsx.writeBuffer();
@@ -703,6 +552,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
     contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
     campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
     termUtm: appl.termUtm ? appl.termUtm : "",
+    prodinfo: appl.prodinfo ? appl.prodinfo : "",
     nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
     rejection: appl.rejection ? appl.rejection : "",
     errorReejctionDone: appl.errorReejctionDone == true ? "Да" : "Нет", // Ошибка исправлена?
@@ -733,9 +583,6 @@ export async function generateExcel5(applications: constructionApplications[]) {
     createdAt: appl.createdAt ? formatDateTime(new Date(appl.createdAt)) : "",
   }));
 
-
-  
-
   // Фильтрация данных по типу заявки
   let applicationsByType: Record<string, constructionApplicationsExcel[]> = {};
   applicationsNew.forEach((application) => {
@@ -746,7 +593,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
     applicationsByType[type].push(application);
   });
 
-  //вкладка все заявки 
+  //вкладка все заявки
   const allApplicationsSheet = workbook.addWorksheet("Все заявки");
   // Добавление заголовков столбцов для всех заявок
   const allColumns = columnsSetsApplicationSansara[0];
@@ -758,18 +605,18 @@ export async function generateExcel5(applications: constructionApplications[]) {
   applicationsNew.forEach((application) => {
     const row: Array<string | undefined> = [];
     allColumns.forEach((col) => {
-      const value = application[col.field as keyof constructionApplicationsExcel];
+      const value =
+        application[col.field as keyof constructionApplicationsExcel];
       row.push(value?.toString());
     });
 
-    
     allApplicationsSheet.addRow(row);
     const postUrlColumn = columns.find((col) => col.field === "url");
-    
+
     if (postUrlColumn) {
       const postUrlColumnIndex =
         columns.findIndex((col) => col.field === "url") + 1;
-        allApplicationsSheet.getColumn(postUrlColumnIndex).eachCell((cell) => {
+      allApplicationsSheet.getColumn(postUrlColumnIndex).eachCell((cell) => {
         const cellValue = cell.text;
         if (cellValue) {
           cell.value = { text: cellValue, hyperlink: cellValue };
@@ -781,37 +628,39 @@ export async function generateExcel5(applications: constructionApplications[]) {
       });
     }
 
-     // Управление стилями для колонки "ОК ОП"
-     const okSaleCenterColumn = columns.find(
+    // Управление стилями для колонки "ОК ОП"
+    const okSaleCenterColumn = columns.find(
       (col) => col.field === "okSaleCenter"
     );
 
     if (okSaleCenterColumn) {
       const okSaleCenterColumnIndex =
         columns.findIndex((col) => col.field === "okSaleCenter") + 1;
-        allApplicationsSheet.getColumn(okSaleCenterColumnIndex).eachCell((cell) => {
-        const cellValue = cell.text;
+      allApplicationsSheet
+        .getColumn(okSaleCenterColumnIndex)
+        .eachCell((cell) => {
+          const cellValue = cell.text;
 
-        switch (cellValue) {
-          case "✓":
-            cell.fill = {
-              type: "pattern",
-              pattern: "solid",
-              fgColor: { argb: "FF008000" }, //  зеленый
-            };
-            break;
-          case "👎🏻":
-            cell.fill = {
-              type: "pattern",
-              pattern: "solid",
-              fgColor: { argb: "FFFF0000" }, // красный
-            };
-            break;
-          default:
-            // оставить по умолчанию
-            break;
-        }
-      });
+          switch (cellValue) {
+            case "✓":
+              cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "FF008000" }, //  зеленый
+              };
+              break;
+            case "👎🏻":
+              cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "FFFF0000" }, // красный
+              };
+              break;
+            default:
+              // оставить по умолчанию
+              break;
+          }
+        });
     }
 
     // Управление стилями для колонки "ОК КЦ"
@@ -822,34 +671,34 @@ export async function generateExcel5(applications: constructionApplications[]) {
     if (okCallCenterColumn) {
       const okCallCenterColumnIndex =
         columns.findIndex((col) => col.field === "okCallCenter") + 1;
-        allApplicationsSheet.getColumn(okCallCenterColumnIndex).eachCell((cell) => {
-        const cellValue = cell.text;
+      allApplicationsSheet
+        .getColumn(okCallCenterColumnIndex)
+        .eachCell((cell) => {
+          const cellValue = cell.text;
 
-        switch (cellValue) {
-          case "✓":
-            cell.fill = {
-              type: "pattern",
-              pattern: "solid",
-              fgColor: { argb: "FF008000" }, //  зеленый
-            };
-            break;
-          case "👎🏻":
-            cell.fill = {
-              type: "pattern",
-              pattern: "solid",
-              fgColor: { argb: "FFFF0000" }, // красный
-            };
-            break;
-          default:
-            // оставить по умолчанию
-            break;
-         }
-        })
+          switch (cellValue) {
+            case "✓":
+              cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "FF008000" }, //  зеленый
+              };
+              break;
+            case "👎🏻":
+              cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "FFFF0000" }, // красный
+              };
+              break;
+            default:
+              // оставить по умолчанию
+              break;
+          }
+        });
     }
-
-    
   });
-  
+
   // Создание вкладок Excel для каждого типа заявки
   Object.entries(applicationsByType).forEach(([type, data]) => {
     if (type !== "Заявка без типа") {
@@ -859,7 +708,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
       let columns = columnsSetsApplicationSansara[type === "Заявка" ? 0 : 1];
 
       // Удаление колонок "campaignUtm" и "termUtm" на вкладках "Кампания" и "Звонок"
-      if (type === "Показ объекта по Сансаре" ) {
+      if (type === "Показ объекта по Сансаре") {
         columns = columns.filter(
           (col) =>
             col.field !== "campaignUtm" &&
@@ -1049,9 +898,6 @@ export async function generateExcel5(applications: constructionApplications[]) {
   saveAs(new Blob([buffer]), "application.xlsx");
 }
 
-
-
-
 export async function generateExcel6(applications: constructionApplications[]) {
   const workbook = new ExcelJS.Workbook();
   const applicationsNew = applications.map((appl) => ({
@@ -1066,17 +912,18 @@ export async function generateExcel6(applications: constructionApplications[]) {
     contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
     campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
     termUtm: appl.termUtm ? appl.termUtm : "",
+    prodinfo: appl.prodinfo ? appl.prodinfo : "",
     nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
     rejection: appl.rejection ? appl.rejection : "",
     errorReejctionDone: appl.errorReejctionDone == true ? "Да" : "Нет", // Ошибка исправлена?
     datecallCenter: appl.datecallCenter ? appl.datecallCenter : "", //Дата обработки заявки колл центром String? //Дата обработки заявки колл центром
-    timecallCenter: appl.timecallCenter? appl.timecallCenter  : "", // Сколько заявка была в обработке у рекламы
+    timecallCenter: appl.timecallCenter ? appl.timecallCenter : "", // Сколько заявка была в обработке у рекламы
     okCallCenter: appl.timecallCenter
       ? appl.timecallCenter < "0.15"
         ? "✓"
         : "👎🏻"
       : "", // ОК КЦ
-      timesaletCenter: appl.timesaletCenter?  appl.timesaletCenter : "", //Время + дата размещения в реклам
+    timesaletCenter: appl.timesaletCenter ? appl.timesaletCenter : "", //Время + дата размещения в реклам
     okSaleCenter: appl.timesaletCenter
       ? appl.timesaletCenter < "0.15"
         ? "✓"
@@ -1108,7 +955,7 @@ export async function generateExcel6(applications: constructionApplications[]) {
       // Добавление заголовков столбцов
       let columns = columnsSetsApplicationRansom[type === "Заявка" ? 0 : 1];
       // Удаление колонок "campaignUtm" и "termUtm" на вкладках "Кампания" и "Звонок"
-      if (type === "Прием объекта Срочный Выкуп" ) {
+      if (type === "Прием объекта Срочный Выкуп") {
         columns = columns.filter(
           (col) =>
             col.field !== "campaignUtm" &&

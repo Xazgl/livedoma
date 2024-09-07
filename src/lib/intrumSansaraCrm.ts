@@ -200,6 +200,11 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append("params[request][fields][8][id]", "5020"); // доп поле  9   Стадия работы с покупателем
   params.append( "params[request][fields][8][value]", 'Указать стадию'); 
 
+  params.append("params[request][fields][9][id]", "5169"); // доп поле 10  prodinfo
+  params.append( "params[request][fields][9][value]",
+     message.prodinfo ? message.prodinfo : ""
+  ); 
+
   try {
     const postResponse = await axios.post(
       "http://jivemdoma.intrumnet.com:81/sharedapi/applications/addCustomer",

@@ -17,7 +17,7 @@ model ObjectIntrum {
   operationType     String // тип продам 
   state             String? // Область
   city              String? // Волгоград или Волжский
-  district          String?//район через API 
+  district          String? //район через API 
   street            String? // улица и номер дома 
   price             Float? // цена
   companyName       String //АН Живем дома или какая то другая 
@@ -93,31 +93,28 @@ model ExchangeRate {
   updatedAt DateTime @updatedAt
 }
 
-
 model ManagerQueue {
-  id                String   @id @default(cuid())
-  managerId         String        
-  url               String? 
-  type              String?
-  createdAt         DateTime @default(now())
+  id        String   @id @default(cuid())
+  managerId String
+  url       String?
+  type      String?
+  createdAt DateTime @default(now())
 }
-
 
 model ManagerSansaraQueue {
-  id                String   @id @default(cuid())
-  managerId         String        
-  url               String? 
-  type              String?
-  createdAt         DateTime @default(now())
+  id        String   @id @default(cuid())
+  managerId String
+  url       String?
+  type      String?
+  createdAt DateTime @default(now())
 }
 
-
 model ManagerRansomQueue {
-  id                String   @id @default(cuid())
-  managerId         String        
-  url               String? 
-  type              String?
-  createdAt         DateTime @default(now())
+  id        String   @id @default(cuid())
+  managerId String
+  url       String?
+  type      String?
+  createdAt DateTime @default(now())
 }
 
 model Wazzup {
@@ -156,6 +153,7 @@ model Tilda {
   answers           String?
   managerId         String?
 
+  prodinfo    String?
   intrumId    String?
   intrumUrl   String?
   timeCall    String?
@@ -272,6 +270,7 @@ model constructionApplications {
   contactedClient     String? //специалист связался с клиентом
   campaignUtm         String?
   termUtm             String?
+  prodinfo            String?
   nextAction          String? //Дата следующего действия по заявки 
 
   rejection          String? //Отклонения работы с заявкой
@@ -323,8 +322,8 @@ model InparseObjects {
   sourceId    String?
   active      Boolean  @default(true)
 
-  createdAt  DateTime?
-  updatedAt  DateTime?
+  createdAt DateTime?
+  updatedAt DateTime?
 }
 
 model SmartAgentObjects {

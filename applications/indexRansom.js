@@ -53,6 +53,13 @@ async function start() {
         },
       });
 
+      // Функция для определения значения translator
+      const determineTranslator = (requestName) => {
+        if (requestName.startsWith('Сколько комнат в Вашей квартире?\n')) {
+          return 'Marquiz';
+        }
+        return getField(application.fields, "1277") ? getField(application.fields, "1277") : '';
+      };
 
       function translateStatus(englishStatus) {
         const statusMap = {
@@ -90,7 +97,8 @@ async function start() {
           },
           data: {
             idApplicationIntrum: application.id,
-            translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
+            translator: determineTranslator(application.request_name),
+            // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
             responsibleMain: responsibleMain,
             status: translateStatus(application.status),
             typeApplication:'Прием объекта Срочный Выкуп',
@@ -113,7 +121,8 @@ async function start() {
         return await db.constructionApplications.create({
           data: {
             idApplicationIntrum: application.id,
-            translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
+            translator: determineTranslator(application.request_name),
+            // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
             responsibleMain: responsibleMain,
             status: translateStatus(application.status),
             typeApplication:'Прием объекта Срочный Выкуп',

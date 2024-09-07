@@ -226,6 +226,7 @@ export type MarquizRansom = {
 
 export type Tilda = {
   Phone: string;
+  prodinfo:string;
   phone: string;
   name: string;
   Name: string;
@@ -393,6 +394,7 @@ export type constructionApplicationsExcel = {
   contactedClient: string; //специалист связался с клиентом
   campaignUtm: string;
   termUtm: string;
+  prodinfo: string;
   nextAction: string | Date; //Дата следующего действия по заявки
 
   rejection: string; //Отклонения работы с заявкой

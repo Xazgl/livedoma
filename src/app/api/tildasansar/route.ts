@@ -36,6 +36,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const utm_campaign = answer.utm_campaign ? answer.utm_campaign : "";
         const utm_content = answer.utm_content ? answer.utm_content : "";
         const utm_term = answer.utm_term ? answer.utm_term : "";
+        const prodinfo = answer.prodinfo ? answer.prodinfo : "";
 
         try {
           let double = await doubleFind(phone);
@@ -50,6 +51,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               utm_campaign: utm_campaign,
               utm_content: utm_content,
               utm_term: utm_term,
+              prodinfo: prodinfo,
               sendCrm: false,
               managerId:
                 manager && manager !== ""

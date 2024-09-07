@@ -92,7 +92,6 @@ async function start() {
             translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
             responsibleMain: responsibleMain,
             status: translateStatus(application.status),
-            // postMeetingStage: getField(application.fields, "5020"),
             postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
                   (getField(application.fields, "5081") ?  getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),
             desc: application.request_name,
@@ -100,6 +99,7 @@ async function start() {
             contactedClient: getField(application.fields, "5069"),
             campaignUtm: 'нету',
             termUtm: 'нету',
+            prodinfo: getField(application.fields, "5169"),
             nextAction: getField(application.fields, "1404"),
             rejection: '',//отклонение работы с заявок
             //errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false, исправлена ошибка 
@@ -108,7 +108,6 @@ async function start() {
             timesaletCenter: getField(application.fields, "5071"),
             dateFirstContact: getField(application.fields, "5072"),
             phone: phone,
-            // phone: typeof getField(application.fields, "5073") !== 'object' ? ( getField(application.fields, "5073")  ? getField(application.fields, "5073") : findPhone(application.customer_id)  ) : findPhone(application.customer_id),
             url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
             comment: await commentArr(application.id),
             typeApplicationCrm: "Сансара",
@@ -121,7 +120,6 @@ async function start() {
           data: {
             idApplicationIntrum: application.id,
             translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '', responsibleMain: responsibleMain, status: translateStatus(application.status),
-            // postMeetingStage: getField(application.fields, "5074"),
             postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
                   (getField(application.fields, "5081") ?  getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),            
             desc: application.request_name,
@@ -137,7 +135,6 @@ async function start() {
             timesaletCenter: getField(application.fields, "5071"),
             dateFirstContact: getField(application.fields, "5072"),
             phone: phone,
-            // phone: typeof getField(application.fields, "5073") !== 'object' ? ( getField(application.fields, "5073")  ? getField(application.fields, "5073") : findPhone(application.customer_id)  ) : findPhone(application.customer_id),            url: getField(application.fields, "5075") ? getField(application.fields, "5075") :`https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request` ,
             comment: await commentArr(application.id),
             typeApplicationCrm: "Сансара",
             createdAtCrm: application.date_create,

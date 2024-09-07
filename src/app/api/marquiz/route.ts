@@ -17,7 +17,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       };
 
       const answer: Marquiz = await req.json();
-      // console.log(answer);
+       console.log(answer);
 
       //@ts-ignore
       if (answer) {
@@ -55,11 +55,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
           return resultString;
         }
         const textAnswers = formatQuestionsAndAnswers(answer);
+        console.log(textAnswers)
 
         try {
           let double = await doubleFind(phone);
-
+          console.log(double)
           const manager = await managerFind();
+          console.log(manager)
           const newContact = await db.tilda.create({
             data: {
               name: name,

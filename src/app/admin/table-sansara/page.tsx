@@ -26,22 +26,7 @@ async function getObjects() {
       },
     });
 
-    const dataStageArr = await db.sales.findMany({
-      where: {},
-      select: {
-        dateStage: true,
-      },
-    });
-
-    // Извлекаем значения поля dateStage из каждого объекта результата запроса
-    const dateStages = dataStageArr.map((obj) => obj.dateStage);
-
-    // Создаем уникальный массив значений с помощью Set
-    let uniqueDateStages = [...new Set(dateStages)];
-    uniqueDateStages.length > 0 ? uniqueDateStages : ["Значений нет"];
-
-    // const sid = req.cookies['sid']
-
+    
     const sid = getCookie("sid", { cookies });
     // console.log(sid)
     const admin = await checkSession(sid ? sid : "");
@@ -50,7 +35,6 @@ async function getObjects() {
       const { login } = admin.admin;
       return {
         applications: applications,
-        uniqueDateStages: uniqueDateStages,
         login: login,
         admin: admin,
       };
@@ -58,23 +42,22 @@ async function getObjects() {
 
     return {
       applications: [],
-      uniqueDateStages: uniqueDateStages,
     };
   } catch (error) {
     console.error(error);
-    return { applications: [], uniqueDateStages: [], formattedYesterday: "" };
+    return { applications: [], formattedYesterday: "" };
   }
 }
 
 export default async function Home() {
-  const { applications, uniqueDateStages, login, admin } = await getObjects();
+  const { applications, login, admin } = await getObjects();
   console.log(admin);
 
   return (
     <section className="flex flex-col w-full h-full">
       {login ? (
         <>
-          {applications.length > 0 && uniqueDateStages.length > 0 ? (
+          {applications.length > 0  ? (
               <TableFour applications={applications} />
           ) : (
             <div className="flex w-full h-[100vh] items-center justify-center">
