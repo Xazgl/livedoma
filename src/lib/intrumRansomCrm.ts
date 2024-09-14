@@ -186,7 +186,8 @@ export async function sendIntrumCrmTildaRansom(message: Tilda, double: boolean) 
     params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
     params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
     params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
-    // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
+    params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
+    params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
   
   
     params.append("params[request][fields][0][id]", "1277"); // доп поле 2 Источник

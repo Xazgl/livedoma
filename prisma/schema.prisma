@@ -388,3 +388,11 @@ model SmartAgentObjects {
   note_generated          String?
   active                  Boolean  @default(true)
 }
+
+
+model ReviewLink {
+  id          String   @id @default(cuid())
+  identifier  String   @unique
+  createdAt   DateTime @default(now())
+  objectIds   String[]
+}

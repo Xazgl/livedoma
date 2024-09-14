@@ -160,6 +160,8 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
   params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
+  params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
+  params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
 
   //доп поля заявки
   params.append("params[request][fields][0][id]", "1091"); // доп поле 1
@@ -203,6 +205,11 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append("params[request][fields][9][id]", "5169"); // доп поле 10  prodinfo
   params.append( "params[request][fields][9][value]",
      message.prodinfo ? message.prodinfo : ""
+  ); 
+
+
+  params.append("params[request][fields][10][id]", "1404"); // доп поле 11 Дата следующего действия
+  params.append( "params[request][fields][10][value]",`${new Date().toISOString().split("T")[0]}`
   ); 
 
   try {

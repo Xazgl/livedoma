@@ -112,7 +112,9 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
   params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
-  // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
+  params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
+  params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
+
   //доп поля заявки
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
   params.append(
@@ -126,7 +128,7 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   params.append("params[request][fields][2][value]", formattedDate); //доп поле 3
 
   params.append("params[request][fields][3][id]", "4058"); // доп поле 4
-  params.append("params[request][fields][3][value]", "Встреча не состоялась"); //доп поле 4
+  params.append("params[request][fields][3][value]", "Указать стадию"); //доп поле 4
 
   params.append("params[request][fields][4][id]", "5079"); // доп поле 5
   params.append("params[request][fields][4][value]", "Не заполнено"); //доп поле 5
@@ -334,7 +336,7 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
     message.utm_term ? message.utm_term : ""
   ); //доп поле 4
 
-  params.append("params[request][fields][4][id]", "4992"); // доп поле 5
+  params.append("params[request][fields][4][id]",  "4992"); // доп поле 5
   params.append("params[request][fields][4][value]", "Заявка не проверена"); //доп поле 5
 
   params.append("params[request][fields][5][id]", "5079"); // доп поле 6
@@ -344,7 +346,7 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][fields][6][value]", formattedDate); //доп поле 7
 
   params.append("params[request][fields][7][id]", "4058"); // доп поле 8
-  params.append("params[request][fields][7][value]", "Встреча не состоялась"); //доп поле 8
+  params.append("params[request][fields][7][value]", "Указать стадию"); //доп поле 8
 
   try {
     const postResponse = await axios.post(

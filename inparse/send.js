@@ -1,12 +1,19 @@
 const { PrismaClient } = require("@prisma/client");
 const db = new PrismaClient()
+
 const { Worker } = require("worker_threads");
-const consola = require("consola");
+// const consola = require("consola");
+
 const os = require("os");
 const path = require("path");
 const xlsx = require("xlsx");
+
 const nodemailer = require("nodemailer");
 const { getInparseCategory, formatISODate } = require("./function");
+
+// const { customAlphabet } = require('nanoid');
+// const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
+// const uniqueIdentifier = nanoid();
 
 
 function splitArrayIntoChunks(array, parts) {
@@ -47,6 +54,7 @@ async function start() {
     const [allInparseObjects, allIntumAddresses] = await Promise.all([
       db.inparseObjects.findMany({
         where: {
+          active:true,
           createdAt: {
             gte: fourteenDaysAgo,
           },
@@ -62,8 +70,12 @@ async function start() {
     const chunks = splitArrayIntoChunks(allInparseObjects, cpuCount);
     const promises = chunks.map((chunk) => {
       return new Promise((resolve, reject) => {
+        // const worker = new Worker(
+        //   path.join(process.cwd(), "./worker/worker.js"),
+        //   { workerData: { chunk, allIntumAddresses } }
+        // );
         const worker = new Worker(
-          path.join(process.cwd(), "./worker/worker.js"),
+          path.join(__dirname, "worker.js"), 
           { workerData: { chunk, allIntumAddresses } }
         );
         worker.on("message", resolve);
@@ -71,13 +83,31 @@ async function start() {
         worker.on("exit", (code) => {
           if (code !== 0) {
             reject(new Error(`Worker stopped with exit code ${code}`));
-            consola.fail(code);
+            // consola.fail(code);
           }
         });
       });
     });
 
     const results = (await Promise.all(promises)).flat();
+
+    function generateUniqueIdentifier() {
+      const timestamp = Date.now().toString(36); // Текущее время в миллисекундах, преобразованное в строку в системе счисления 36
+      const randomPart = Math.random().toString(36).substring(2, 12); // Случайное число, преобразованное в строку (без "0.")
+      return timestamp + randomPart; // Склеиваем обе части
+    }
+    
+    const uniqueIdentifier = generateUniqueIdentifier();
+
+    if (results && results.length > 0) {
+      //Добавляем в базу ссылку на объекты 
+      await db.reviewLink.create({
+        data: {
+          identifier: uniqueIdentifier,
+          objectIds: results.map(item => item.id),
+        },
+      });
+    }
 
     // Создаем Excel файл
     const workbook = xlsx.utils.book_new();
@@ -124,11 +154,20 @@ async function start() {
       },
     });
 
+    const link = `https://mls-vlg.ru/admin/results/${uniqueIdentifier}`;
+
+    // const link = `http://localhost:3000/admin/results/${uniqueIdentifier}`;
+
+
+    const dateTimeString = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
+
+
     const mailOptions = {
       from: "e-16757995@yandex.ru",
-      to: "karpovichirina87@gmail.com",
+      to: ["karpovichirina87@gmail.com",'ldomofon-sericel@rambler.ru'],
       subject: "Inparse уникальные объекты",
-      text: "Сверить объекты из файла во вложении к письму и занести уникальные из них в Intrum",
+      text: `Сверьте объекты из файла во вложении к письму и занесите уникальные из них в Intrum. После добавления объекта в црм проставить кнопку в таблице по ссылке (создана ${dateTimeString}): ${link}`,
+      // text: "Сверить объекты из файла во вложении к письму и занести уникальные из них в Intrum",
       attachments: [
         {
           filename: "results.xlsx",
@@ -139,13 +178,16 @@ async function start() {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        consola.error("Error sending email:", error);
+        // consola.error("Error sending email:", error);
+        console.log("Error sending email:", error);
       } else {
-        consola.success("Email sent: " + info.response);
+        // consola.success("Email sent: " + info.response);
+        console.log("Email sent: " + info.response);
       }
     });
   } catch (error) {
-    consola.error("Error processing request:", error);
+    // consola.error("Error processing request:", error);
+    console.log("Error processing request:", error);
   }
 }
 
