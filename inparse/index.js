@@ -7,7 +7,7 @@ const db = new PrismaClient()
 
 async function start() {
   // Удаляем все объекты из базы данных
-  await db.inparseObjects.deleteMany();
+  // await db.inparseObjects.deleteMany();
 
   try {
     const arrHoods = [

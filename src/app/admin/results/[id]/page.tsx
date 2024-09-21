@@ -22,7 +22,7 @@ async function getObjects(identifier?: string) {
 
     const objects = await db.inparseObjects.findMany({
       where: {
-        id: { in: objectIds },
+        idInparse: { in: objectIds },
       },
     });
 

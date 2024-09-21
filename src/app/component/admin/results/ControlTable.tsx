@@ -53,7 +53,7 @@ const ControlTable: React.FC<ObjectsTableProps> = ({ objectsAll, idPage }) => {
       const updatedObject = await response.json();
       setObjects((prevObjects) =>
         prevObjects.map((obj) =>
-          obj.id === id ? { ...obj, active: updatedObject.active } : obj
+          obj.idInparse === id ? { ...obj, active: updatedObject.active } : obj
         )
       );
     } catch (error) {
@@ -127,7 +127,7 @@ const ControlTable: React.FC<ObjectsTableProps> = ({ objectsAll, idPage }) => {
           </TableHead>
           <TableBody>
             {objects.map((obj) => (
-              <TableRow key={obj.id}>
+              <TableRow key={obj.idInparse}>
                 <TableCell>
                   <button
                     style={{ transition: "all 0.2s" }}
@@ -136,7 +136,7 @@ const ControlTable: React.FC<ObjectsTableProps> = ({ objectsAll, idPage }) => {
                         ? "bg-red-500 hover:bg-red-700"
                         : "bg-green-500 hover:bg-green-700"
                     }`}
-                    onClick={() => handleToggleActive(obj.id)}
+                    onClick={() => handleToggleActive(obj.idInparse)}
                   >
                     {obj.active ? "Не в CRM" : "Добавлен"}
                   </button>

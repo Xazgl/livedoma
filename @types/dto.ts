@@ -440,3 +440,9 @@ export type ThemeContextProps = {
   toggleTheme: () => void;
   setTheme: Dispatch<SetStateAction<string>>;
 }
+
+
+export type ResultsWazzupMesage = {
+  formattedNumber: string;
+  status: string;
+}

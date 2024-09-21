@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     const objectIds = reviewLink.objectIds;
     const objects = await db.inparseObjects.findMany({
       where: {
-        id: { in: objectIds },
+        idInparse: { in: objectIds },
       },
     });
 

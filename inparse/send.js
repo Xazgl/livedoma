@@ -11,11 +11,6 @@ const xlsx = require("xlsx");
 const nodemailer = require("nodemailer");
 const { getInparseCategory, formatISODate } = require("./function");
 
-// const { customAlphabet } = require('nanoid');
-// const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
-// const uniqueIdentifier = nanoid();
-
-
 function splitArrayIntoChunks(array, parts) {
   let result = [];
   for (let i = parts; i > 0; i--) {
@@ -104,7 +99,7 @@ async function start() {
       await db.reviewLink.create({
         data: {
           identifier: uniqueIdentifier,
-          objectIds: results.map(item => item.id),
+          objectIds: results.map(item => item.idInparse),
         },
       });
     }
@@ -154,9 +149,9 @@ async function start() {
       },
     });
 
-    const link = `https://mls-vlg.ru/admin/results/${uniqueIdentifier}`;
+     const link = `https://mls-vlg.ru/admin/results/${uniqueIdentifier}`;
 
-    // const link = `http://localhost:3000/admin/results/${uniqueIdentifier}`;
+    //  const link = `http://localhost:3000/admin/results/${uniqueIdentifier}`;
 
 
     const dateTimeString = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
@@ -164,7 +159,7 @@ async function start() {
 
     const mailOptions = {
       from: "e-16757995@yandex.ru",
-      to: ["karpovichirina87@gmail.com",'ldomofon-sericel@rambler.ru'],
+      to: ["karpovichirina87@gmail.com","fggg5808@gmail.com",'ldomofon-sericel@rambler.ru'],
       subject: "Inparse уникальные объекты",
       text: `Сверьте объекты из файла во вложении к письму и занесите уникальные из них в Intrum. После добавления объекта в црм проставить кнопку в таблице по ссылке (создана ${dateTimeString}): ${link}`,
       // text: "Сверить объекты из файла во вложении к письму и занести уникальные из них в Intrum",

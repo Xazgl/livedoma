@@ -6,7 +6,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       const id = params.id;
   
       const object = await db.inparseObjects.findUnique({
-        where: { id: id},
+        where: { idInparse: id },
       });
   
       if (!object) {
@@ -18,7 +18,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   
       // Меняем состояние поля active на противоположное
       const updatedObject = await db.inparseObjects.update({
-        where: { id: id },
+        where: { idInparse: id },
         data: {
           active: !object.active,
         },
