@@ -172,8 +172,8 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
 
   params.append("params[request][fields][1][id]", "1211"); // доп поле 2 Источник
   params.append(
-    "params[request][fields][1][value]",
-    message.utm_campaign || message.utm_content || message.utm_term ? "Лендинг Сансара" : "Сайт Сансара"
+    "params[request][fields][1][value]", message.typeSend !== 'Marquiz Сансара'?
+    message.utm_campaign || message.utm_content || message.utm_term ? "Лендинг Сансара" : "Сайт Сансара" : message.typeSend
   ); 
 
   params.append("params[request][fields][2][id]", "5147"); // доп поле 3 campaign
@@ -185,6 +185,12 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append("params[request][fields][3][id]", "5148"); // доп поле 4  term
   params.append( "params[request][fields][3][value]",
      message.utm_term ? message.utm_term : ""
+  ); 
+
+
+  params.append("params[request][fields][11][id]", "5185"); // доп поле 11  source
+  params.append( "params[request][fields][11][value]",
+     message.utm_source ? message.utm_source : ""
   ); 
 
   params.append("params[request][fields][4][id]", "3724"); // доп поле  5  Тип недвижимости

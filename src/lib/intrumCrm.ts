@@ -60,13 +60,13 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
 
   const managers = [
     { name: "Политов", id: "391" },
-    // { name: "Максимова Людмила", id: "332" },
+    { name: "Максимова Людмила", id: "332" },
     { name: "Трофимов", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
     // { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
-    { name: "Выходцева", id: "1944" },
+    // { name: "Выходцева", id: "1944" },
   ];
 
   // Случайный выбор менеджера
@@ -242,13 +242,13 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
 
   const managers = [
     { name: "Политов", id: "391" },
-    // { name: "Максимова Людмила", id: "332" },
+    { name: "Максимова Людмила", id: "332" },
     { name: "Трофимов", id: "1140" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
-     { name: "Трубачева", id: "1460" },
+    { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
-    { name: "Выходцева", id: "1944" },
+    // { name: "Выходцева", id: "1944" },
   ];
 
   // Случайный выбор менеджера
@@ -321,7 +321,9 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append(
     "params[request][fields][1][value]",
-    message.utm_campaign || message.utm_content || message.utm_term  ? "лендинг" : "Наш сайт"
+    message.utm_campaign || message.utm_content || message.utm_term
+      ? "лендинг"
+      : "Наш сайт"
   ); //доп поле 2
 
   params.append("params[request][fields][2][id]", "5001"); // доп поле 3
@@ -336,7 +338,13 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
     message.utm_term ? message.utm_term : ""
   ); //доп поле 4
 
-  params.append("params[request][fields][4][id]",  "4992"); // доп поле 5
+  params.append("params[request][fields][8][id]", "5184"); // доп поле 8
+  params.append(
+    "params[request][fields][8][value]",
+    message.utm_source ? message.utm_source : ""
+  ); 
+
+  params.append("params[request][fields][4][id]", "4992"); // доп поле 5
   params.append("params[request][fields][4][value]", "Заявка не проверена"); //доп поле 5
 
   params.append("params[request][fields][5][id]", "5079"); // доп поле 6
@@ -370,12 +378,12 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
 
 const managers = [
   { name: "Политов", id: "391" },
-  // { name: "Максимова Людмила", id: "332" },
+  { name: "Максимова Людмила", id: "332" },
   { name: "Трофимов", id: "1140" },
   // { name: "Исаева", id: "39" },
   { name: "Трубачева", id: "1460" },
   { name: "Бородина", id: "353" },
-  { name: "Выходцева", id: "1944" },
+  // { name: "Выходцева", id: "1944" },
 ];
 
 export async function managerFind() {
@@ -536,4 +544,3 @@ async function oldManagerFind() {
     console.error("Error in managerFind:", error);
   }
 }
-

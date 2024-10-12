@@ -135,7 +135,6 @@ export async function generateExcel(transactions: Sales[]) {
   saveAs(new Blob([buffer]), "transactions.xlsx");
 }
 
-
 export async function generateExcel2(applications: constructionApplications[]) {
   const workbook = new ExcelJS.Workbook();
 
@@ -166,6 +165,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
     desc: appl.desc ? appl.desc : "",
     typeApplication: appl.typeApplication ? appl.typeApplication : "",
     contactedClient: appl.contactedClient ? appl.contactedClient : "",
+    sourceUtm: appl.sourceUtm ? appl.sourceUtm : "",
     campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
     termUtm: appl.termUtm ? appl.termUtm : "",
     prodinfo: appl.prodinfo ? appl.prodinfo : "",
@@ -183,9 +183,12 @@ export async function generateExcel2(applications: constructionApplications[]) {
         ? "✓"
         : "👎🏻"
       : "", // ОК КЦ
-    timesaletCenter: appl.timesaletCenter && appl.timesaletCenter !== 'Специалист связался с клиентом_NEW не проставили ДА' 
-      ? parseFloat(appl.timesaletCenter).toLocaleString("ru-RU")
-      : "Специалист связался с клиентом_NEW не проставили ДА", // время ОП
+    timesaletCenter:
+      appl.timesaletCenter &&
+      appl.timesaletCenter !==
+        "Специалист связался с клиентом_NEW не проставили ДА"
+        ? parseFloat(appl.timesaletCenter).toLocaleString("ru-RU")
+        : "Специалист связался с клиентом_NEW не проставили ДА", // время ОП
     okSaleCenter: appl.timesaletCenter
       ? appl.timesaletCenter < "0.15"
         ? "✓"
@@ -222,10 +225,18 @@ export async function generateExcel2(applications: constructionApplications[]) {
       let columns = columnsSetsApplication[type === "Заявка" ? 0 : 1];
 
       // Удаление колонок "campaignUtm" и "termUtm" на вкладках "Кампания" и "Звонок"
-      if (type === "WhatsApp" || type === "Звонок") {
+      // if (type === "WhatsApp" || type === "Звонок") {
+      if (type === "WhatsApp") {
         columns = columns.filter(
-          (col) => col.field !== "campaignUtm" && col.field !== "termUtm"
+          (col) =>
+            col.field !== "campaignUtm" &&
+            col.field !== "termUtm" &&
+            col.field !== "sourceUtm"
         );
+      }
+
+      if (type === "Звонок") {
+        columns = columns.filter((col) => col.field !== "sourceUtm");
       }
 
       const russianColumns = columns.map((col) => col.headerName);
@@ -400,7 +411,6 @@ export async function generateExcel2(applications: constructionApplications[]) {
       }
     }
   });
-  
 
   // Создание файла Excel
   const buffer = await workbook.xlsx.writeBuffer();
@@ -552,6 +562,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
     contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
     campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
     termUtm: appl.termUtm ? appl.termUtm : "",
+    sourceUtm: appl.sourceUtm ? appl.sourceUtm : "",
     prodinfo: appl.prodinfo ? appl.prodinfo : "",
     nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
     rejection: appl.rejection ? appl.rejection : "",

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       };
 
       const answer: Marquiz = await req.json();
-       console.log(answer);
+      console.log(answer);
 
       //@ts-ignore
       if (answer) {
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         let utm_campaign = "";
         let utm_content = "";
         let utm_term = "";
+        let utm_source = "";
 
         if (answer.extra.utm) {
           utm_medium = answer.extra.utm.medium ? answer.extra.utm.medium : "";
@@ -39,6 +40,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             ? answer.extra.utm.content
             : "";
           utm_term = answer.extra.utm.term ? answer.extra.utm.term : "";
+          utm_source = answer.extra.utm.source ? answer.extra.utm.source : "";
         }
 
         // Функция для формирования строки
@@ -55,13 +57,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
           return resultString;
         }
         const textAnswers = formatQuestionsAndAnswers(answer);
-        console.log(textAnswers)
+        console.log(textAnswers);
 
         try {
           let double = await doubleFind(phone);
-          console.log(double)
+          console.log(double);
           const manager = await managerFind();
-          console.log(manager)
+          console.log(manager);
           const newContact = await db.tilda.create({
             data: {
               name: name,
@@ -73,6 +75,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               utm_campaign: utm_campaign,
               utm_content: utm_content,
               utm_term: utm_term,
+              utm_source: utm_source,
               sendCrm: false,
               answers: textAnswers,
               managerId:

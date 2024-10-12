@@ -145,6 +145,7 @@ model Tilda {
   typeSend          String?
   timeForClientCall String? @default("")
   formid            String?
+  utm_source        String?
   utm_medium        String?
   utm_campaign      String?
   utm_content       String?
@@ -268,10 +269,14 @@ model constructionApplications {
   desc                String? //описание
   typeApplication     String? //тип заявки
   contactedClient     String? //специалист связался с клиентом
+  sourceUtm           String?
   campaignUtm         String?
   termUtm             String?
   prodinfo            String?
   nextAction          String? //Дата следующего действия по заявки 
+
+  mangoCampaign       String? //Кампания каллтрекинга
+  mangoKeyWord        String? //Источник / Канал 
 
   rejection          String? //Отклонения работы с заявкой
   errorReejctionDone Boolean? // Ошибка исправлена?
@@ -389,10 +394,9 @@ model SmartAgentObjects {
   active                  Boolean  @default(true)
 }
 
-
 model ReviewLink {
-  id          String   @id @default(cuid())
-  identifier  String   @unique
-  createdAt   DateTime @default(now())
-  objectIds   String[]
+  id         String   @id @default(cuid())
+  identifier String   @unique
+  createdAt  DateTime @default(now())
+  objectIds  String[]
 }

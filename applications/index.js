@@ -93,6 +93,7 @@ async function start() {
             typeApplication: getField(application.fields, "4059"),
             contactedClient: getField(application.fields, "5079")? getField(application.fields, "5079")  : 'Не заполнено' ,
             campaignUtm: getField(application.fields, "5001"),
+            sourceUtm: getField(application.fields, "5184"),
             termUtm: getField(application.fields, "5000"),
             nextAction: getField(application.fields, "4057"),
             rejection: getField(application.fields, "4992"),

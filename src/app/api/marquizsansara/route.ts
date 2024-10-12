@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Tilda, crmAnswer } from "../../../../@types/dto";
-import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { Marquiz, crmAnswer } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
+import { managerFindSansara, sendIntrumCrmTildaSansara } from "@/lib/intrumSansaraCrm";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -16,40 +16,72 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
       };
 
-      const answer: Tilda = await req.json();
+      const answer: Marquiz = await req.json();
       console.log(answer);
 
       //@ts-ignore
-      if (answer.test == null) {
-        const manager = await managerFind();
-        const name = answer.Name
-          ? answer.Name
-          : answer.name
-          ? answer.name
-          : "Нету";
-        const phone = await normalizePhoneNumber(answer.Phone);
-        const formid = answer.formid ? answer.formid : "Нету";
-        const utm_medium = answer.utm_medium ? answer.utm_medium : "";
-        const utm_campaign = answer.utm_campaign ? answer.utm_campaign : "";
-        const utm_content = answer.utm_content ? answer.utm_content : "";
-        const utm_term = answer.utm_term ? answer.utm_term : "";
-        const utm_source = answer.utm_source ? answer.utm_source : "";
+      if (answer) {
+        const name = answer.contacts.name;
+        const phone = await normalizePhoneNumber(answer.contacts.phone);
+        const clientCallTime = answer.contacts.text;
+        const formid = answer.form.id ? answer.form.id : "Нету";
+        let utm_medium = "";
+        let utm_campaign = "";
+        let utm_content = "";
+        let utm_term = "";
+        let utm_source = "";
+        let prodinfo = "";
+
+        if (answer.extra.utm) {
+          utm_medium = answer.extra.utm.medium ? answer.extra.utm.medium : "";
+          utm_campaign = answer.extra.utm.campaign
+            ? answer.extra.utm.campaign
+            : "";
+          utm_content = answer.extra.utm.content
+            ? answer.extra.utm.content
+            : "";
+          utm_term = answer.extra.utm.term ? answer.extra.utm.term : "";
+          utm_source = answer.extra.utm.source ? answer.extra.utm.source : "";
+          prodinfo = answer.extra.utm.prodinfo ?  answer.extra.utm.prodinfo : "";
+
+        }
+
+        // Функция для формирования строки
+        function formatQuestionsAndAnswers(answer: Marquiz) {
+          let resultString = "";
+          answer.answers.forEach((answer) => {
+            // Добавление вопроса и ответа к результату
+            resultString += `${answer.q} '${answer.a}'`;
+            // Добавление пробела после каждой связки вопроса и ответа
+            resultString += ", ";
+          });
+          // Удаление лишнего пробела в конце строки
+          resultString = resultString.trim();
+          return resultString;
+        }
+        const textAnswers = formatQuestionsAndAnswers(answer);
+        console.log(textAnswers);
 
         try {
           let double = await doubleFind(phone);
-
+          console.log(double);
+          const manager = await managerFindSansara();
+          console.log(manager);
           const newContact = await db.tilda.create({
             data: {
               name: name,
               phone: phone,
+              timeForClientCall: clientCallTime,
               formid: formid,
-              typeSend: "Tilda",
-              utm_source: utm_source,
+              typeSend: "Marquiz Сансара",
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,
               utm_content: utm_content,
               utm_term: utm_term,
+              utm_source: utm_source,
+              prodinfo: prodinfo,
               sendCrm: false,
+              answers: textAnswers,
               managerId:
                 manager && manager !== ""
                   ? manager
@@ -58,7 +90,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           });
 
           if (double.within24Hours == false) {
-            crmAnswer = await sendIntrumCrmTilda(
+            crmAnswer = await  sendIntrumCrmTildaSansara(
               newContact,
               double.isDuplicate
             );
@@ -83,7 +115,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                         ? manager
                         : "Ошибка в выборе менеджера",
                     url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                    type: "Tilda",
+                    type: "Marquiz Сансара",
                   },
                 });
               }
@@ -102,6 +134,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 },
               });
             }
+
             return NextResponse.json(
               { crmStatus: crmAnswer, contacts: newContact },
               { status: 200 }

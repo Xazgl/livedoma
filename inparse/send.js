@@ -159,7 +159,7 @@ async function start() {
 
     const mailOptions = {
       from: "e-16757995@yandex.ru",
-      to: ["karpovichirina87@gmail.com","fggg5808@gmail.com",'ldomofon-sericel@rambler.ru'],
+      to: ["karpovichirina87@gmail.com","fggg5808@gmail.com",'ldomofon-sericel@rambler.ru','pasha.pshenichnikov.04@mail.ru'],
       subject: "Inparse уникальные объекты",
       text: `Сверьте объекты из файла во вложении к письму и занесите уникальные из них в Intrum. После добавления объекта в црм проставить кнопку в таблице по ссылке (создана ${dateTimeString}): ${link}`,
       // text: "Сверить объекты из файла во вложении к письму и занести уникальные из них в Intrum",

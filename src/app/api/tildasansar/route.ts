@@ -36,6 +36,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const utm_campaign = answer.utm_campaign ? answer.utm_campaign : "";
         const utm_content = answer.utm_content ? answer.utm_content : "";
         const utm_term = answer.utm_term ? answer.utm_term : "";
+        const utm_source = answer.utm_source ? answer.utm_source : "";
         const prodinfo = answer.prodinfo ? answer.prodinfo : "";
 
         try {
@@ -48,6 +49,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               formid: formid,
               typeSend: "Tilda Сансара",
               utm_medium: utm_medium,
+              utm_source: utm_source,
               utm_campaign: utm_campaign,
               utm_content: utm_content,
               utm_term: utm_term,

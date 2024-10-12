@@ -68,6 +68,7 @@ export type Marquiz = {
       source: string;
       term: string;
       name: string;
+      prodinfo: string;
     };
     cookies: {
       _ym_uid: string;
