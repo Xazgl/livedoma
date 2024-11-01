@@ -2,6 +2,7 @@
 import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { Coordinates } from "../../../../../@types/dto";
+import React from "react";
 
 type Props = {
   object: ObjectIntrum;
@@ -46,5 +47,5 @@ export function YandexMap({ object }: Props) {
   );
 }
 
-export default YandexMap;
+export default React.memo(YandexMap);
 

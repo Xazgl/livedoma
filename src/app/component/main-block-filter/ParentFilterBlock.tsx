@@ -2,9 +2,6 @@
 import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
-// import { Filter } from "./filter-sidebar/Filter";
-import { ObjectsCardsTest } from "./objectsCards/ObjectsCardsTest";
-// import { FilterMobile } from "./filter-sidebar/FilterMobile";
 import { SelectCategory } from "../selectCategory/SelectCategory";
 import {
   categoryFilter,
@@ -30,6 +27,8 @@ import { PaginationRow } from "../paginationRow/PaginatiowRow";
 import { useTheme } from "../provider/ThemeProvider";
 import ObjectsMap from "../mapObject/objectsMap";
 import dynamic from "next/dynamic";
+import React from "react";
+import ObjectsCardsTest from "./objectsCards/ObjectsCardsTest";
 
 // Динамический импорт компонентов фильтра
 const FilterMobile = dynamic(() => import('./filter-sidebar/FilterMobile'));
@@ -42,7 +41,7 @@ type Props = {
   priceMax: number;
 };
 
-export function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
+ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
   const { theme } = useTheme();
   const refCardsObjects = useRef<HTMLDivElement>(null);
   const [isFirstRender, setIsFirstRender] = useState(true);
@@ -528,3 +527,6 @@ export function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
     </div>
   );
 }
+
+
+export default React.memo(ParentFilterBlock);

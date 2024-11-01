@@ -84,7 +84,9 @@ RUN (crontab -u $(whoami) -l; echo "0 */1 * * * /usr/local/bin/node /app/report/
 
 
 RUN (crontab -u $(whoami) -l; echo "0 */2 * * * /usr/local/bin/node /app/applications/index.js" ) | crontab -u $(whoami) -
-RUN (crontab -u $(whoami) -l; echo "20 */2 * * * /usr/local/bin/node /app/applications/mango.js") | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/applications/mango.js") | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/mangoSansara.js") | crontab -u $(whoami) -
+
 
 RUN (crontab -u $(whoami) -l; echo "0 */10 * * * /usr/local/bin/node /app/applications/updateSansara.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */9 * * * /usr/local/bin/node /app/applications/update.js" ) | crontab -u $(whoami) -
@@ -95,7 +97,6 @@ RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insuran
 
 RUN (crontab -u $(whoami) -l; echo "*/90 * * * * /usr/local/bin/node /app/inparse/index.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/inparse/send.js" ) | crontab -u $(whoami) -
-# RUN (crontab -u $(whoami) -l; echo "*/70 * * * * /usr/local/bin/node /app/smartagent/index.js" ) | crontab -u $(whoami) -
 
 
 EXPOSE 3000

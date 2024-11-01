@@ -1,13 +1,13 @@
 'use client'
 import { AllHeader } from "@/app/component/allHeader/AllHeader"
-import { DescriptionObj } from "@/app/component/currentObjComponents/description/DescriptionObj"
 import YandexMap from "@/app/component/currentObjComponents/map/YandexMap"
-import { SwiperImg } from "@/app/component/currentObjComponents/slider/SwiperImg"
 import { ModalImg } from "@/app/component/modalWindow/ModalImg"
 import { ObjectIntrum } from "@prisma/client"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
 import dynamic from 'next/dynamic';
+import SwiperImg from "@/app/component/currentObjComponents/slider/SwiperImg"
+import DescriptionObj from "@/app/component/currentObjComponents/description/DescriptionObj"
 const Footer = dynamic(() => import("@/app/component/folder/Footer"));
 
 

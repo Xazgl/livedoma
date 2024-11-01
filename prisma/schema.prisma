@@ -275,8 +275,8 @@ model constructionApplications {
   prodinfo            String?
   nextAction          String? //Дата следующего действия по заявки 
 
-  mangoCampaign       String? //Кампания каллтрекинга
-  mangoKeyWord        String? //Источник / Канал 
+  mangoCampaign String? //Кампания каллтрекинга
+  mangoKeyWord  String? //Источник / Канал 
 
   rejection          String? //Отклонения работы с заявкой
   errorReejctionDone Boolean? // Ошибка исправлена?
@@ -295,6 +295,8 @@ model constructionApplications {
   createdAtCrm String?
 
   typeApplicationCrm String @default("ЖДД") // Тип заявки ЖДД или Сансара 
+
+  mangoUtm Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

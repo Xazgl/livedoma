@@ -1,6 +1,8 @@
 import { ObjectIntrum } from "@prisma/client";
-import { ParentFilterBlock } from "./ParentFilterBlock";
+
 import { Suspense } from "react";
+import ParentFilterBlock from "./ParentFilterBlock";
+import React from "react";
 
 type Props = {
   objects: ObjectIntrum[];
@@ -9,7 +11,7 @@ type Props = {
   priceMax: number;
 };
 
-export function SuspenseFilter({ objects, pages, page, priceMax }: Props) {
+function SuspenseFilter({ objects, pages, page, priceMax }: Props) {
   return (
     <>
       <Suspense fallback={null}>
@@ -25,3 +27,5 @@ export function SuspenseFilter({ objects, pages, page, priceMax }: Props) {
     </>
   );
 }
+
+export default React.memo(SuspenseFilter);

@@ -143,7 +143,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
     { name: "Максимова", id: "332" },
     { name: "Исаева", id: "39" },
     { name: "Трофимов Николай", id: "1140" },
-    { name: "Трубачева", id: "1460" },
+     { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
     { name: "Выходцева", id: "1944" },
   ];
@@ -153,10 +153,28 @@ export async function generateExcel2(applications: constructionApplications[]) {
     return manager ? manager.name : "";
   }
 
+  // Функция для проверки источника
+  function getTranslator(
+    sourceUtm?: string | null,
+    campaignUtm?: string | null,
+    termUtm?: string | null,
+    translator?: string | null
+  ): string {
+    if (translator) {
+      return sourceUtm || campaignUtm || termUtm ? "лендинг" : translator;
+    }
+    return "";
+  }
+
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
     idApplicationIntrum: appl.idApplicationIntrum,
-    translator: appl.translator ? appl.translator : "",
+    translator: getTranslator(
+      appl.sourceUtm,
+      appl.campaignUtm,
+      appl.termUtm,
+      appl.translator
+    ),
     responsibleMain: appl.responsibleMain
       ? findManager(appl.responsibleMain)
       : "",
@@ -235,9 +253,9 @@ export async function generateExcel2(applications: constructionApplications[]) {
         );
       }
 
-      if (type === "Звонок") {
-        columns = columns.filter((col) => col.field !== "sourceUtm");
-      }
+      // if (type === "Звонок") {
+      //   columns = columns.filter((col) => col.field !== "sourceUtm");
+      // }
 
       const russianColumns = columns.map((col) => col.headerName);
       worksheet.addRow(russianColumns);
@@ -550,49 +568,62 @@ export async function generateExcel3(transactions: Sales[]) {
 export async function generateExcel5(applications: constructionApplications[]) {
   const workbook = new ExcelJS.Workbook();
 
-  const applicationsNew = applications.map((appl) => ({
-    id: appl.id,
-    idApplicationIntrum: appl.idApplicationIntrum,
-    translator: appl.translator ? appl.translator : "",
-    responsibleMain: appl.responsibleMain,
-    status: appl.status ? appl.status : "",
-    postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
-    desc: appl.desc ? appl.desc : "",
-    typeApplication: appl.typeApplication ? appl.typeApplication : "",
-    contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
-    campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
-    termUtm: appl.termUtm ? appl.termUtm : "",
-    sourceUtm: appl.sourceUtm ? appl.sourceUtm : "",
-    prodinfo: appl.prodinfo ? appl.prodinfo : "",
-    nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
-    rejection: appl.rejection ? appl.rejection : "",
-    errorReejctionDone: appl.errorReejctionDone == true ? "Да" : "Нет", // Ошибка исправлена?
-    datecallCenter: appl.datecallCenter ? appl.datecallCenter : "", //Дата обработки заявки колл центром String? //Дата обработки заявки колл центром
-    timecallCenter: appl.timecallCenter
-      ? parseFloat(appl.timecallCenter).toLocaleString("ru-RU")
-      : "",
-    okCallCenter: appl.timecallCenter
-      ? appl.timecallCenter < "0.15"
-        ? "✓"
-        : "👎🏻"
-      : "", // ОК КЦ
-    timesaletCenter: appl.timesaletCenter
-      ? parseFloat(appl.timesaletCenter).toLocaleString("ru-RU")
-      : "", // время ОП
-    okSaleCenter: appl.timesaletCenter
-      ? appl.timesaletCenter < "0.15"
-        ? "✓"
-        : "👎🏻"
-      : "", // ОК ОП
-    dateFirstContact: appl.dateFirstContact ? appl.dateFirstContact : "",
-    phone: appl.phone ? appl.phone : "",
-    comment: appl.comment ? appl.comment : [],
-    url: appl.url
-      ? appl.url
-      : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${appl.idApplicationIntrum}#request`,
-    createdAtCrm: appl.createdAtCrm ? appl.createdAtCrm.replace(/-/g, ".") : "", // Дата в формате 2024-05-07 11:25:23 нужно убрать - на .
-    createdAt: appl.createdAt ? formatDateTime(new Date(appl.createdAt)) : "",
-  }));
+  const applicationsNew = applications.map((appl) => {
+    const hasUtm =
+      appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
+        ? true
+        : false;
+    return {
+      id: appl.id,
+      idApplicationIntrum: appl.idApplicationIntrum,
+      translator:
+        appl.translator && appl.translator !== "Marquiz Сансара"
+          ? appl.translator
+          : hasUtm
+          ? "Лендинг Сансара"
+          : "Сайт Сансара",
+      responsibleMain: appl.responsibleMain,
+      status: appl.status ? appl.status : "",
+      postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
+      desc: appl.desc ? appl.desc : "",
+      typeApplication: appl.typeApplication ? appl.typeApplication : "",
+      contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
+      campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
+      termUtm: appl.termUtm ? appl.termUtm : "",
+      sourceUtm: appl.sourceUtm ? appl.sourceUtm : "",
+      prodinfo: appl.prodinfo ? appl.prodinfo : "",
+      nextAction: appl.nextAction ? formatDate(appl.nextAction) : "",
+      rejection: appl.rejection ? appl.rejection : "",
+      errorReejctionDone: appl.errorReejctionDone == true ? "Да" : "Нет", // Ошибка исправлена?
+      datecallCenter: appl.datecallCenter ? appl.datecallCenter : "", //Дата обработки заявки колл центром String? //Дата обработки заявки колл центром
+      timecallCenter: appl.timecallCenter
+        ? parseFloat(appl.timecallCenter).toLocaleString("ru-RU")
+        : "",
+      okCallCenter: appl.timecallCenter
+        ? appl.timecallCenter < "0.15"
+          ? "✓"
+          : "👎🏻"
+        : "", // ОК КЦ
+      timesaletCenter: appl.timesaletCenter
+        ? parseFloat(appl.timesaletCenter).toLocaleString("ru-RU")
+        : "", // время ОП
+      okSaleCenter: appl.timesaletCenter
+        ? appl.timesaletCenter < "0.15"
+          ? "✓"
+          : "👎🏻"
+        : "", // ОК ОП
+      dateFirstContact: appl.dateFirstContact ? appl.dateFirstContact : "",
+      phone: appl.phone ? appl.phone : "",
+      comment: appl.comment ? appl.comment : [],
+      url: appl.url
+        ? appl.url
+        : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${appl.idApplicationIntrum}#request`,
+      createdAtCrm: appl.createdAtCrm
+        ? appl.createdAtCrm.replace(/-/g, ".")
+        : "", // Дата в формате 2024-05-07 11:25:23 нужно убрать - на .
+      createdAt: appl.createdAt ? formatDateTime(new Date(appl.createdAt)) : "",
+    };
+  });
 
   // Фильтрация данных по типу заявки
   let applicationsByType: Record<string, constructionApplicationsExcel[]> = {};

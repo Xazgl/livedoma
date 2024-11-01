@@ -7,12 +7,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { logoFind, numberWithSpaces } from "../../main-block-filter/objectsCards/functionCard";
 import { useTheme } from "../../provider/ThemeProvider";
+import React from "react";
 
 type Props = {
   object: ObjectIntrum;
 };
 
-export function DescriptionObj({ object }: Props) {
+function DescriptionObj({ object }: Props) {
   const { theme } = useTheme();
   return (
     <section className="flex flex-col w-full h-[auto] p-5">
@@ -126,3 +127,5 @@ export function DescriptionObj({ object }: Props) {
     </section>
   );
 }
+
+export default React.memo(DescriptionObj);

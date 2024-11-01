@@ -1,10 +1,9 @@
 import "server-only";
 import db from "../../prisma";
-import { SuspenseFilter } from "./component/main-block-filter/SuspenseFilter";
 import { Metadata } from 'next'
-//  import { Footer } from "./component/folder/Footer";
 import { AllHeader } from "./component/allHeader/AllHeader";
 import dynamicImport from 'next/dynamic';
+import SuspenseFilter from "./component/main-block-filter/SuspenseFilter";
 const Footer = dynamicImport(() => import("./component/folder/Footer"));
  
 export const metadata: Metadata = {

@@ -148,7 +148,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   }
 
   if (doubleMessage) {
-    params.append("params[request][employee_id]", "1676");
+    params.append("params[request][employee_id]", "1693");
   } else {
     params.append(
       "params[request][employee_id]",
@@ -172,8 +172,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
 
   params.append("params[request][fields][1][id]", "1211"); // доп поле 2 Источник
   params.append(
-    "params[request][fields][1][value]", message.typeSend !== 'Marquiz Сансара'?
-    message.utm_campaign || message.utm_content || message.utm_term ? "Лендинг Сансара" : "Сайт Сансара" : message.typeSend
+    "params[request][fields][1][value]", message.utm_campaign || message.utm_content || message.utm_term || message.utm_source ? "Лендинг Сансара" : "Сайт Сансара" 
   ); 
 
   params.append("params[request][fields][2][id]", "5147"); // доп поле 3 campaign

@@ -1,10 +1,8 @@
 import "server-only";
-// import { Header } from "./../component/header/Header";
-import { ParentFilterBlock } from "./../component/main-block-filter/ParentFilterBlock";
 import { FilterUserOptions } from "../../../@types/dto";
 import db from "../../../prisma";
 import { AllHeader } from "../component/allHeader/AllHeader";
-// import { MobileHeader } from "../component/mainBarMobile/MobileBar";
+import ParentFilterBlock from "../component/main-block-filter/ParentFilterBlock";
 
 
 export const dynamic = "force-dynamic";
@@ -55,12 +53,10 @@ async function getObjects(page?: string, filter?: FilterUserOptions) {
   } catch (error) {
     console.error(error);
     return { objects: [], pages: 1, page: 1 };
-    // return [];
   }
 }
 
 export default async function Home({ params }: { params: { page?: string } }) {
-  // console.log(params);
 
   const { objects, pages, page, priceMax} = await getObjects(params.page);
 
@@ -75,13 +71,6 @@ export default async function Home({ params }: { params: { page?: string } }) {
           priceMax={priceMax}
         />
       )}
-      <div className="flex gap-2 text-black">
-        {/* {
-        Array(pages).fill(0).map((el, i) => {
-          return <Link href={`/${i+1}`}  key={i} >{i+1}</Link>
-        })
-      } */}
-      </div>
     </>
   );
 }

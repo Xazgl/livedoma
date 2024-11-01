@@ -11,7 +11,7 @@ type Props = {
     img?: string[]
 }
 
-export function SwiperImg({ showModalImg, img, setShowModalImg, setHouseStepImg }: Props) {
+function SwiperImg({ showModalImg, img, setShowModalImg, setHouseStepImg }: Props) {
 
     const [houseArrImg, setHouseArrImg] = useState<string[]>([]);
     const [firstImageLoaded, setFirstImageLoaded] = useState(false);
@@ -127,3 +127,5 @@ export function SwiperImg({ showModalImg, img, setShowModalImg, setHouseStepImg 
         )
     }
 }
+
+export default React.memo(SwiperImg);
