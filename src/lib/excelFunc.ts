@@ -160,10 +160,14 @@ export async function generateExcel2(applications: constructionApplications[]) {
     termUtm?: string | null,
     translator?: string | null
   ): string {
-    if (translator) {
-      return sourceUtm || campaignUtm || termUtm ? "лендинг" : translator;
+    if (translator  && translator !== 'WhatsApp') {
+      if(sourceUtm == "TG" || sourceUtm == "vk"){
+        return 'Наш сайт';
+      } else {
+      return sourceUtm || campaignUtm || termUtm ? "лендинг" : 'Наш сайт';
+      }
     }
-    return "";
+    return translator? translator  : "";
   }
 
   const applicationsNew = applications.map((appl) => ({
@@ -244,14 +248,14 @@ export async function generateExcel2(applications: constructionApplications[]) {
 
       // Удаление колонок "campaignUtm" и "termUtm" на вкладках "Кампания" и "Звонок"
       // if (type === "WhatsApp" || type === "Звонок") {
-      if (type === "WhatsApp") {
-        columns = columns.filter(
-          (col) =>
-            col.field !== "campaignUtm" &&
-            col.field !== "termUtm" &&
-            col.field !== "sourceUtm"
-        );
-      }
+      // if (type === "WhatsApp") {
+      //   columns = columns.filter(
+      //     (col) =>
+      //       col.field !== "campaignUtm" &&
+      //       col.field !== "termUtm" &&
+      //       col.field !== "sourceUtm"
+      //   );
+      // }
 
       // if (type === "Звонок") {
       //   columns = columns.filter((col) => col.field !== "sourceUtm");
@@ -577,11 +581,12 @@ export async function generateExcel5(applications: constructionApplications[]) {
       id: appl.id,
       idApplicationIntrum: appl.idApplicationIntrum,
       translator:
-        appl.translator && appl.translator !== "Marquiz Сансара"
-          ? appl.translator
-          : hasUtm
-          ? "Лендинг Сансара"
-          : "Сайт Сансара",
+        // appl.translator && appl.translator !== "Marquiz Сансара"
+        //   ? appl.translator
+        //   : hasUtm
+        //   ? "Лендинг Сансара"
+        //   : "Сайт Сансара",
+        appl.sourceUtm =='TG' || appl.sourceUtm =='vk'? "Лендинг Сансара" :  hasUtm? "Лендинг Сансара" : "Сайт Сансара",
       responsibleMain: appl.responsibleMain,
       status: appl.status ? appl.status : "",
       postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
@@ -945,7 +950,11 @@ export async function generateExcel6(applications: constructionApplications[]) {
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
     idApplicationIntrum: appl.idApplicationIntrum,
-    translator: appl.translator ? appl.translator : "",
+    translator: appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo?  "лендинг" :"наш сайт",
+        // appl.translator? appl.translator
+        //   :  appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
+        //   ? "лендинг"
+        //   : "наш сайт",
     responsibleMain: appl.responsibleMain,
     status: appl.status ? appl.status : "",
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",

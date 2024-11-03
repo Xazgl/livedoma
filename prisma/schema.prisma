@@ -296,7 +296,7 @@ model constructionApplications {
 
   typeApplicationCrm String @default("ЖДД") // Тип заявки ЖДД или Сансара 
 
-  mangoUtm Boolean @default(false)
+  mangoUtm Boolean? @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

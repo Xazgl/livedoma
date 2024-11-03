@@ -172,7 +172,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
 
   params.append("params[request][fields][1][id]", "1211"); // доп поле 2 Источник
   params.append(
-    "params[request][fields][1][value]", message.utm_campaign || message.utm_content || message.utm_term || message.utm_source ? "Лендинг Сансара" : "Сайт Сансара" 
+    "params[request][fields][1][value]", message.utm_source =='vk' || message.utm_source =='TG' ? 'Сайт Сансара' : message.utm_campaign || message.utm_content || message.utm_term || message.utm_source ? "Лендинг Сансара" : "Сайт Сансара" 
   ); 
 
   params.append("params[request][fields][2][id]", "5147"); // доп поле 3 campaign

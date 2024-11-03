@@ -16,6 +16,9 @@ export async function GET(
    
     const applicationsExcel = await db.constructionApplications.findMany({
       where: {
+        NOT: {
+          responsibleMain: 'Тест Тестович',
+        },
         createdAtCrm: {
           lte: dateEnd? dateEnd : "2022-01-30",
           gte: date ? date : "2022-01-30",
@@ -30,10 +33,9 @@ export async function GET(
     if (table) {
       applications = await db.constructionApplications.findMany({
         where: {
-          // createdAt: {
-          //    lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-          //   gte: new Date(date ? date : "2022-01-30"),
-          // }, 
+          NOT: {
+            responsibleMain: 'Тест Тестович',
+          },
           typeApplicationCrm:'Срочный выкуп',
           createdAtCrm: {
             lte: dateEnd? dateEnd : "2022-01-30",
@@ -48,10 +50,9 @@ export async function GET(
     } else {
       applications = await db.constructionApplications.findMany({
         where: {
-          // createdAt: {
-          //   lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-          //   gte: new Date(date ? date : "2022-01-30"),
-          // },
+          NOT: {
+            responsibleMain: 'Тест Тестович',
+          },
           typeApplicationCrm:'Срочный выкуп',
           createdAtCrm: {
             lte: dateEnd? dateEnd : "2022-01-30",

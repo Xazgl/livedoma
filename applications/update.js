@@ -70,8 +70,9 @@ async function startBatch(fromDate, toDate) {
                         desc: application.request_name,
                         typeApplication: getField(application.fields, "4059"),
                         contactedClient: getField(application.fields, "5079") ? getField(application.fields, "5079") : getField(application.fields, "4994"),
-                        campaignUtm: getField(application.fields, "5001"),
-                        termUtm: getField(application.fields, "5000"),
+                        campaignUtm: existingSale.mangoUtm ? existingSale.campaignUtm : getField(application.fields, "5001"),
+                        sourceUtm: existingSale.mangoUtm ? existingSale.sourceUtm : getField(application.fields, "5184"),
+                        termUtm: existingSale.mangoUtm ? existingSale.termUtm : getField(application.fields, "5000"),
                         nextAction: getField(application.fields, "4057"),
                         rejection: getField(application.fields, "4992"),
                         errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false,
@@ -105,7 +106,7 @@ async function start() {
 
     for (let i = 0; i < totalBatches; i++) {
         const fromDate = new Date(toDate.getTime() - (batchSize * 24 * 60 * 60 * 1000));
-        await  startBatch(fromDate.toISOString().split('T')[0], toDate.toISOString().split('T')[0]);
+        await startBatch(fromDate.toISOString().split('T')[0], toDate.toISOString().split('T')[0]);
         toDate = fromDate;
 
         if (i < totalBatches - 1) {

@@ -55,6 +55,7 @@ const fetchAndProcessApplications = async () => {
                             id: application.id,
                         },
                         data: {
+                            sourceUtm:call.utmSource,
                             campaignUtm: call.utmCampaign,
                             termUtm: call.utmTerm,
                             mangoUtm: true

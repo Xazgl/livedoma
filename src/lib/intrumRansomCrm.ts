@@ -209,6 +209,11 @@ export async function sendIntrumCrmTildaRansom(
   params.append("params[request][fields][7][id]", "3667"); // доп поле 7
   params.append("params[request][fields][7][value]", "1"); //доп поле 7
 
+  if (doubleMessage) {
+    params.append("params[request][fields][8][id]", "5205"); // доп поле 8
+    params.append("params[request][fields][8][value]", "1"); //доп поле 8
+  }
+
   try {
     const postResponse = await axios.post(
       "http://jivemdoma.intrumnet.com:81/sharedapi/applications/addCustomer",

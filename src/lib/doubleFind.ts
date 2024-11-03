@@ -41,34 +41,4 @@ export async function doubleFind(phone: string) {
   }
 }
 
-// export async function doubleFind(phone: string) {
-
-//   const doubleMessageOne = await db.tilda.findFirst({
-//     where: {
-//       phone: phone,
-//     },
-//     orderBy: {
-//       createdAt: 'desc',
-//     },
-//   });
-
-//   const doubleMessageTwo = await db.wazzup.findFirst({
-//     where: {
-//       phone: phone,
-//     },
-//     orderBy: {
-//       createdAt: 'desc',
-//     },
-//   });
-
-//   console.log({doubleMessageOne:doubleMessageOne,doubleMessageTwo:doubleMessageTwo  })
-  
-//   if(!doubleMessageOne && !doubleMessageTwo) {
-//     return false;
-//   } else {
-//     return true;
-//   }
-
-// }
-
 

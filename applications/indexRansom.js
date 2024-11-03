@@ -89,58 +89,62 @@ async function start() {
       const phone = typeof phoneValue === 'string' ? phoneValue : await findPhone(application.customer_id);
 
       console.log(getField(application.fields, "4629"))
-      if (existingSale) {
-        // Если сделка существует, обновляем ее поля
-        return await db.constructionApplications.update({
-          where: {
-            id: existingSale.id
-          },
-          data: {
-            idApplicationIntrum: application.id,
-            translator: determineTranslator(application.request_name),
-            // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
-            responsibleMain: responsibleMain,
-            status: translateStatus(application.status),
-            typeApplication:'Прием объекта Срочный Выкуп',
-            contactedClient: getField(application.fields, "5069"),
-            campaignUtm: getField(application.fields, "5150")? getField(application.fields, "5150") : '',
-            termUtm: getField(application.fields, "5152")? getField(application.fields, "5152") : '',
-            nextAction: getField(application.fields, "1404"),
-            timecallCenter: getField(application.fields, "4630"), //Сколько заявка была в обработке у рекламы.
-            timesaletCenter: getField(application.fields, "4629"), // Время + дата размещения в рекламе
-            dateFirstContact: getField(application.fields, "1327"), // Передача в отдел рекламы
-            phone: phone,
-            url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
-            comment: await commentArr(application.id),
-            typeApplicationCrm: "Срочный выкуп",
-            createdAtCrm: application.date_create,
-            createdAt: new Date(`${application.date_create}`)
-          },
-        });
-      } else {
-        return await db.constructionApplications.create({
-          data: {
-            idApplicationIntrum: application.id,
-            translator: determineTranslator(application.request_name),
-            // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
-            responsibleMain: responsibleMain,
-            status: translateStatus(application.status),
-            typeApplication:'Прием объекта Срочный Выкуп',
-            contactedClient: getField(application.fields, "5069"),
-            campaignUtm: getField(application.fields, "5150")? getField(application.fields, "5150") : '',
-            termUtm: getField(application.fields, "5152")? getField(application.fields, "5152") : '',
-            nextAction: getField(application.fields, "1404"),
-            timecallCenter: getField(application.fields, "4630"), //Сколько заявка была в обработке у рекламы.
-            timesaletCenter: getField(application.fields, "4629"), // Время + дата размещения в рекламе
-            dateFirstContact: getField(application.fields, "1327"), // Передача в отдел рекламы
-            phone: phone,
-            url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
-            comment: await commentArr(application.id),
-            typeApplicationCrm: "Срочный выкуп",
-            createdAtCrm: application.date_create,
-            createdAt: new Date(`${application.date_create}`)
-          },
-        });
+
+      if (getField(application.fields, "5205") !== '1' && getField(application.fields, "5205") !== 'Да' &&
+        getField(application.fields, "5205") !== true) {
+        if (existingSale) {
+          // Если сделка существует, обновляем ее поля
+          return await db.constructionApplications.update({
+            where: {
+              id: existingSale.id
+            },
+            data: {
+              idApplicationIntrum: application.id,
+              translator: determineTranslator(application.request_name),
+              // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
+              responsibleMain: responsibleMain,
+              status: translateStatus(application.status),
+              typeApplication: 'Прием объекта Срочный Выкуп',
+              contactedClient: getField(application.fields, "5069"),
+              campaignUtm: getField(application.fields, "5150") ? getField(application.fields, "5150") : '',
+              termUtm: getField(application.fields, "5152") ? getField(application.fields, "5152") : '',
+              nextAction: getField(application.fields, "1404"),
+              timecallCenter: getField(application.fields, "4630"), //Сколько заявка была в обработке у рекламы.
+              timesaletCenter: getField(application.fields, "4629"), // Время + дата размещения в рекламе
+              dateFirstContact: getField(application.fields, "1327"), // Передача в отдел рекламы
+              phone: phone,
+              url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
+              comment: await commentArr(application.id),
+              typeApplicationCrm: "Срочный выкуп",
+              createdAtCrm: application.date_create,
+              createdAt: new Date(`${application.date_create}`)
+            },
+          });
+        } else {
+          return await db.constructionApplications.create({
+            data: {
+              idApplicationIntrum: application.id,
+              translator: determineTranslator(application.request_name),
+              // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
+              responsibleMain: responsibleMain,
+              status: translateStatus(application.status),
+              typeApplication: 'Прием объекта Срочный Выкуп',
+              contactedClient: getField(application.fields, "5069"),
+              campaignUtm: getField(application.fields, "5150") ? getField(application.fields, "5150") : '',
+              termUtm: getField(application.fields, "5152") ? getField(application.fields, "5152") : '',
+              nextAction: getField(application.fields, "1404"),
+              timecallCenter: getField(application.fields, "4630"), //Сколько заявка была в обработке у рекламы.
+              timesaletCenter: getField(application.fields, "4629"), // Время + дата размещения в рекламе
+              dateFirstContact: getField(application.fields, "1327"), // Передача в отдел рекламы
+              phone: phone,
+              url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
+              comment: await commentArr(application.id),
+              typeApplicationCrm: "Срочный выкуп",
+              createdAtCrm: application.date_create,
+              createdAt: new Date(`${application.date_create}`)
+            },
+          });
+        }
       }
     }));
 

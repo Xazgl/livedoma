@@ -95,7 +95,7 @@ async function start() {
             typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
             contactedClient: getField(application.fields, "5069"),
             campaignUtm: existingSale.mangoUtm? existingSale.campaignUtm : getField(application.fields, "5147")? getField(application.fields, "5147") : 'нету',
-            sourceUtm: getField(application.fields, "5185")? getField(application.fields, "5185") : 'нету',
+            sourceUtm: existingSale.mangoUtm? existingSale.sourceUtm: getField(application.fields, "5185")? getField(application.fields, "5185") : 'нету',
             termUtm: existingSale.mangoUtm? existingSale.termUtm : getField(application.fields, "5148")? getField(application.fields, "5148") : 'нету',
             prodinfo: getField(application.fields, "5169")?  getField(application.fields, "5169") :'нету',
             nextAction: getField(application.fields, "1404"),
