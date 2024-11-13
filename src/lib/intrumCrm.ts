@@ -62,6 +62,8 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
     { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
     { name: "Трофимов", id: "1140" },
+    { name: "Петрухин*", id: "2417" },
+    { name: "Ломакин*", id: "2447" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
     // { name: "Трубачева", id: "1460" },
@@ -244,6 +246,8 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
     { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
     { name: "Трофимов", id: "1140" },
+    { name: "Петрухин*", id: "2417" },
+    { name: "Ломакин*", id: "2447" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
     // { name: "Трубачева", id: "1460" },
@@ -308,7 +312,7 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
-  params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
+  params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
 
   //доп поля заявки

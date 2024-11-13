@@ -23,6 +23,7 @@
     "start4": "node xmlTasks/indexforDownloadResize.js",
     "start5": "node applications/index.js",
     "start17": "node applications/mango.js",
+    "magoJddSendCrm":"node applications/sendMangoUtmInCrm.js",
     "start12": "node applications/indexSansara.js",
     "start13": "node applications/indexRansom.js",
     "start18": "node applications/updateSansara.js",
