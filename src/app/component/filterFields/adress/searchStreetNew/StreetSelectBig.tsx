@@ -13,13 +13,14 @@ import "./style.css";
 import { Props } from "./type";
 import { getStyles } from "./style";
 import { createFilterOptions, useSyncStreetValue, useThemeEffect } from "./utils";
+import React from "react";
 
-export function StreetSelectBig({
+const StreetSelectBig: React.FC<Props> = ({
   filteblackProps,
   currentFilter,
   setCurrentFilter,
   resetPageAndReloadData,
-}: Props) {
+}) => {
   const { theme } = useTheme();
   const styles = getStyles(theme);
   const [inputValue, setInputValue] = useState<string>("");
@@ -82,6 +83,8 @@ export function StreetSelectBig({
     />
   );
 }
+
+export default React.memo(StreetSelectBig);
 
 // export function StreetSelectBig({
 //   filteblackProps,

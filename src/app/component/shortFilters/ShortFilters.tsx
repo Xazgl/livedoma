@@ -1,36 +1,7 @@
-import { RootState } from "@/app/redux/store";
-import { useTheme } from "../provider/ThemeProvider";
-import { useSelector } from "react-redux";
-import {
-  allObjects,
-  FilteblackProps,
-  FilterUserOptions,
-} from "../../../../@types/dto";
-import { Dispatch, SetStateAction } from "react";
-import { ObjectIntrum } from "../../../../prisma";
 import React from "react";
-import { StreetSelectBig } from "../filterFields/adress/searchStreetNew/StreetSelectBig";
+import StreetSelectBig from "../filterFields/adress/searchStreetNew/StreetSelectBig";
+import { Props } from "./type";
 
-type Props = {
-  objects: allObjects;
-  currentFilter: FilterUserOptions;
-  setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
-  setFilteredHouse: Dispatch<SetStateAction<ObjectIntrum[]>>;
-  filteredHouse: ObjectIntrum[];
-  maxPrice: number;
-  minPrice: number;
-  setMinPrice: Dispatch<SetStateAction<number>>;
-  setMaxPrice: Dispatch<SetStateAction<number>>;
-  filteblackProps: FilteblackProps;
-  valueSliderPrice: [number, number];
-  setValueSliderPrice: Dispatch<SetStateAction<[number, number]>>;
-  countObjects: number;
-  resetPageAndReloadData: () => void;
-  isVisibleFilter: boolean;
-  setIsVisibleFilter: Dispatch<SetStateAction<boolean>>;
-};
-
-const filterRow = "flex w-full p-4 h-auto ";
 
 function ShortFilters({
   filteblackProps,
@@ -49,8 +20,6 @@ function ShortFilters({
   isVisibleFilter,
   setIsVisibleFilter,
 }: Props) {
-  const { favorites } = useSelector((state: RootState) => state.favorite);
-  const { theme } = useTheme();
 
   const toggleVisibility = () => {
     setIsVisibleFilter(!isVisibleFilter);
