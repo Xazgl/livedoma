@@ -3,6 +3,7 @@ import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { FilterUserOptions } from "../../../../@types/dto";
 import { useTheme } from "../provider/ThemeProvider";
+import { apiMapKey } from "@/lib/apiKeyMap";
 
 type YandexMapProps = {
   mapObj: ObjectIntrum[] | undefined;
@@ -19,7 +20,7 @@ export default function ObjectsMap({ mapObj, currentFilter }: YandexMapProps) {
   useEffect(() => {
     async function fetchCoordinates(object: ObjectIntrum) {
       const geoResponse = await fetch(
-        `https://geocode-maps.yandex.ru/1.x/?apikey=fab78cee-5042-4e98-92f2-76c2bc8bbb17&format=json&geocode=${object.city},${object.street}`
+        `https://geocode-maps.yandex.ru/1.x/?apikey=${apiMapKey}&format=json&geocode=${object.city},${object.street}`
       );
       const geoData = await geoResponse.json();
       const geoObject =

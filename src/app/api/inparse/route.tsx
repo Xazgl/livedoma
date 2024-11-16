@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
+import { apiMapKey } from "@/lib/apiKeyMap";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         // Делаем запрос к API Яндекс.Карт для получения координат
         const geoResponse = await fetch(
-          `https://geocode-maps.yandex.ru/1.x/?apikey=fab78cee-5042-4e98-92f2-76c2bc8bbb17&format=json&geocode=Волгоград,${address}`
+          `https://geocode-maps.yandex.ru/1.x/?apikey=${apiMapKey}&format=json&geocode=Волгоград,${address}`
         );
         const geoData = await geoResponse.json();
         

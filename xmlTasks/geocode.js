@@ -1,7 +1,7 @@
 const axios = require('axios').default
 
 async function getDistrictFromAddress(address) {
-    const apiKey = 'fab78cee-5042-4e98-92f2-76c2bc8bbb17';
+    const apiKey = 'cec34cf8-8380-4078-b0f0-b2437defbe32';
     const geocodeUrl = `https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&format=json&geocode=${encodeURIComponent(address)}`;
 
     try {
