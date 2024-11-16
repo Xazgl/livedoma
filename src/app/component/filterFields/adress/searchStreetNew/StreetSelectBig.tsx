@@ -12,7 +12,7 @@ import { useTheme } from "../../../provider/ThemeProvider";
 import "./style.css";
 import { Props } from "./type";
 import { getStyles } from "./style";
-
+import { createFilterOptions, useSyncStreetValue, useThemeEffect } from "./utils";
 
 export function StreetSelectBig({
   filteblackProps,
@@ -21,31 +21,15 @@ export function StreetSelectBig({
   resetPageAndReloadData,
 }: Props) {
   const { theme } = useTheme();
-  const styles = getStyles(theme); 
+  const styles = getStyles(theme);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
-  // Синхронизация выбранного значения из currentFilter
-  useEffect(() => {
-    if (currentFilter.street && currentFilter.street[0]) {
-      const streetValue = currentFilter.street[0].trim();
-      setSelectedValue(streetValue);
-      setInputValue(streetValue);
-    }
-  }, [currentFilter.street]);
+  // Подключение хука для синхронизации значения улицы
+  useSyncStreetValue(currentFilter.street, setSelectedValue, setInputValue);
 
-  // Управление темой
-  useEffect(() => {
-    const body = document.body;
-    if (theme === "dark") {
-      body.classList.add("dark-mode");
-    } else {
-      body.classList.remove("dark-mode");
-    }
-    return () => {
-      body.classList.remove("dark-mode");
-    };
-  }, [theme]);
+  // Подключение хука для управления темой
+  useThemeEffect(theme);
 
   const handleChange = (event: React.ChangeEvent<{}>, value: string | null) => {
     const trimmedValue = value ? value.trim() : null;
@@ -61,28 +45,14 @@ export function StreetSelectBig({
     setInputValue(value);
   };
 
+  // Использование функции для создания фильтра
   const filterOptions = useMemo(() => {
-    return (options: string[], state: FilterOptionsState<string>) => {
-      const { inputValue } = state;
-      const filtered = options.filter((option) =>
-        option.toLowerCase().includes(inputValue.toLowerCase())
-      );
-
-      if (inputValue && !filtered.includes(inputValue)) {
-        filtered.unshift(inputValue);
-      }
-
-      return filtered;
-    };
+    return createFilterOptions(filteblackProps.streets || []);
   }, [filteblackProps.streets]);
 
-  console.log()
-
-
-
   const renderInput = (params: AutocompleteRenderInputParams) => (
-    <TextField 
-      {...params} 
+    <TextField
+      {...params}
       sx={styles.textField}
       label={
         <span className={` ${theme === "dark" ? "text-white" : "text-black"}`}>
@@ -95,7 +65,7 @@ export function StreetSelectBig({
 
   return (
     <Autocomplete
-     sx={styles.autocomplete}
+      sx={styles.autocomplete}
       options={filteblackProps.streets || []}
       value={selectedValue}
       onChange={handleChange}
