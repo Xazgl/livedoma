@@ -9,7 +9,7 @@ import {
 import { Dispatch, SetStateAction } from "react";
 import { ObjectIntrum } from "../../../../prisma";
 import React from "react";
-import { StreetSelectBig } from "../filterFields/adress/StreetSelectBig";
+import { StreetSelectBig } from "../filterFields/adress/searchStreetNew/StreetSelectBig";
 
 type Props = {
   objects: allObjects;

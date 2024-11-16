@@ -6,18 +6,14 @@ import {
   AutocompleteRenderInputParams,
   FilterOptionsState,
 } from "@mui/material";
-import { FilteblackProps, FilterUserOptions } from "../../../../../@types/dto";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { useTheme } from "../../provider/ThemeProvider";
+import { useTheme } from "../../../provider/ThemeProvider";
 import "./style.css";
+import { Props } from "./type";
+import { getStyles } from "./style";
 
-type Props = {
-  filteblackProps: FilteblackProps;
-  currentFilter: FilterUserOptions;
-  setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
-  resetPageAndReloadData: () => void;
-};
+
 export function StreetSelectBig({
   filteblackProps,
   currentFilter,
@@ -25,6 +21,7 @@ export function StreetSelectBig({
   resetPageAndReloadData,
 }: Props) {
   const { theme } = useTheme();
+  const styles = getStyles(theme); 
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
@@ -86,31 +83,7 @@ export function StreetSelectBig({
   const renderInput = (params: AutocompleteRenderInputParams) => (
     <TextField 
       {...params} 
-      sx={{
-        color: theme === "dark" ? "white" : "black",
-        "& .MuiInputBase-root": {
-          borderRadius: "5px",
-          bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-          color: theme === "dark" ? "white" : "black",
-        },
-        "& .MuiInputBase-input": {
-          color: theme === "dark" ? "white" : "black",
-        },
-        "& .MuiInputLabel-root": {
-          color: theme === "dark" ? "white" : "black",
-        },
-        "& .MuiOutlinedInput-root": {
-          "& fieldset": {
-            borderColor: theme === "dark" ? "#e5e7ebb0" : "#3a3f467d",
-          },
-          "&:hover fieldset": {
-            borderColor: theme === "dark" ? "white" : "#3a3f4635",
-          },
-          "&.Mui-focused fieldset": {
-            borderColor: theme === "dark" ? "white" : "#3a3f4635",
-          },
-        },
-      }}
+      sx={styles.textField}
       label={
         <span className={` ${theme === "dark" ? "text-white" : "text-black"}`}>
           <SearchIcon sx={{ color: theme === "dark" ? "white" : "black" }} />{" "}
@@ -122,30 +95,7 @@ export function StreetSelectBig({
 
   return (
     <Autocomplete
-      sx={{
-        borderRadius:'10px',
-        width: "100%",
-        border: "none",
-        bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-        color: theme === "dark" ? "white" : "black",
-        "& .MuiAutocomplete-popupIndicator": {
-          display: "none",
-        },
-        "& .MuiAutocomplete-paper": {
-          maxHeight: "50px !important",
-          overflowY: "auto",
-        },
-        "& .MuiAutocomplete-listbox": {
-          maxHeight: "50px !important",
-          overflowY: "auto",
-        },
-        "& .MuiAutocomplete-clearIndicator": {
-          color: theme === "dark" ? "white" : "black",
-        },
-        "& .MuiAutocomplete-noOptions": {
-          color: theme === "dark" ? "white" : "black",
-        },
-      }}
+     sx={styles.autocomplete}
       options={filteblackProps.streets || []}
       value={selectedValue}
       onChange={handleChange}
