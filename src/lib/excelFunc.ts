@@ -162,7 +162,8 @@ export async function generateExcel2(applications: constructionApplications[]) {
   ): string {
     if (translator  && translator !== 'WhatsApp'  && translator !== 'Авито' 
       && translator !== 'ДомКлик' && translator !== 'Яндекс Услуги'
-      && translator !== 'Циан'
+      && translator !== 'Циан' && translator !== 'рекомендация'
+      && translator !== 'Сбербанк'
     ) {
       if(sourceUtm == "TG" || sourceUtm == "vk"){ 
         return 'Наш сайт';
@@ -584,7 +585,9 @@ export async function generateExcel5(applications: constructionApplications[]) {
     if (translator  && translator !== 'WhatsApp'  && translator !== 'Avito' 
       && translator !== 'Дом Клик' && translator !== 'yandex'
       && translator !== 'Циан' && translator !== 'VK' && translator !== 'забор Сансары'
-      && translator !== 'Telegram Сансара'
+      && translator !== 'Telegram Сансара' && translator !== 'Мир квартир'
+      && translator !== 'М2 ВТБ' && translator !== 'jivem-doma.ru'
+      && translator !== 'Сайт Сансара'
     ) {
       if(sourceUtm == "TG" || sourceUtm == "vk"){ 
         return 'Сайт Сансара';

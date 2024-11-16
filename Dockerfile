@@ -1,19 +1,19 @@
 # multy stage dockerfile
-FROM node:lts-alpine as node_modules_dev
+FROM node:18-alpine as node_modules_dev
 # Create app directory
 WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
-RUN --mount=type=cache,target=~/.npm npm ci
+RUN --mount=type=cache,target=~/.npm npm ci --verbose
 
-FROM node:lts-alpine as node_modules_prod
+FROM node:18-alpine as node_modules_prod
 # Create app directory
 WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
-RUN --mount=type=cache,target=~/.npm npm ci --omit=dev
+RUN --mount=type=cache,target=~/.npm npm ci --omit=dev --verbose
 
-FROM node:lts-alpine AS builder
+FROM node:18-alpine AS builder
 
 # Create app directory
 WORKDIR /app
@@ -35,7 +35,7 @@ RUN --mount=type=cache,target=/app/.next/cache --mount=type=cache,target=~/.npm 
 
 # RUN npx prisma migrate deploy
 
-FROM node:lts-alpine 
+FROM node:18-alpine
 # RUN imagemagick with format
 RUN apk add --update --no-cache imagemagick
 RUN apk add --update --no-cache jpeg
@@ -99,6 +99,5 @@ RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insuran
 
 RUN (crontab -u $(whoami) -l; echo "*/90 * * * * /usr/local/bin/node /app/inparse/index.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/inparse/send.js" ) | crontab -u $(whoami) -
-
 
 EXPOSE 3000

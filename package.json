@@ -23,7 +23,7 @@
     "start4": "node xmlTasks/indexforDownloadResize.js",
     "start5": "node applications/index.js",
     "start17": "node applications/mango.js",
-    "magoJddSendCrm":"node applications/sendMangoUtmInCrm.js",
+    "magoJddSendCrm": "node applications/sendMangoUtmInCrm.js",
     "start12": "node applications/indexSansara.js",
     "start13": "node applications/indexRansom.js",
     "start18": "node applications/updateSansara.js",
@@ -50,7 +50,6 @@
     "@types/crypto-js": "^4.2.2",
     "@types/react-slick": "^0.23.13",
     "@types/xml2js": "^0.4.14",
-    "@types/xmldom": "^0.1.34",
     "@uiw/react-md-editor": "^4.0.4",
     "bcryptjs": "^2.4.3",
     "classnames": "^2.3.2",
@@ -82,7 +81,6 @@
     "sharp": "^0.33.4",
     "slick-carousel": "^1.8.1",
     "xlsx": "^0.18.5",
-    "xmldom": "^0.6.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

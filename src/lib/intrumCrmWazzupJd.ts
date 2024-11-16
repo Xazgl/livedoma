@@ -1,8 +1,10 @@
 import { Wazzup } from "@prisma/client";
 import axios from "axios";
 
-export default async function sendIntrumCrmWazzupJD(message: Wazzup, double: boolean) {
-
+export default async function sendIntrumCrmWazzupJD(
+  message: Wazzup,
+  double: boolean
+) {
   const doubleMessage = double;
 
   console.log(doubleMessage);
@@ -51,11 +53,12 @@ export default async function sendIntrumCrmWazzupJD(message: Wazzup, double: boo
   } else {
     params.append(
       "params[request][employee_id]",
-      message.managerId == "Ошибка в выборе менеджера"
-        ? managerIdRandom
-        : message.managerId
-        ? message.managerId
-        : managerIdRandom
+      "1676"
+      // message.managerId == "Ошибка в выборе менеджера"
+      //   ? managerIdRandom
+      //   : message.managerId
+      //   ? message.managerId
+      //   : managerIdRandom
     ); //id главного отв заявки
   }
   //колцентр 309 , 1584, 1693, 2220, 2146
@@ -80,6 +83,9 @@ export default async function sendIntrumCrmWazzupJD(message: Wazzup, double: boo
 
   params.append("params[request][fields][3][id]", "5218"); // доп поле 4
   params.append("params[request][fields][3][value]", "Указать стадию"); //доп поле 4
+
+  params.append("params[request][fields][4][id]", "5221"); // доп поле 5
+  params.append("params[request][fields][4][value]", "1"); //доп поле 5
 
   // params.append("params[request][fields][4][id]", "5079"); // доп поле 5
   // params.append("params[request][fields][4][value]", "Не заполнено"); //доп поле 5
@@ -106,4 +112,3 @@ export default async function sendIntrumCrmWazzupJD(message: Wazzup, double: boo
     });
   }
 }
-
