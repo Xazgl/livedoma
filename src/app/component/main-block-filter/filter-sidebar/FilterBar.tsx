@@ -11,6 +11,10 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Link,
   Typography,
 } from "@mui/material";
@@ -72,6 +76,10 @@ export default function FilterMobile({
   const { favorites } = useSelector((state: RootState) => state.favorite);
   const { theme } = useTheme();
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false)
   
   //функция для сброса фильтров
   function resetFilteblackCars() {
@@ -105,42 +113,20 @@ export default function FilterMobile({
     };
 
   return (
-    <aside className="flex  md:hidden  w-full  justify-center  sticky  top-0  left-0  z-[999]">
-      <div className="flex  flex-col  items-center  w-[90%]  h-[auto]  ">
-        <Accordion
-          expanded={expanded === "panel1"}
-          onChange={handleChangeBar("panel1")}
-          sx={{
-            backgroundColor: theme === "dark" ? "#445465fc" : "#131313f0",
-            color: "white",
-            margin: "1px",
-            width: "100%",
-            position: "relative",
-          }}
-        >
-          <AccordionSummary
-            expandIcon={<TuneIcon sx={{ color: "white", width: "40px" }} />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
-          >
-            <h1 className="flex w-[100%] text-[14px] s:text-[16px]">
-              Параметры поиска
-              { favorites  &&  favorites .length > 0 ? (
-                <div className="flex pl-[10%] md:pl-[50%] items-center gap-[3px]">
-                  <FavoriteBorderIcon sx={{ fontSize: "18px" }} />{" "}
-                  { favorites .length}
-                </div>
-              ) : (
-                ""
-              )}
-            </h1>
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{ backgroundColor: "#f2f2f21a", width: "100%" }}
-            // sx={{zIndex:'999', backgroundColor: "#f2f2f21a", width: "100%",position:`${expanded ? ' absolute' : 'relative'}`    }}
+    <aside className="flex  w-full  justify-center ">
+      <div className="flex  flex-col  items-center   w-full    h-[auto] p-[7px]">
+      <Button onClick={handleOpen} variant="contained" startIcon={<TuneIcon />} sx={{ marginBottom: 2 }}>
+        Все 
+      </Button>
+      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
+        <DialogTitle>Параметры поиска</DialogTitle>
+        <DialogContent>
+          <div
+            className="flex flex-col items-center"
+            style={{ maxHeight: '70vh', overflowY: 'auto' }}
           >
             <div
-              className={`flex  flex-col w-full  md:w-[20%]   items-center 
+              className={`flex  flex-col w-full    items-center 
                                     sticky  top-0  right-0  h-[70vh]  overflow-auto`}
               id={styles.aside}
             >
@@ -365,8 +351,9 @@ export default function FilterMobile({
                 )}
               </div>
             </div>
-          </AccordionDetails>
-        </Accordion>
+            </div>
+        </DialogContent>
+      </Dialog>
       </div>
     </aside>
   );

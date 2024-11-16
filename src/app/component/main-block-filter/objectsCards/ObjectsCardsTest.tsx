@@ -47,6 +47,7 @@ type Props = {
   currentFilter: FilterUserOptions;
   setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
   resetPageAndReloadData: () => void;
+  isVisibleFilter:boolean;
 };
 
 function ObjectsCardsTest({
@@ -59,6 +60,7 @@ function ObjectsCardsTest({
   currentFilter,
   setCurrentFilter,
   resetPageAndReloadData,
+  isVisibleFilter
 }: Props) {
   const [loadingImg, setLoadingImg] = useState(true);
   const { theme } = useTheme();
@@ -103,10 +105,18 @@ function ObjectsCardsTest({
     dispatch(deleteFavorite(id));
   };
 
+  isVisibleFilter
+
+  
+  const width = isVisibleFilter
+  ?"w-full md:w-[80%]":
+   "w-full md:w-[100%]"
+
   return (
     <main
       id={styles.main}
-      className={`flex w-full  md:w-[80%]   p-7   ${style} relative `}
+      style={{ transition: "all 0.5s" }}
+      className={`flex w-full  ${width}  p-7   ${style} relative `}
       ref={refCardsObjects}
     >
       {loading ? (

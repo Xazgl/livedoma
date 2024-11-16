@@ -29,10 +29,11 @@ import ObjectsMap from "../mapObject/objectsMap";
 import dynamic from "next/dynamic";
 import React from "react";
 import ObjectsCardsTest from "./objectsCards/ObjectsCardsTest";
+import ShortFilters from "../shortFilters/ShortFilters";
 
 // Динамический импорт компонентов фильтра
-const FilterMobile = dynamic(() => import('./filter-sidebar/FilterMobile'));
-const Filter = dynamic(() => import('./filter-sidebar/Filter'));
+const FilterMobile = dynamic(() => import("./filter-sidebar/FilterMobile"));
+const Filter = dynamic(() => import("./filter-sidebar/Filter"));
 
 type Props = {
   objects: ObjectIntrum[];
@@ -41,7 +42,7 @@ type Props = {
   priceMax: number;
 };
 
- function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
+function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
   const { theme } = useTheme();
   const refCardsObjects = useRef<HTMLDivElement>(null);
   const [isFirstRender, setIsFirstRender] = useState(true);
@@ -53,13 +54,19 @@ type Props = {
   );
   const [mapObj, setMapObj] = useState<ObjectIntrum[]>();
   const [minPrice, setMinPrice] = useState<number>(0);
-  const [maxPrice, setMaxPrice] = useState<number>(
-    priceMax
-  );
+  const [maxPrice, setMaxPrice] = useState<number>(priceMax);
   const [loading, setLoading] = useState<boolean>(true); // загрузка при фильтрации
   /////// Состояния для паганации
   const [currentPage, setCurrentPage] = useState(page); // текущая страница
   const [allPages, setAllPages] = useState<number>(pages); //Всего страниц
+
+  //Появление фильтра
+  const [isVisibleFilter, setIsVisibleFilter] = useState(false);
+
+  const toggleVisibility = () => {
+    setIsVisibleFilter(!isVisibleFilter);
+  };
+
   //search params url
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -119,31 +126,33 @@ type Props = {
     return filter;
   }, [searchParams]);
 
-
   useEffect(() => {
     if (isFirstRender) {
-      
       function handleResize() {
         if (window.innerWidth < 1100) {
-            setMobile(true);
-       } else if (window.innerWidth > 1100) {
-        setMobile(false);
-        }   
+          setMobile(true);
+        } else if (window.innerWidth > 1100) {
+          setMobile(false);
+        }
       }
 
-    window.addEventListener("resize", handleResize);
-    // Вызываем handleResize сразу при монтировании компонента
+      window.addEventListener("resize", handleResize);
+      // Вызываем handleResize сразу при монтировании компонента
 
       setCurrentFilter((prevFilterState) => {
         const newFilterState = { ...prevFilterState, ...filterFromParams };
-        if (JSON.stringify(prevFilterState) !== JSON.stringify(newFilterState)) {
+        if (
+          JSON.stringify(prevFilterState) !== JSON.stringify(newFilterState)
+        ) {
           return newFilterState;
         }
         return prevFilterState;
       });
 
       // Проверяем, совпадают ли параметры в currentFilter с URL и отправляем запрос
-      const urlParamsCount = Array.from(new URLSearchParams(searchParams).keys()).length;
+      const urlParamsCount = Array.from(
+        new URLSearchParams(searchParams).keys()
+      ).length;
       const currentFilterParamsCount = Object.keys(filterFromParams).length;
 
       if (urlParamsCount === currentFilterParamsCount) {
@@ -222,11 +231,11 @@ type Props = {
   }, [filterFromParams, isFirstRender]);
 
   //Загрузка при изменении фильтра и сброс страницы на 1
- useEffect(() => {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
   }, [currentFilter]);
 
   const resetPageAndReloadData = () => {
@@ -290,9 +299,9 @@ type Props = {
     );
   }, [currentFilter]);
 
-  
   useEffect(() => {
-    if (!isFirstRender) { // Логика для обычного обновления после первого рендера
+    if (!isFirstRender) {
+      // Логика для обычного обновления после первого рендера
       const params = new URLSearchParams();
 
       if (currentFilter.category) {
@@ -340,7 +349,10 @@ type Props = {
           params.append("floors", flr);
         });
       }
-      if (currentFilter.sortOrder && (!currentFilter.sortPrice || currentFilter.sortPrice.length === 0)) {
+      if (
+        currentFilter.sortOrder &&
+        (!currentFilter.sortPrice || currentFilter.sortPrice.length === 0)
+      ) {
         currentFilter.sortOrder.forEach((dateSort) => {
           params.append("sortOrder", dateSort);
         });
@@ -431,8 +443,6 @@ type Props = {
     sortPrice: string[];
   });
 
- 
-
   return (
     <div className="flex  flex-col  w-full  h-auto  justify-center">
       {currentPage == 1 && (
@@ -463,31 +473,51 @@ type Props = {
               </span>
             </h1>
           </div>
-          <ObjectsMap  currentFilter={currentFilter} mapObj={mapObj}/>
+          {/* <ObjectsMap currentFilter={currentFilter} mapObj={mapObj} /> */}
         </>
       )}
 
-      <section className="flex  flex-col  md:flex-row w-full  h-full  relative   mt-[50px] ">
-       {mobile  &&
-        <FilterMobile
-          objects={objects}
-          currentFilter={currentFilter}
-          setCurrentFilter={setCurrentFilter}
-          filteredHouse={filteredHouse}
-          setFilteredHouse={setFilteredHouse}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          setMinPrice={setMinPrice}
-          setMaxPrice={setMaxPrice}
-          filteblackProps={filteblackProps}
-          valueSliderPrice={valueSliderPrice}
-          setValueSliderPrice={setValueSliderPrice}
-          countObjects={countObjects}
-          resetPageAndReloadData={resetPageAndReloadData}
-        />
-       }
+      <ShortFilters
+        setIsVisibleFilter={setIsVisibleFilter}
+        isVisibleFilter={isVisibleFilter}
+        objects={objects}
+        currentFilter={currentFilter}
+        setCurrentFilter={setCurrentFilter}
+        filteredHouse={filteredHouse}
+        setFilteredHouse={setFilteredHouse}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        setMinPrice={setMinPrice}
+        setMaxPrice={setMaxPrice}
+        filteblackProps={filteblackProps}
+        valueSliderPrice={valueSliderPrice}
+        setValueSliderPrice={setValueSliderPrice}
+        countObjects={countObjects}
+        resetPageAndReloadData={resetPageAndReloadData}
+      />
+
+      <section className="flex  flex-col  md:flex-row md w-full  h-full  relative   mt-[50px] overflow-hidden">
+        {mobile && (
+          <FilterMobile
+            objects={objects}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+            filteredHouse={filteredHouse}
+            setFilteredHouse={setFilteredHouse}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            setMinPrice={setMinPrice}
+            setMaxPrice={setMaxPrice}
+            filteblackProps={filteblackProps}
+            valueSliderPrice={valueSliderPrice}
+            setValueSliderPrice={setValueSliderPrice}
+            countObjects={countObjects}
+            resetPageAndReloadData={resetPageAndReloadData}
+          />
+        )}
 
         <ObjectsCardsTest
+          isVisibleFilter={isVisibleFilter}
           allPages={allPages}
           currentPage={currentPage}
           loading={loading}
@@ -498,24 +528,25 @@ type Props = {
           currentFilter={currentFilter}
           setCurrentFilter={setCurrentFilter}
         />
-      {mobile == false  &&
-        <Filter
-          objects={objects}
-          currentFilter={currentFilter}
-          setCurrentFilter={setCurrentFilter}
-          filteredHouse={filteredHouse}
-          setFilteredHouse={setFilteredHouse}
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          setMinPrice={setMinPrice}
-          setMaxPrice={setMaxPrice}
-          filteblackProps={filteblackProps}
-          valueSliderPrice={valueSliderPrice}
-          setValueSliderPrice={setValueSliderPrice}
-          countObjects={countObjects}
-          resetPageAndReloadData={resetPageAndReloadData}
-        />
-      }
+        {mobile == false && (
+          <Filter
+            isVisibleFilter={isVisibleFilter}
+            objects={objects}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+            filteredHouse={filteredHouse}
+            setFilteredHouse={setFilteredHouse}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            setMinPrice={setMinPrice}
+            setMaxPrice={setMaxPrice}
+            filteblackProps={filteblackProps}
+            valueSliderPrice={valueSliderPrice}
+            setValueSliderPrice={setValueSliderPrice}
+            countObjects={countObjects}
+            resetPageAndReloadData={resetPageAndReloadData}
+          />
+        )}
       </section>
       <div className="hidden sm:flex">
         <PaginationRow
@@ -527,6 +558,5 @@ type Props = {
     </div>
   );
 }
-
 
 export default React.memo(ParentFilterBlock);

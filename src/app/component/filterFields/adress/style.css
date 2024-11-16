@@ -1,0 +1,98 @@
+.css-gdh49b-MuiAutocomplete-listbox {
+  max-height: 200px !important; 
+  overflow-y: auto !important; 
+  list-style: none; 
+  margin: 0; 
+  padding: 8px 0; 
+  scrollbar-gutter: stable both-edges; /* Убирает стрелки  скрола*/
+}
+
+/* .css-9e5uuu-MuiPaper-root-MuiAutocomplete-paper {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+} */
+
+/* Кастомный стиль для скроллбара */
+.css-gdh49b-MuiAutocomplete-listbox::-webkit-scrollbar {
+  width: 8px; /* Ширина скроллбара */
+}
+
+.css-gdh49b-MuiAutocomplete-listbox::-webkit-scrollbar-track {
+  border-radius: 4px; /* Закругляем трек */
+  background-color: rgba(255, 255, 255, 0.2); /* Цвет трека */
+}
+
+.css-gdh49b-MuiAutocomplete-listbox::-webkit-scrollbar-thumb {
+  border-radius: 10px; /* Закругляем ползунок */
+  background-color: rgba(58, 63, 70, 0.8); /* Цвет ползунка */
+}
+
+.css-gdh49b-MuiAutocomplete-listbox::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(58, 63, 70, 1); /* Цвет ползунка при наведении */
+}
+
+/* Стили для стандартных скроллбаров в Firefox */
+.css-gdh49b-MuiAutocomplete-listbox {
+  scrollbar-width: thin; /* Тонкий скроллбар */
+  scrollbar-color: rgba(58, 63, 70, 0.8) rgba(255, 255, 255, 0.2); /* Цвет ползунка и трека */
+}
+
+/* Для темной темы */
+body.dark-mode .css-gdh49b-MuiAutocomplete-listbox::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.1); /* Трек в темной теме */
+}
+
+body.dark-mode .css-gdh49b-MuiAutocomplete-listbox::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5); /* Ползунок в темной теме */
+}
+
+body.dark-mode .css-gdh49b-MuiAutocomplete-listbox::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.8); /* Ползунок при наведении */
+}
+
+/* Для Firefox в темной теме */
+body.dark-mode .css-gdh49b-MuiAutocomplete-listbox {
+  scrollbar-color: rgba(255, 255, 255, 0.5) rgba(58, 63, 70, 0.1);
+}
+
+.MuiPaper-root.MuiAutocomplete-paper {
+  background-color: #fff; /* Светлая тема */
+  margin-top: 3px;
+  border-radius: 10px;
+}
+  
+  /* Для тёмной темы */
+body.dark-mode .MuiPaper-root.MuiAutocomplete-paper {
+  background-color: #3a3f46c9 !important; /* Тёмная тема */
+  color:white;
+}
+
+
+/* Стили для текста "Нет вариантов" */
+body.dark-mode .MuiAutocomplete-noOptions {
+  color: white !important; 
+  background-color: #3a3f46c9; 
+  padding: 8px; 
+  font-size: 14px;
+}
+
+/* Светлая тема для текста "Нет вариантов" */
+.MuiAutocomplete-noOptions {
+  color: black !important; 
+  background-color: #fff; 
+  padding: 8px; 
+  font-size: 14px;
+}
+
+
+.MuiInputBase-root.MuiOutlinedInput-root {
+  border-radius: 20px !important;
+}
+
+
+.MuiAutocomplete-root.MuiAutocomplete-hasPopupIcon {
+  border-radius: 20px !important; 
+}
+
