@@ -217,6 +217,9 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append( "params[request][fields][10][value]",`${new Date().toISOString().split("T")[0]}`
   ); 
 
+  params.append("params[request][fields][13][id]", "5269"); // доп поле 12 Дата следующего действия
+  params.append( "params[request][fields][13][value]","1"); 
+
   try {
     const postResponse = await axios.post(
       "http://jivemdoma.intrumnet.com:81/sharedapi/applications/addCustomer",

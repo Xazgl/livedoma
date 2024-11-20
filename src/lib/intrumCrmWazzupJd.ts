@@ -87,6 +87,10 @@ export default async function sendIntrumCrmWazzupJD(
   params.append("params[request][fields][4][id]", "5221"); // доп поле 5
   params.append("params[request][fields][4][value]", "1"); //доп поле 5
 
+  params.append("params[request][fields][8][id]", "5272"); // доп поле 5
+  params.append("params[request][fields][8][value]", "1"); //доп поле 5
+
+
   // params.append("params[request][fields][4][id]", "5079"); // доп поле 5
   // params.append("params[request][fields][4][value]", "Не заполнено"); //доп поле 5
 

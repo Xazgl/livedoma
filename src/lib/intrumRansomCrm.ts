@@ -209,6 +209,9 @@ export async function sendIntrumCrmTildaRansom(
   params.append("params[request][fields][7][id]", "3667"); // доп поле 7
   params.append("params[request][fields][7][value]", "1"); //доп поле 7
 
+  params.append("params[request][fields][10][id]", "5271"); // доп поле 10
+  params.append("params[request][fields][10][value]", "1"); //доп поле 10
+
   if (doubleMessage) {
     params.append("params[request][fields][8][id]", "5205"); // доп поле 8
     params.append("params[request][fields][8][value]", "1"); //доп поле 8
