@@ -325,6 +325,7 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append(
     "params[request][fields][1][value]",
+    message.utm_source =='sayt_GD'? "Сайт Живем Дома" :
     message.utm_source =='vk' || message.utm_source =='TG' ? 'Наш сайт' : 
     message.utm_campaign ||
       message.utm_content ||
