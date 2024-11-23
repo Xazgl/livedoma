@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
-import { FilteblackProps, FilterUserOptions,    allObjects,} from "../../../../@types/dto";
-import { ObjectIntrum } from "../../../../prisma";
+import { FilteblackProps, FilterUserOptions,    allObjects,} from "../../../../../@types/dto";
+import { ObjectIntrum } from "../../../../../prisma";
 
 export type Props = {
   loading:boolean;

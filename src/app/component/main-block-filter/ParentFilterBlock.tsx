@@ -478,6 +478,8 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
       )}
 
       <ShortFilters
+        loading={loading}
+        theme={theme}
         setIsVisibleFilter={setIsVisibleFilter}
         isVisibleFilter={isVisibleFilter}
         objects={objects}

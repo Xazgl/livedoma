@@ -1,9 +1,12 @@
 import React from "react";
 import StreetSelectBig from "../filterFields/adress/searchStreetNew/StreetSelectBig";
 import { Props } from "./type";
-
+import { getClassFilterBox } from "./utils";
+import FilterContainer from "./filters/filter-container";
 
 function ShortFilters({
+  loading,
+  theme,
   filteblackProps,
   objects,
   currentFilter,
@@ -19,11 +22,8 @@ function ShortFilters({
   resetPageAndReloadData,
   isVisibleFilter,
   setIsVisibleFilter,
+  filteredHouse
 }: Props) {
-
-  const toggleVisibility = () => {
-    setIsVisibleFilter(!isVisibleFilter);
-  };
 
   return (
     <>
@@ -36,14 +36,26 @@ function ShortFilters({
             resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
-        <div className="flex flex-end w-[90%]">
-          <button
-            onClick={toggleVisibility}
-            className=" bg-blue-500 text-white rounded"
-          >
-            {isVisibleFilter ? "Скрыть фильтры" : "Показать фильтры"}
-          </button>
-        </div>
+        <FilterContainer
+         loading={loading}
+         theme={theme}
+         setIsVisibleFilter={setIsVisibleFilter}
+         isVisibleFilter={isVisibleFilter}
+         objects={objects}
+         currentFilter={currentFilter}
+         setCurrentFilter={setCurrentFilter}
+         filteredHouse={filteredHouse}
+         setFilteredHouse={setFilteredHouse}
+         minPrice={minPrice}
+         maxPrice={maxPrice}
+         setMinPrice={setMinPrice}
+         setMaxPrice={setMaxPrice}
+         filteblackProps={filteblackProps}
+         valueSliderPrice={valueSliderPrice}
+         setValueSliderPrice={setValueSliderPrice}
+         countObjects={countObjects}
+         resetPageAndReloadData={resetPageAndReloadData}
+        />
       </section>
     </>
   );
