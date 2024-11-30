@@ -295,6 +295,7 @@ model constructionApplications {
   createdAtCrm String?
 
   typeApplicationCrm String @default("ЖДД") // Тип заявки ЖДД или Сансара 
+  services String? @default("") // услуги
 
   mangoUtm Boolean? @default(false)
 

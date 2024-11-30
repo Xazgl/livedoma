@@ -396,6 +396,8 @@ const managers = [
   // { name: "Трубачева", id: "1460" },
   { name: "Бородина", id: "353" },
   { name: "Выходцева", id: "1944" },
+  { name: "Петрухин*", id: "2417" },
+  { name: "Ломакин*", id: "2447" },
 ];
 
 export async function managerFind() {

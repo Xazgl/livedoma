@@ -146,6 +146,8 @@ export async function generateExcel2(applications: constructionApplications[]) {
      { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
     { name: "Выходцева", id: "1944" },
+    { name: "Петрухин*", id: "2417" },
+    { name: "Ломакин*", id: "2447" },
   ];
 
   function findManager(id: string) {
@@ -187,6 +189,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
       ? findManager(appl.responsibleMain)
       : "",
     status: appl.status ? appl.status : "",
+    services: appl.services ? appl.services : "Строительство",
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
     desc: appl.desc ? appl.desc : "",
     typeApplication: appl.typeApplication ? appl.typeApplication : "",
@@ -438,6 +441,38 @@ export async function generateExcel2(applications: constructionApplications[]) {
     }
   });
 
+
+  // Фильтрация  по типу услуг
+  let applicationsByService: Record<string, constructionApplicationsExcel[]> = {};
+  applicationsNew.forEach((application) => {
+    const service = application.services || "Услуга не указана";
+    if (!applicationsByService[service]) {
+      applicationsByService[service] = [];
+    }
+    applicationsByService[service].push(application);
+  });
+
+  // Создание вкладок Excel для каждого типа услуги
+  Object.entries(applicationsByService).forEach(([service, data]) => {
+    const worksheet = workbook.addWorksheet(service);
+
+    // Добавление заголовков столбцов
+    let columns = columnsSetsApplication[1];
+    const russianColumns = columns.map((col) => col.headerName);
+    worksheet.addRow(russianColumns);
+
+    // Добавление данных в таблицу
+    data.forEach((application) => {
+      const row: Array<string | undefined> = [];
+      columns.forEach((col) => {
+        const value =
+          application[col.field as keyof constructionApplicationsExcel];
+        row.push(value?.toString());
+      });
+      worksheet.addRow(row);
+    });
+  });
+
   // Создание файла Excel
   const buffer = await workbook.xlsx.writeBuffer();
 
@@ -620,6 +655,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
         ),
       responsibleMain: appl.responsibleMain,
       status: appl.status ? appl.status : "",
+      services:'',
       postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
       desc: appl.desc ? appl.desc : "",
       typeApplication: appl.typeApplication ? appl.typeApplication : "",
@@ -988,6 +1024,7 @@ export async function generateExcel6(applications: constructionApplications[]) {
         //   : "наш сайт",
     responsibleMain: appl.responsibleMain,
     status: appl.status ? appl.status : "",
+    services:'',
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
     desc: appl.desc ? appl.desc : "",
     typeApplication: appl.typeApplication ? appl.typeApplication : "",
