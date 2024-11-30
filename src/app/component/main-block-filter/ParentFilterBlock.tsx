@@ -55,17 +55,13 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
   const [mapObj, setMapObj] = useState<ObjectIntrum[]>();
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(priceMax);
-  const [loading, setLoading] = useState<boolean>(true); // загрузка при фильтрации
+  const [loading, setLoading] = useState<boolean>(false); // загрузка при фильтрации
   /////// Состояния для паганации
   const [currentPage, setCurrentPage] = useState(page); // текущая страница
   const [allPages, setAllPages] = useState<number>(pages); //Всего страниц
 
   //Появление фильтра
   const [isVisibleFilter, setIsVisibleFilter] = useState(false);
-
-  const toggleVisibility = () => {
-    setIsVisibleFilter(!isVisibleFilter);
-  };
 
   //search params url
   const pathname = usePathname();
@@ -157,6 +153,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
 
       if (urlParamsCount === currentFilterParamsCount) {
         // Запрос при первом рендере
+        setLoading(true);
         const params = new URLSearchParams(searchParams);
         fetch("/api/objects/?" + params.toString())
           .then((res) => res.json())
@@ -178,8 +175,15 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
               companyNames: el.filter.companyName,
               price: [el.filter.minPrice, el.filter.maxPrice],
             }));
+          })
+          .catch((err) => {
+            console.error("Ошибка при загрузке данных:", err);
+          })
+          .finally(() => {
+            // Завершаем загрузку и отмечаем первый рендер завершенным
+            setLoading(false);
+            setIsFirstRender(false);
           });
-        setIsFirstRender(false); // Отмечаем, что первый рендер завершен
       }
       handleResize();
       // Убираем обработчик события при размонтировании компонента
@@ -189,10 +193,6 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
   };
 
   //Конкретные выбранные фильтры
@@ -230,20 +230,8 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
     }
   }, [filterFromParams, isFirstRender]);
 
-  //Загрузка при изменении фильтра и сброс страницы на 1
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-  }, [currentFilter]);
-
   const resetPageAndReloadData = () => {
-    setLoading(true);
     setCurrentPage(1);
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
   };
 
   const [valueSliderPrice, setValueSliderPrice] = useState<[number, number]>([
@@ -373,7 +361,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
       if (currentPage) {
         params.append("page", String(currentPage));
       }
-
+      setLoading(true)
       window.history.replaceState(null, "", `${pathname}?${params}`);
       // Выполняем запрос с текущими параметрами фильтра
       fetch("/api/objects/?" + params.toString())
@@ -396,6 +384,12 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
             companyNames: el.filter.companyName,
             price: [el.filter.minPrice, el.filter.maxPrice],
           }));
+        })
+        .catch((err) => {
+          console.error("Ошибка при загрузке данных:", err);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   }, [currentFilter, currentPage, isFirstRender]);

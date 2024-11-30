@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Skeleton from "@mui/material/Skeleton";
 import { useTheme } from "@/app/component/provider/ThemeProvider";

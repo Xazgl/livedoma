@@ -1,9 +1,9 @@
+"use client";
 import CityFilter from "../../../filterFields/adress/new/CitySelect";
 import FilterCategories from "../../../filterFields/categories/new/CategoriesCheckbox";
 import FilterRooms from "../../../filterFields/rooms/new/Rooms";
-import React  from "react";
+import React from "react";
 import { FilterConfigProps } from "./type";
-
 
 export const getFilterConfig = ({
   filteblackProps,
@@ -23,8 +23,8 @@ export const getFilterConfig = ({
           resetPageAndReloadData={resetPageAndReloadData}
         />
       ),
-      isVisible: filteblackProps.cities?.filter((cit) => cit.trim() !== "")
-        .length > 0,
+      isVisible:
+        filteblackProps.cities?.filter((cit) => cit.trim() !== "").length > 0,
     },
     {
       key: "category",
@@ -37,8 +37,9 @@ export const getFilterConfig = ({
           resetPageAndReloadData={resetPageAndReloadData}
         />
       ),
-      isVisible: filteblackProps.categories?.filter((categor) => categor.trim() !== "")
-        .length > 0,
+      isVisible:
+        filteblackProps.categories?.filter((categor) => categor.trim() !== "")
+          .length > 0,
     },
     {
       key: "rooms",

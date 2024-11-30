@@ -43,7 +43,7 @@ export const accordionContentStyles = (theme: string) => ({
   maxHeight: "150px",
   minWidth: "100%",
   overflowY: "auto",
-  bgcolor: checkTheme(theme, "#3a3f46c9", "rgba(255, 255, 255, .7)"),
+  bgcolor: checkTheme(theme, "#3a3f46", "rgba(255, 255, 255, .7)"),
   color: checkTheme(theme, "white", "black"),
   marginTop: "5px",
 });

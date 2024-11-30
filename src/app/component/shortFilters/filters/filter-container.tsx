@@ -1,9 +1,10 @@
+"use client";
 import { Props } from "./type";
 import { calculateFilterWidth, getClassFilterBox } from "../utils";
 import React, { useMemo } from "react";
 import { getFilterConfig } from "./firstRowFilter/first-row-filter";
 import SkeletonLoader from "./sketelot-filter";
-import FilterPrice from "../../filterFields/price/new/RangeSlider";
+import SecondFilterRow from "./secondRowFilter/second-row-filter";
 
 const FilterContainer = ({
   filteblackProps,
@@ -17,9 +18,11 @@ const FilterContainer = ({
   valueSliderPrice,
   setValueSliderPrice,
   setMinPrice,
-  setMaxPrice
+  setMaxPrice,
 }: Props) => {
   const classFilterBox = useMemo(() => getClassFilterBox(theme), [theme]);
+
+  console.log(loading)
 
   // Получаем конфигурацию фильтров
   const filtersFirstRow = useMemo(
@@ -45,6 +48,8 @@ const FilterContainer = ({
     [visibleFiltersFirstRow.length]
   );
 
+
+
   return (
     <div className={classFilterBox}>
       <div className={`flex w-[100%] justify-between`}>
@@ -62,17 +67,19 @@ const FilterContainer = ({
           ))
         )}
       </div>
-      <div className={`flex mt-[20px] w-[100%] justify-between`}>
-        <FilterPrice
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-          valueSliderPrice={valueSliderPrice}
-          setValueSliderPrice={setValueSliderPrice}
-          setMinPrice={setMinPrice}
-          setMaxPrice={setMaxPrice}
-          resetPageAndReloadData={resetPageAndReloadData}
-        />
-      </div>
+      <SecondFilterRow
+        loading={loading}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        valueSliderPrice={valueSliderPrice}
+        setValueSliderPrice={setValueSliderPrice}
+        setMinPrice={setMinPrice}
+        setMaxPrice={setMaxPrice}
+        resetPageAndReloadData={resetPageAndReloadData}
+        filteblackProps={filteblackProps}
+        currentFilter={currentFilter}
+        setCurrentFilter={setCurrentFilter}
+      />
     </div>
   );
 };

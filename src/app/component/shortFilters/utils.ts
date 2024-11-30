@@ -8,7 +8,7 @@ import { checkTheme } from "@/shared/utils";
  */
 export function getClassFilterBox(theme: string): string {
   return `
-      flex flex-col p-9 rounded-[20px] h-[300px] w-[90%] mt-[15px]
+      flex flex-col p-10 rounded-[20px] h-[300px] w-[90%] mt-[15px]
       ${checkTheme(
         theme,
         "bg-[#3a3f4635]", // Класс для тёмной темы
@@ -19,9 +19,9 @@ export function getClassFilterBox(theme: string): string {
 
 export function calculateFilterWidth(filterCount: number): string {
   if (filterCount === 3) {
-    return "33%";
+    return "32%";
   } else if (filterCount === 2) {
-    return "49%";
+    return "48%";
   } else {
     return "100%";
   }

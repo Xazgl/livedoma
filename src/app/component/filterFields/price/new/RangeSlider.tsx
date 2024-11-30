@@ -131,7 +131,7 @@ function FilterPrice({
           sx={{ fontSize: "14px", display: "flex", alignItems: "center" }}
         >
           <CurrencyRubleIcon style={{ marginRight: "8px", fontSize: "19px" }} />
-          {selectedPriceRange}
+          Цена
         </Typography>
         <ExpandMoreIcon
           sx={{
@@ -144,7 +144,7 @@ function FilterPrice({
       {/* Контент аккордеона */}
       {isExpanded && (
         <AccordionDetails sx={accordionContentStyles(theme)}>
-          <div className="flex w-full justify-between items-center">
+          <div className="flex w-full gap-[8px] items-center p-3">
             <TextField
               size="small"
               sx={commonTextFieldStyles}
