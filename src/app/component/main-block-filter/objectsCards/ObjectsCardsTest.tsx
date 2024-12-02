@@ -318,7 +318,7 @@ function ObjectsCardsTest({
                               label="Высота потолков"
                               value={`${
                                 object.ceilingHeight
-                                  ? parseInt(object.ceilingHeight)
+                                  ? object.ceilingHeight
                                   : ""
                               } м`}
                             />

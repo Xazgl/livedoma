@@ -35,7 +35,7 @@ function DescriptionObj({ object }: Props) {
           <PropertyInfo
             icon={size}
             label="Высота потолков"
-            value={object.ceilingHeight ? parseInt(object.ceilingHeight) : ""}
+            value={object.ceilingHeight ? object.ceilingHeight : ""}
           />
         )}
         {object.floor && object.floors && (

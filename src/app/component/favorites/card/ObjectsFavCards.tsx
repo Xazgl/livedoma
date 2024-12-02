@@ -244,7 +244,7 @@ export function ObjectsFavCards({ favArr }: Props) {
                                 label="Высота потолков"
                                 value={`${
                                   object.object.ceilingHeight
-                                    ? parseInt(object.object.ceilingHeight)
+                                    ? object.object.ceilingHeight
                                     : ""
                                 } м`}
                               />
