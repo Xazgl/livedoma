@@ -4,6 +4,8 @@ import { Message, MessagesResponse, crmAnswer } from "../../../../@types/dto";
 import sendIntrumCrm, { managerFind } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizeWazzupNumber } from "@/lib/phoneMask";
+import { determineProjectType, ProjectType } from "@/lib/wazzup";
+import sendIntrumCrmWazzupJD from "@/lib/intrumCrmWazzupJd";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -29,6 +31,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
               const phone = await normalizeWazzupNumber(message.chatId);
               const chatType = message.chatType ? message.chatType : "Нету";
               const text = message.text ? message.text : "Нету";
+
+              const projectType: ProjectType = await determineProjectType(text);
+              
               if (phone !== "Admin") {
                 try {
                   let double = await doubleFind(phone);
@@ -48,11 +53,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
                   });
 
                   if (double.within24Hours == false) {
-                    crmAnswer = await sendIntrumCrm(
-                      newContact,
-                      double.isDuplicate
-                    );
-                    console.log(crmAnswer);
+                    if (projectType == "ЖДД" || projectType == 'Не определено') {
+                      crmAnswer = await sendIntrumCrm(
+                        newContact,
+                        double.isDuplicate
+                      );
+                      console.log(crmAnswer);
+                    }
+
+                    if (projectType == "ЖД") {
+                      crmAnswer = await sendIntrumCrmWazzupJD(
+                        newContact,
+                        double.isDuplicate
+                      );
+                      console.log(crmAnswer);
+                    }
 
                     if (crmAnswer.status == "success") {
                       console.log(crmAnswer);

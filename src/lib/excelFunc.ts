@@ -146,6 +146,8 @@ export async function generateExcel2(applications: constructionApplications[]) {
      { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
     { name: "Выходцева", id: "1944" },
+    { name: "Петрухин*", id: "2417" },
+    { name: "Ломакин*", id: "2447" },
   ];
 
   function findManager(id: string) {
@@ -160,11 +162,15 @@ export async function generateExcel2(applications: constructionApplications[]) {
     termUtm?: string | null,
     translator?: string | null
   ): string {
-    if (translator  && translator !== 'WhatsApp') {
-      if(sourceUtm == "TG" || sourceUtm == "vk"){
+    if (translator  && translator !== 'WhatsApp'  && translator !== 'Авито' 
+      && translator !== 'ДомКлик' && translator !== 'Яндекс Услуги'
+      && translator !== 'Циан' && translator !== 'рекомендация'
+      && translator !== 'Сбербанк'
+    ) {
+      if(sourceUtm == "TG" || sourceUtm == "vk"){ 
         return 'Наш сайт';
       } else {
-      return sourceUtm || campaignUtm || termUtm ? "лендинг" : 'Наш сайт';
+        return (sourceUtm && sourceUtm !== 'нету')||  (campaignUtm && campaignUtm !== 'нету') || (termUtm && termUtm !== 'нету') ? "лендинг" : 'Наш сайт';
       }
     }
     return translator? translator  : "";
@@ -183,6 +189,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
       ? findManager(appl.responsibleMain)
       : "",
     status: appl.status ? appl.status : "",
+    services: appl.services ? appl.services : "Строительство",
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
     desc: appl.desc ? appl.desc : "",
     typeApplication: appl.typeApplication ? appl.typeApplication : "",
@@ -434,6 +441,38 @@ export async function generateExcel2(applications: constructionApplications[]) {
     }
   });
 
+
+  // Фильтрация  по типу услуг
+  let applicationsByService: Record<string, constructionApplicationsExcel[]> = {};
+  applicationsNew.forEach((application) => {
+    const service = application.services || "Услуга не указана";
+    if (!applicationsByService[service]) {
+      applicationsByService[service] = [];
+    }
+    applicationsByService[service].push(application);
+  });
+
+  // Создание вкладок Excel для каждого типа услуги
+  Object.entries(applicationsByService).forEach(([service, data]) => {
+    const worksheet = workbook.addWorksheet(service);
+
+    // Добавление заголовков столбцов
+    let columns = columnsSetsApplication[1];
+    const russianColumns = columns.map((col) => col.headerName);
+    worksheet.addRow(russianColumns);
+
+    // Добавление данных в таблицу
+    data.forEach((application) => {
+      const row: Array<string | undefined> = [];
+      columns.forEach((col) => {
+        const value =
+          application[col.field as keyof constructionApplicationsExcel];
+        row.push(value?.toString());
+      });
+      worksheet.addRow(row);
+    });
+  });
+
   // Создание файла Excel
   const buffer = await workbook.xlsx.writeBuffer();
 
@@ -572,6 +611,28 @@ export async function generateExcel3(transactions: Sales[]) {
 export async function generateExcel5(applications: constructionApplications[]) {
   const workbook = new ExcelJS.Workbook();
 
+  function getTranslatorSansara(
+    sourceUtm?: string | null,
+    campaignUtm?: string | null,
+    termUtm?: string | null,
+    translator?: string | null
+  ): string {
+    if (translator  && translator !== 'WhatsApp'  && translator !== 'Avito' 
+      && translator !== 'Дом Клик' && translator !== 'yandex'
+      && translator !== 'Циан' && translator !== 'VK' && translator !== 'забор Сансары'
+      && translator !== 'Telegram Сансара' && translator !== 'Мир квартир'
+      && translator !== 'М2 ВТБ' && translator !== 'jivem-doma.ru'
+      && translator !== 'Сайт Сансара'
+    ) {
+      if(sourceUtm == "TG" || sourceUtm == "vk"){ 
+        return 'Сайт Сансара';
+      } else {
+        return (sourceUtm && sourceUtm !== 'нету') || (campaignUtm && campaignUtm !== 'нету') || (termUtm && termUtm !== 'нету')   ? "Лендинг Сансара" : 'Сайт Сансара';
+      }
+    }
+    return translator? translator  : "";
+  }
+
   const applicationsNew = applications.map((appl) => {
     const hasUtm =
       appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
@@ -586,9 +647,15 @@ export async function generateExcel5(applications: constructionApplications[]) {
         //   : hasUtm
         //   ? "Лендинг Сансара"
         //   : "Сайт Сансара",
-        appl.sourceUtm =='TG' || appl.sourceUtm =='vk'? "Лендинг Сансара" :  hasUtm? "Лендинг Сансара" : "Сайт Сансара",
+         getTranslatorSansara(
+          appl.sourceUtm,
+          appl.campaignUtm,
+          appl.termUtm,
+          appl.translator
+        ),
       responsibleMain: appl.responsibleMain,
       status: appl.status ? appl.status : "",
+      services:'',
       postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
       desc: appl.desc ? appl.desc : "",
       typeApplication: appl.typeApplication ? appl.typeApplication : "",
@@ -957,6 +1024,7 @@ export async function generateExcel6(applications: constructionApplications[]) {
         //   : "наш сайт",
     responsibleMain: appl.responsibleMain,
     status: appl.status ? appl.status : "",
+    services:'',
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
     desc: appl.desc ? appl.desc : "",
     typeApplication: appl.typeApplication ? appl.typeApplication : "",

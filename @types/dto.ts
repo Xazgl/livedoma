@@ -389,6 +389,7 @@ export type constructionApplicationsExcel = {
   translator: string; //Источник
   responsibleMain: string | Promise<any>; //Главный отвественный
   status: string; //статус
+  services: string;
   postMeetingStage: string; //стадия после встречи
   desc: string; //описание
   typeApplication: string; //тип заявки

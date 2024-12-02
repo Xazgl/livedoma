@@ -159,7 +159,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
-  params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
+  params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
   params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
 
@@ -216,6 +216,9 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append("params[request][fields][10][id]", "1404"); // доп поле 11 Дата следующего действия
   params.append( "params[request][fields][10][value]",`${new Date().toISOString().split("T")[0]}`
   ); 
+
+  params.append("params[request][fields][13][id]", "5269"); // доп поле 12 Дата следующего действия
+  params.append( "params[request][fields][13][value]","1"); 
 
   try {
     const postResponse = await axios.post(

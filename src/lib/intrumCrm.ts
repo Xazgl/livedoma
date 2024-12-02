@@ -62,6 +62,8 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
     { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
     { name: "Трофимов", id: "1140" },
+    { name: "Петрухин*", id: "2417" },
+    { name: "Ломакин*", id: "2447" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
     // { name: "Трубачева", id: "1460" },
@@ -244,6 +246,8 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
     { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
     { name: "Трофимов", id: "1140" },
+    { name: "Петрухин*", id: "2417" },
+    { name: "Ломакин*", id: "2447" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
     // { name: "Трубачева", id: "1460" },
@@ -308,7 +312,7 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
-  params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
+  params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
 
   //доп поля заявки
@@ -321,6 +325,7 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append(
     "params[request][fields][1][value]",
+    message.utm_source =='sayt_GD'? "Сайт Живем Дома" :
     message.utm_source =='vk' || message.utm_source =='TG' ? 'Наш сайт' : 
     message.utm_campaign ||
       message.utm_content ||
@@ -360,6 +365,9 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][fields][7][id]", "4058"); // доп поле 8
   params.append("params[request][fields][7][value]", "Указать стадию"); //доп поле 8
 
+  params.append("params[request][fields][9][id]", "5268"); // доп поле 8
+  params.append("params[request][fields][9][value]", "1"); //доп поле 8
+
   try {
     const postResponse = await axios.post(
       "http://jivemdoma.intrumnet.com:81/sharedapi/applications/addCustomer",
@@ -388,6 +396,8 @@ const managers = [
   // { name: "Трубачева", id: "1460" },
   { name: "Бородина", id: "353" },
   { name: "Выходцева", id: "1944" },
+  { name: "Петрухин*", id: "2417" },
+  { name: "Ломакин*", id: "2447" },
 ];
 
 export async function managerFind() {

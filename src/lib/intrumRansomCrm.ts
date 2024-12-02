@@ -167,7 +167,7 @@ export async function sendIntrumCrmTildaRansom(
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
-  params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
+  params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
   params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
 
@@ -208,6 +208,9 @@ export async function sendIntrumCrmTildaRansom(
 
   params.append("params[request][fields][7][id]", "3667"); // доп поле 7
   params.append("params[request][fields][7][value]", "1"); //доп поле 7
+
+  params.append("params[request][fields][10][id]", "5271"); // доп поле 10
+  params.append("params[request][fields][10][value]", "1"); //доп поле 10
 
   if (doubleMessage) {
     params.append("params[request][fields][8][id]", "5205"); // доп поле 8
