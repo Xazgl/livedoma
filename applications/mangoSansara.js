@@ -20,27 +20,34 @@ const fetchAndProcessApplications = async () => {
                 gte: formattedPrevDate,
             },
             typeApplicationCrm: 'Сансара',
-            typeApplication: 'Звонок',
+            typeApplication: {
+                contains: 'звонок',
+            }
         },
         orderBy: {
             createdAt: 'asc',
         },
     });
 
-    if (applications.length === 0) return;
+    if (applications.length === 0) {
+        console.log('Заявки в БД не найдены');
+        return;
+    }
 
     const url = `https://widgets-api.mango-office.ru/v1/calltracking/33769/calls.json?dateStart=${formattedPrevDate}T23:59Z&dateEnd=${formattedDateCurrent}T23:59Z&access_token=31c1f4a7633e7411430f9917c068b11a0d661cf6`;
 
     try {
         const response = await axios.get(url);
         const callData = response.data;
+        console.log(callData);
+        console.log(applications);
 
         // Обрабатываем данные и сверяем номера телефонов
         for (const application of applications) {
             // Проходим по каждому звонку из callData
             for (const call of callData) {
                 // Сравниваем номера
-                console.log(application.phone , call.callerNumber )
+                console.log(application.phone, call.callerNumber)
                 if (String(application.phone) === String(call.callerNumber)) {
                     console.log('Совпадение найдено:', {
                         applicationPhone: application.phone,
@@ -55,7 +62,7 @@ const fetchAndProcessApplications = async () => {
                             id: application.id,
                         },
                         data: {
-                            sourceUtm:call.utmSource,
+                            sourceUtm: call.utmSource,
                             campaignUtm: call.utmCampaign,
                             termUtm: call.utmTerm,
                             mangoUtm: true
