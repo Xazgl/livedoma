@@ -49,7 +49,7 @@ const fetchAndProcessApplications = async () => {
                 // Сравниваем номера
                 console.log(application.phone, call.callerNumber)
                 if (String(application.phone) === String(call.callerNumber)) {
-                   const translator =  call.utmSource || call.utmSource ||  call.utmCampaign ||  call.utmTerm?  'Лендинг Сансара' : application.translator
+                   const translator =   application.utm_source !=='vk' || application.utm_source !=='TG' &&  call.utmSource || call.utmSource ||  call.utmCampaign ||  call.utmTerm?  'Лендинг Сансара' : application.translator
 
                     console.log('Совпадение найдено:', {
                         applicationPhone: application.phone,
