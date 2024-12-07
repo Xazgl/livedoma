@@ -1,7 +1,6 @@
 import React from "react";
 import StreetSelectBig from "../filterFields/adress/searchStreetNew/StreetSelectBig";
 import { Props } from "./type";
-import { getClassFilterBox } from "./utils";
 import FilterContainer from "./filters/filter-container";
 
 function ShortFilters({
@@ -27,7 +26,7 @@ function ShortFilters({
 
   return (
     <>
-      <section className="hidden md:flex flex-col w-full mt-[20px] items-center ">
+      <section className="flex flex-col w-full mt-[20px] items-center ">
         <div className="flex flex-end w-[90%] ">
           <StreetSelectBig
             filteblackProps={filteblackProps}

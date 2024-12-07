@@ -29,11 +29,10 @@ import ObjectsMap from "../mapObject/objectsMap";
 import dynamic from "next/dynamic";
 import React from "react";
 import ObjectsCardsTest from "./objectsCards/ObjectsCardsTest";
-import ShortFilters from "../shortFilters/ShortFilters";
 
 // Динамический импорт компонентов фильтра
 const FilterMobile = dynamic(() => import("./filter-sidebar/FilterMobile"));
-const Filter = dynamic(() => import("./filter-sidebar/Filter"));
+const ShortFilters = dynamic(() => import("../shortFilters/ShortFilters"));
 
 type Props = {
   objects: ObjectIntrum[];
@@ -361,7 +360,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
       if (currentPage) {
         params.append("page", String(currentPage));
       }
-      setLoading(true)
+      setLoading(true);
       window.history.replaceState(null, "", `${pathname}?${params}`);
       // Выполняем запрос с текущими параметрами фильтра
       fetch("/api/objects/?" + params.toString())
@@ -470,27 +469,28 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
           {/* <ObjectsMap currentFilter={currentFilter} mapObj={mapObj} /> */}
         </>
       )}
-
-      <ShortFilters
-        loading={loading}
-        theme={theme}
-        setIsVisibleFilter={setIsVisibleFilter}
-        isVisibleFilter={isVisibleFilter}
-        objects={objects}
-        currentFilter={currentFilter}
-        setCurrentFilter={setCurrentFilter}
-        filteredHouse={filteredHouse}
-        setFilteredHouse={setFilteredHouse}
-        minPrice={minPrice}
-        maxPrice={maxPrice}
-        setMinPrice={setMinPrice}
-        setMaxPrice={setMaxPrice}
-        filteblackProps={filteblackProps}
-        valueSliderPrice={valueSliderPrice}
-        setValueSliderPrice={setValueSliderPrice}
-        countObjects={countObjects}
-        resetPageAndReloadData={resetPageAndReloadData}
-      />
+      {mobile == false && (
+        <ShortFilters
+          loading={loading}
+          theme={theme}
+          setIsVisibleFilter={setIsVisibleFilter}
+          isVisibleFilter={isVisibleFilter}
+          objects={objects}
+          currentFilter={currentFilter}
+          setCurrentFilter={setCurrentFilter}
+          filteredHouse={filteredHouse}
+          setFilteredHouse={setFilteredHouse}
+          minPrice={minPrice}
+          maxPrice={maxPrice}
+          setMinPrice={setMinPrice}
+          setMaxPrice={setMaxPrice}
+          filteblackProps={filteblackProps}
+          valueSliderPrice={valueSliderPrice}
+          setValueSliderPrice={setValueSliderPrice}
+          countObjects={countObjects}
+          resetPageAndReloadData={resetPageAndReloadData}
+        />
+      )}
 
       <section className="flex  flex-col  md:flex-row md w-full  h-full  relative   mt-[50px] overflow-hidden">
         {mobile && (
@@ -524,7 +524,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
           currentFilter={currentFilter}
           setCurrentFilter={setCurrentFilter}
         />
-        {mobile == false && (
+        {/* {mobile == false && (
           <Filter
             isVisibleFilter={isVisibleFilter}
             objects={objects}
@@ -542,7 +542,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
             countObjects={countObjects}
             resetPageAndReloadData={resetPageAndReloadData}
           />
-        )}
+        )} */}
       </section>
       <div className="hidden sm:flex">
         <PaginationRow

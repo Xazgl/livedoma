@@ -7,6 +7,8 @@ import SkeletonLoader from "./sketelot-filter";
 import SecondFilterRow from "./secondRowFilter/second-row-filter";
 import FloorFilter from "@/app/component/filterFields/floor/new/Floor";
 import FloorSelector from "../../filterFields/floor/new/FloorSelector";
+import { checkTheme } from "@/shared/utils";
+import { Typography } from "@mui/material";
 
 const FilterContainer = ({
   filteblackProps,
@@ -21,6 +23,8 @@ const FilterContainer = ({
   setValueSliderPrice,
   setMinPrice,
   setMaxPrice,
+  setFilteredHouse,
+  objects,
 }: Props) => {
   const classFilterBox = useMemo(() => getClassFilterBox(theme), [theme]);
 
@@ -47,6 +51,31 @@ const FilterContainer = ({
     () => calculateFilterWidth(visibleFiltersFirstRow.length),
     [visibleFiltersFirstRow.length]
   );
+
+  function resetFilteblackCars() {
+    setFilteredHouse(objects);
+    setCurrentFilter((prevFilterState) => ({
+      ...prevFilterState,
+      category: [],
+      operationType: [],
+      state: [],
+      city: [],
+      street: [],
+      minPrice: 0,
+      maxPrice: undefined,
+      companyName: [],
+      passengerElevator: [],
+      freightElevator: [],
+      ceilingHeight: [],
+      renovation: [],
+      rooms: [],
+      square: [],
+      floors: [],
+      floor: [],
+      wallsType: [],
+    }));
+    resetPageAndReloadData();
+  }
 
   return (
     <div className={classFilterBox}>
@@ -79,19 +108,40 @@ const FilterContainer = ({
         setCurrentFilter={setCurrentFilter}
       />
       <div className={`flex mt-[20px] w-[100%] justify-between`}>
-        <div className={`flex w-[50%] `}>
+        <div className={`flex w-[49%] `}>
           <FloorFilter
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
           />
         </div>
-        <div className={`flex w-[50%] `}>
+        <div className={`flex w-[49%] `}>
           <FloorSelector
             filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
           />
+        </div>
+      </div>
+      <div className={`flex mt-[20px] w-[100%] justify-end`}>
+        <div className={`flex  w-[15%]`}>
+          <button
+            style={{
+              transition: "all 1s",
+              color: checkTheme(theme, "white", "black"),
+              backgroundColor: checkTheme(theme, "#3a3f4669", "white"),
+              whiteSpace: "nowrap",
+            }}
+            className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded 
+           p-3  hover:bg-[#54529F]  cursor-pointer"
+            onClick={resetFilteblackCars}
+          >
+            <Typography
+              sx={{ fontSize: "14px", display: "flex", alignItems: "center" }}
+            >
+              Сбросить фильтры
+            </Typography>
+          </button>
         </div>
       </div>
     </div>

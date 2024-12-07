@@ -1,11 +1,16 @@
 "use client";
 
-import { AccordionDetails, Box, TextField, InputAdornment, Typography } from "@mui/material";
+import {
+  AccordionDetails,
+  Box,
+  TextField,
+  InputAdornment,
+  Typography,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CurrencyRubleIcon from "@mui/icons-material/CurrencyRuble";
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTheme } from "../../../provider/ThemeProvider";
-import useDeb from "@/lib/hooks";
 import {
   accordionContainerStyles,
   accordionContentStyles,
@@ -41,60 +46,54 @@ function FilterPrice({
 
   const [inputMin, setInputMin] = useState<string>(String(minPrice));
   const [inputMax, setInputMax] = useState<string>(String(maxPrice));
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const debouncedMinPrice = useDeb(inputMin);
-  const debouncedMaxPrice = useDeb(inputMax);
 
-  // Обработка изменения минимального значения
-  const handleInputChangeMin = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setInputMin(newValue);
-  };
-
-  // Обработка изменения максимального значения
-  const handleInputChangeMax = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setInputMax(newValue);
-  };
-
-  // Синхронизация valueSliderPrice с локальными состояниями
   useEffect(() => {
     setValueSliderPrice([minPrice, maxPrice]);
   }, [minPrice, maxPrice]);
 
-  // Обновляем минимальное значение с debounce
-  useEffect(() => {
-    const parsedValue = Number(debouncedMinPrice.replace(/\D/g, ""));
-    if (debouncedMinPrice === "") {
-      setMinPrice(valueSliderPrice[0]);
-      setInputMin(String(valueSliderPrice[0]));
-    } else if (
-      !isNaN(parsedValue) &&
-      parsedValue <= Number(inputMax.replace(/\D/g, ""))
-    ) {
-      setMinPrice(parsedValue);
-      resetPageAndReloadData();
-    }
-  }, [debouncedMinPrice]);
+  const handleInputChangeMin = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setInputMin(newValue);
 
-  // Обновляем максимальное значение с debounce
-  useEffect(() => {
-    const parsedValue = Number(debouncedMaxPrice.replace(/\D/g, ""));
-    if (debouncedMaxPrice === "") {
-      setMaxPrice(valueSliderPrice[1]);
-      setInputMax(String(valueSliderPrice[1]));
-    } else if (
-      !isNaN(parsedValue) &&
-      parsedValue >= Number(inputMin.replace(/\D/g, ""))
-    ) {
-      setMaxPrice(parsedValue);
-      resetPageAndReloadData();
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
     }
-  }, [debouncedMaxPrice]);
 
-  const selectedPriceRange = useMemo(() => {
-    return `От ${valueSliderPrice[0]} до ${valueSliderPrice[1]} ₽`;
-  }, [valueSliderPrice]);
+    debounceTimer.current = setTimeout(() => {
+      const parsedValue = Number(newValue.replace(/\D/g, ""));
+      if (
+        !isNaN(parsedValue) &&
+        parsedValue <= Number(inputMax.replace(/\D/g, ""))
+      ) {
+        setMinPrice(parsedValue);
+      }
+    }, 1000);
+  };
+
+  const handleInputChangeMax = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setInputMax(newValue);
+
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      const parsedValue = Number(newValue.replace(/\D/g, ""));
+      if (
+        !isNaN(parsedValue) &&
+        parsedValue >= Number(inputMin.replace(/\D/g, ""))
+      ) {
+        setMaxPrice(parsedValue);
+      }
+    }, 1000);
+  };
+
+  // const selectedPriceRange = useMemo(() => {
+  //   return valueSliderPrice[1] ? `От ${valueSliderPrice[0] ? valueSliderPrice[0] : 0} до ${valueSliderPrice[1]} ₽`: 'Цена';
+  // }, [valueSliderPrice]);
 
   const commonTextFieldStyles = {
     width: "50%",
