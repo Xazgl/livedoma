@@ -86,7 +86,7 @@ async function start() {
           },
           data: {
             idApplicationIntrum: application.id,
-            translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
+            translator: existingSale.mangoUtm? existingSale.translator : getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
             responsibleMain: responsibleMain,
             status: translateStatus(application.status),
             postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
