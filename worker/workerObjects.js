@@ -84,7 +84,8 @@ async function getObjects() {
       by: ["floor"],
       _count: true,
       where: {
-        ...(floor ? { floor: { contains: floor } } : {}),
+        // ...(floor ? { floor: { contains: floor } } : {}),
+        ...(floor ? { floor: { equals: floor } } : {}),
       },
     });
 
@@ -92,7 +93,8 @@ async function getObjects() {
       by: ["floors"],
       _count: true,
       where: {
-        ...(floors ? { floors: { contains: floors } } : {}),
+        // ...(floors ? { floors: { contains: floors } } : {}),
+        ...(floors ? { floors: { equals: floors } } : {}),
       },
     });
 
@@ -143,8 +145,10 @@ async function getObjects() {
           ...(district ? { district: { contains: district } } : {}),
           ...(street ? { street: { contains: street,mode: "insensitive" } } : {}),
           ...(companyName ? { companyName: { contains: companyName } } : {}),
-          ...(floor ? { floor: { contains: floor } } : {}),
-          ...(floors ? { floors: { contains: floors } } : {}),
+          // ...(floor ? { floor: { contains: floor } } : {}),
+          ...(floor ? { floor: { equals: floor } } : {}),
+          // ...(floors ? { floors: { contains: floors } } : {}),
+          ...(floors ? { floors: { equals: floors } } : {}),
           ...(minPrice !== null &&
           minPrice !== undefined &&
           maxPrice !== null &&
@@ -174,6 +178,7 @@ async function getObjects() {
       const prices = allFilteredObject
       .map((obj) => obj.price)
       .filter((price) => price !== null);
+      
     const maxPriceAlternative =
       prices.length > 0 ? Math.max(...prices).toString() : null;
 
