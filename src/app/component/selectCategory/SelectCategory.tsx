@@ -1,9 +1,13 @@
 "use client";
 import { ObjectIntrum } from "@prisma/client";
-import bg3 from "/public/images/mainPage/1.webp";
-import bg1 from "/public/images/mainPage/2.webp";
-import bg2 from "/public/images/mainPage/5.webp";
-import bg4 from "/public/images/mainPage/4.webp";
+import bg3 from "/public/images/photo/house.webp";
+// import bg3 from "/public/images/mainPage/1.webp";
+import bg1 from "/public/images/photo/flat2.webp";
+// import bg1 from "/public/images/mainPage/2.webp";
+import bg2 from "/public/images/photo/commecial.webp";
+// import bg2 from "/public/images/mainPage/5.webp";
+import bg4 from "/public/images/photo/room.webp";
+// import bg4 from "/public/images/mainPage/4.webp";
 import Image from "next/image";
 import {
   Dispatch,
@@ -131,10 +135,10 @@ export function SelectCategory({
   ];
 
   const styleCard = `flex  h-[100px] w-[180px]  relative rounded
-    xs:w-[250px] xs:h-[150px]
-    sm:w-[350px] sm:h-[200px]
-    md:w-[400px] md:h-[200px]
-    lg:w-[600px] lg:h-[270px] 
+    xs:w-[300px] xs:h-[150px]
+    sm:w-[400px] sm:h-[200px]
+    md:w-[500px] md:h-[200px]
+    lg:w-[700px] lg:h-[270px] 
     after:duration-[1000ms]   after:ease-in-out   overflow-hidden
     after:w-full after:h-full hover:after:bg-[#0000003f] hover:after:absolute`;
 
@@ -165,10 +169,10 @@ export function SelectCategory({
                 objectFit="cover"
                 objectPosition="center"
                 loading="lazy"
-                sizes="(max-width: 600px) 100vw,
+                sizes="(max-width: 600px) 80vw,
                  (max-width: 900px) 70vw,
-                 (max-width: 1200px) 85vw,
-                 90vw"
+                 (max-width: 1200px) 95vw,
+                 95vw"
               />
             </div>
             <figcaption className={title}>{category.title}</figcaption>
