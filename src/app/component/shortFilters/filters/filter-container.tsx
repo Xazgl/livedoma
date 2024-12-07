@@ -5,6 +5,8 @@ import React, { useMemo } from "react";
 import { getFilterConfig } from "./firstRowFilter/first-row-filter";
 import SkeletonLoader from "./sketelot-filter";
 import SecondFilterRow from "./secondRowFilter/second-row-filter";
+import FloorFilter from "@/app/component/filterFields/floor/new/Floor";
+import FloorSelector from "../../filterFields/floor/new/FloorSelector";
 
 const FilterContainer = ({
   filteblackProps,
@@ -21,8 +23,6 @@ const FilterContainer = ({
   setMaxPrice,
 }: Props) => {
   const classFilterBox = useMemo(() => getClassFilterBox(theme), [theme]);
-
-  console.log(loading)
 
   // Получаем конфигурацию фильтров
   const filtersFirstRow = useMemo(
@@ -47,8 +47,6 @@ const FilterContainer = ({
     () => calculateFilterWidth(visibleFiltersFirstRow.length),
     [visibleFiltersFirstRow.length]
   );
-
-
 
   return (
     <div className={classFilterBox}>
@@ -80,6 +78,22 @@ const FilterContainer = ({
         currentFilter={currentFilter}
         setCurrentFilter={setCurrentFilter}
       />
+      <div className={`flex mt-[20px] w-[100%] justify-between`}>
+        <div className={`flex w-[50%] `}>
+          <FloorFilter
+            filteblackProps={filteblackProps}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+          />
+        </div>
+        <div className={`flex w-[50%] `}>
+          <FloorSelector
+            filteblackProps={filteblackProps}
+            currentFilter={currentFilter}
+            setCurrentFilter={setCurrentFilter}
+          />
+        </div>
+      </div>
     </div>
   );
 };

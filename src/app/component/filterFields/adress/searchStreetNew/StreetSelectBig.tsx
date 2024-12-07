@@ -5,6 +5,8 @@ import {
   TextField,
   AutocompleteRenderInputParams,
   FilterOptionsState,
+  IconButton,
+  Button,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -25,6 +27,7 @@ const StreetSelectBig: React.FC<Props> = ({
   const styles = getStyles(theme);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [isInputChanged, setIsInputChanged] = useState<boolean>(false); // состояние для отслеживания изменения ввода
 
   // Подключение хука для синхронизации значения улицы
   useSyncStreetValue(currentFilter.street, setSelectedValue, setInputValue);
@@ -40,10 +43,17 @@ const StreetSelectBig: React.FC<Props> = ({
       street: trimmedValue ? [trimmedValue] : undefined,
     }));
     resetPageAndReloadData();
+    setIsInputChanged(false); // После изменения состояния ввода скрыть кнопку
   };
 
   const handleInputChange = (event: React.ChangeEvent<{}>, value: string) => {
     setInputValue(value);
+    setIsInputChanged(value.trim().length > 0); // Показывать кнопку, если есть ввод
+  };
+
+  const handleSearchButtonClick = () => {
+    // Вызываем handleChange при нажатии на кнопку
+    handleChange({} as React.ChangeEvent<{}>, inputValue);
   };
 
   // Использование функции для создания фильтра
@@ -61,6 +71,14 @@ const StreetSelectBig: React.FC<Props> = ({
           Поиск
         </span>
       }
+      InputProps={{
+        ...params.InputProps,
+        endAdornment: isInputChanged ? (
+          <Button  onClick={handleSearchButtonClick} className={` ${theme === "dark" ? "text-white" : "text-black"}`}>
+          {'Найти '}
+        </Button>
+        ) : null, // Показывать кнопку только при изменении ввода
+      }}
     />
   );
 
@@ -82,106 +100,81 @@ const StreetSelectBig: React.FC<Props> = ({
       }
     />
   );
-}
+};
 
 export default React.memo(StreetSelectBig);
 
-// export function StreetSelectBig({
+
+
+// "use client";
+
+// import {
+//   Autocomplete,
+//   TextField,
+//   AutocompleteRenderInputParams,
+//   FilterOptionsState,
+//   debounce,
+// } from "@mui/material";
+// import { useCallback, useEffect, useMemo, useState } from "react";
+// import SearchIcon from "@mui/icons-material/Search";
+// import { useTheme } from "../../../provider/ThemeProvider";
+// import "./style.css";
+// import { Props } from "./type";
+// import { getStyles } from "./style";
+// import { createFilterOptions, useSyncStreetValue, useThemeEffect } from "./utils";
+// import React from "react";
+
+// const StreetSelectBig: React.FC<Props> = ({
 //   filteblackProps,
 //   currentFilter,
 //   setCurrentFilter,
 //   resetPageAndReloadData,
-// }: Props) {
+// }) => {
 //   const { theme } = useTheme();
-//   const [inputValue, setInputValue] = useState("");
+//   const styles = getStyles(theme);
+//   const [inputValue, setInputValue] = useState<string>("");
+//   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
-//     useEffect(() => {
-//     const body = document.body;
-//     if (theme === "dark") {
-//       body.classList.add("dark-mode");
-//     } else {
-//       body.classList.remove("dark-mode");
-//     }
-//     return () => {
-//       body.classList.remove("dark-mode");
-//     };
-//   }, [theme]);
+//   // Подключение хука для синхронизации значения улицы
+//   useSyncStreetValue(currentFilter.street, setSelectedValue, setInputValue);
 
-//   useEffect(() => {
-//     if (
-//       currentFilter.street &&
-//       currentFilter.street[0] &&
-//       currentFilter.street.length > 0 &&
-//       currentFilter.street[0] !== ""
-//     ) {
-//       setInputValue(currentFilter.street[0].trim());
-//     }
-//   }, [currentFilter.street]);
+//   // Подключение хука для управления темой
+//   useThemeEffect(theme);
 
 //   const handleChange = (event: React.ChangeEvent<{}>, value: string | null) => {
-//     const trimmedValue = typeof value === "string" ? value.trim() : value;
-
-//     // Сбрасываем состояние для корректной работы Autocomplete
-//     setInputValue("");
-//     setTimeout(() => {
-//       setInputValue(trimmedValue || "");
-//       setCurrentFilter((prevFilterState) => ({
-//         ...prevFilterState,
-//         street: trimmedValue ? [trimmedValue] : undefined,
-//       }));
-//       resetPageAndReloadData();
-//     }, 0);
+//     console.log('запрос на сервер')
+//     const trimmedValue = value ? value.trim() : null;
+//     setSelectedValue(trimmedValue);
+//     setCurrentFilter((prevFilterState) => ({
+//       ...prevFilterState,
+//       street: trimmedValue ? [trimmedValue] : undefined,
+//     }));
+//     resetPageAndReloadData();
 //   };
+
+//   const handleDebouncedChange = useCallback(
+//     debounce((event,value) => {
+//       handleChange(event,value)
+//       console.log('запрос на сервер с задержкой')
+//     }, 1000), // Задержка в 500 мс
+//     []
+//   );
 
 //   const handleInputChange = (event: React.ChangeEvent<{}>, value: string) => {
+//     console.log('f')
 //     setInputValue(value);
+//     handleDebouncedChange(event,value);
 //   };
 
+//   // Использование функции для создания фильтра
 //   const filterOptions = useMemo(() => {
-//     return (options: string[], state: FilterOptionsState<string>) => {
-//       const { inputValue } = state;
-//       if (inputValue.length < 3) return [];
-//       const filtered = options.filter((option) =>
-//         option.toLowerCase().includes(inputValue.toLowerCase())
-//       );
-
-//       // Добавляем введённое значение в начало, если совпадений нет
-//       if (inputValue && !filtered.includes(inputValue)) {
-//         filtered.unshift(inputValue);
-//       }
-
-//       return filtered;
-//     };
+//     return createFilterOptions(filteblackProps.streets || []);
 //   }, [filteblackProps.streets]);
 
 //   const renderInput = (params: AutocompleteRenderInputParams) => (
 //     <TextField
 //       {...params}
-//       sx={{
-//         color: theme === "dark" ? "white" : "black",
-//         "& .MuiInputBase-root": {
-//           borderRadius: "5px",
-//           bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiInputBase-input": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiInputLabel-root": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiOutlinedInput-root": {
-//           "& fieldset": {
-//             borderColor: theme === "dark" ? "white" : "#3a3f4635",
-//           },
-//           "&:hover fieldset": {
-//             borderColor: theme === "dark" ? "white" : "#3a3f4635",
-//           },
-//           "&.Mui-focused fieldset": {
-//             borderColor: theme === "dark" ? "white" : "#3a3f4635",
-//           },
-//         },
-//       }}
+//       sx={styles.textField}
 //       label={
 //         <span className={` ${theme === "dark" ? "text-white" : "text-black"}`}>
 //           <SearchIcon sx={{ color: theme === "dark" ? "white" : "black" }} />{" "}
@@ -193,32 +186,9 @@ export default React.memo(StreetSelectBig);
 
 //   return (
 //     <Autocomplete
-//       sx={{
-//         width: "100%",
-//         border: "none",
-//         bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-//         color: theme === "dark" ? "white" : "black",
-//         "& .MuiAutocomplete-popupIndicator": {
-//           display: "none",
-//         },
-//         "& .MuiAutocomplete-paper": {
-//           maxHeight: "50px !important",
-//           overflowY: "auto",
-//         },
-//         "& .MuiAutocomplete-listbox": {
-//           maxHeight: "50px !important",
-//           overflowY: "auto",
-//         },
-//         "& .MuiAutocomplete-clearIndicator": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiAutocomplete-noOptions": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//       }}
+//       sx={styles.autocomplete}
 //       options={filteblackProps.streets || []}
-//        value={inputValue}
-//     //   value={currentFilter.street ? currentFilter.street[0] : null}
+//       value={selectedValue}
 //       onChange={handleChange}
 //       inputValue={inputValue}
 //       onInputChange={handleInputChange}
@@ -234,149 +204,5 @@ export default React.memo(StreetSelectBig);
 //   );
 // }
 
-// export function StreetSelectBig({
-//   filteblackProps,
-//   currentFilter,
-//   setCurrentFilter,
-//   resetPageAndReloadData,
-// }: Props) {
-//   const { theme } = useTheme();
-//   const [inputValue, setInputValue] = useState("");
+// export default React.memo(StreetSelectBig);
 
-//   useEffect(() => {
-//     const body = document.body;
-//     if (theme === "dark") {
-//       body.classList.add("dark-mode");
-//     } else {
-//       body.classList.remove("dark-mode");
-//     }
-//     return () => {
-//       body.classList.remove("dark-mode");
-//     };
-//   }, [theme]);
-
-//   useEffect(() => {
-//     if (
-//       currentFilter.street &&
-//       currentFilter.street[0] &&
-//       currentFilter.street.length > 0 &&
-//       currentFilter.street[0] !== ""
-//     ) {
-//       setInputValue(currentFilter.street[0].trim());
-//     }
-//   }, [currentFilter.street])
-
-//   const handleChange = (event: React.ChangeEvent<{}>, value: string | null) => {
-//     setCurrentFilter((prevFilterState) => ({
-//       ...prevFilterState,
-//       street: value ? [value] : undefined,
-//     }));
-//     resetPageAndReloadData();
-//   };
-
-//   const handleInputChange = (event: React.ChangeEvent<{}>, value: string) => {
-//     setInputValue(value);
-//   };
-
-//   const filterOptions = (
-//     options: string[],
-//     { inputValue }: { inputValue: string }
-//   ) => {
-//     const filtered = options.filter(
-//       (option) =>
-//         option.toLowerCase().includes(inputValue.toLowerCase()) &&
-//         inputValue.length >= 3
-//     );
-//     if (inputValue && !filtered.includes(inputValue)) {
-//       filtered.unshift(inputValue);
-//     }
-//     return filtered;
-//   };
-
-//   const getOptionLabel = (option: string) => option;
-
-//   const renderInput = (params: AutocompleteRenderInputParams) => (
-//     <TextField
-//       sx={{
-//         color: theme === "dark" ? "white" : "black",
-//         "& .MuiInputBase-root": {
-//           borderRadius: "5px",
-//           bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiInputBase-input": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiInputLabel-root": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiOutlinedInput-root": {
-//           "& fieldset": {
-//             borderColor: theme === "dark" ? "white" : "black",
-//           },
-//           "&:hover fieldset": {
-//             borderColor: theme === "dark" ? "white" : "black",
-//           },
-//           "&.Mui-focused fieldset": {
-//             borderColor: theme === "dark" ? "white" : "black",
-//           },
-//         },
-//       }}
-//       {...params}
-//       label={
-//         <span className={` ${theme === "dark" ? "text-white" : "text-black"}`}>
-//           {" "}
-//           <SearchIcon
-//             sx={{ color: theme === "dark" ? "white" : "black" }}
-//           />{" "}
-//           Адрес{" "}
-//         </span>
-//       }
-//     />
-//   );
-
-//   return (
-//     <Autocomplete
-//     sx={{
-//         width: "100%",
-//         border: "none",
-//         bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-//         color: theme === "dark" ? "white" : "black",
-//         "& .MuiAutocomplete-popupIndicator": {
-//           display: "none",
-//         },
-//         "& .MuiAutocomplete-paper": {
-//           maxHeight: "50px !important",
-//           overflowY: "auto",
-//         },
-//         "& .MuiAutocomplete-listbox": {
-//           maxHeight: "50px !important",
-//           overflowY: "auto",
-//         },
-//         "& .MuiAutocomplete-clearIndicator": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//         "& .MuiAutocomplete-noOptions": {
-//           color: theme === "dark" ? "white" : "black",
-//         },
-//       }}
-//       id="street-autocomplete"
-//       options={filteblackProps.streets || []}
-//       value={currentFilter.street ? currentFilter.street[0] : null}
-//       onChange={handleChange}
-//       inputValue={inputValue}
-//       onInputChange={handleInputChange}
-//       renderInput={renderInput}
-//       filterOptions={filterOptions}
-//       isOptionEqualToValue={(option, value) =>
-//         option.toLowerCase() === (value || "").toLowerCase()
-//       }
-//       getOptionLabel={getOptionLabel}
-//       noOptionsText={
-//         currentFilter.street && currentFilter.street.length === 0
-//           ? "Напишите адрес"
-//           : "Нет вариантов"
-//       }
-//     />
-//   );
-// }

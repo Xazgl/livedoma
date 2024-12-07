@@ -1,17 +1,12 @@
-import React, { useMemo, useRef, useState } from "react";
-import {
-  AccordionDetails,
-  Box,
-  Checkbox,
-  Typography,
-} from "@mui/material";
+import React, { useState, useRef, useMemo } from "react";
+import { Box, Typography, AccordionDetails, Checkbox } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import FormatPaintIcon from "@mui/icons-material/FormatPaint";
+import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
+import { Dispatch, SetStateAction } from "react";
 import {
   FilteblackProps,
   FilterUserOptions,
 } from "../../../../../../@types/dto";
-import { Dispatch, SetStateAction } from "react";
 import { useTheme } from "../../../provider/ThemeProvider";
 import {
   accordionContainerStyles,
@@ -27,44 +22,49 @@ type Props = {
   setCurrentFilter: Dispatch<SetStateAction<FilterUserOptions>>;
 };
 
-function FilterRenovation({
+const FloorFilter: React.FC<Props> = ({
   filteblackProps,
   currentFilter,
   setCurrentFilter,
-}: Props) {
+}) => {
   const { theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const accordionRef = useRef<HTMLDivElement>(null);
 
   const toggleAccordion = () => setIsExpanded((prev) => !prev);
 
-  const handleRenovationToggle = (renovationType: string) => {
-    setCurrentFilter((prev) => {
-      const isSelected = prev.renovation?.includes(renovationType);
-      const updatedRenovations = isSelected
-        ? prev.renovation?.filter((type) => type !== renovationType)
-        : [...(prev.renovation || []), renovationType];
-      return { ...prev, renovation: updatedRenovations };
+  useOutsideClick(accordionRef, () => setIsExpanded(false));
+
+  const floorsOptions = filteblackProps.floors
+    .map((floors) => (floors.trim() === "" ? "Не указан" : floors.trim()))
+    .sort((a, b) => {
+      const isANumber = !isNaN(Number(a));
+      const isBNumber = !isNaN(Number(b));
+      return isANumber && isBNumber
+        ? Number(a) - Number(b)
+        : a.localeCompare(b);
     });
-    toggleAccordion();
+
+  const handleFloorToggle = (floor: string) => {
+    setCurrentFilter((prev) => ({
+      ...prev,
+      floors: prev.floors?.includes(floor) ? [] : [floor],
+    }));
   };
 
-  const selectedRenovations = useMemo(() => {
-    const selected = currentFilter.renovation || [];
-    return selected.length > 0 ? selected.join(", ") : "Ремонт";
-  }, [currentFilter.renovation]);
-
-  useOutsideClick(accordionRef, () => setIsExpanded(false));
+  const selectedFloors = useMemo(() => {
+    const selected = currentFilter.floors || [];
+    return selected.length > 0 ? selected[0] : "Этажей в доме";
+  }, [currentFilter.floors]);
 
   return (
     <Box ref={accordionRef} sx={accordionContainerStyles(theme)}>
-      {/* Заголовок аккордеона */}
       <Box onClick={toggleAccordion} sx={accordionHeaderStyles(isExpanded)}>
         <Typography
           sx={{ fontSize: "14px", display: "flex", alignItems: "center" }}
         >
-          <FormatPaintIcon sx={{ marginRight: "8px", fontSize: "19px" }} />
-          {selectedRenovations}
+          <MapsHomeWorkIcon sx={{ marginRight: "8px", fontSize: "19px" }} />
+          {selectedFloors}
         </Typography>
         <ExpandMoreIcon
           sx={{
@@ -73,15 +73,13 @@ function FilterRenovation({
           }}
         />
       </Box>
-
-      {/* Контент аккордеона */}
       {isExpanded && (
         <AccordionDetails sx={accordionContentStyles(theme)}>
           <div className="flex flex-col w-full justify-start">
-            {filteblackProps.renovationTypes.map((renovation) => (
+            {floorsOptions.map((floor) => (
               <Box
-                key={renovation}
-                onClick={() => handleRenovationToggle(renovation)}
+                key={floor}
+                onClick={() => handleFloorToggle(floor)}
                 sx={{
                   display: "flex",
                   alignItems: "center",
@@ -95,7 +93,7 @@ function FilterRenovation({
               >
                 <Checkbox
                   color="default"
-                  checked={currentFilter.renovation?.includes(renovation)}
+                  checked={currentFilter.floors?.includes(floor)}
                   onClick={(e) => e.stopPropagation()}
                   sx={{
                     "& .MuiSvgIcon-root": { fontSize: "14px" },
@@ -103,7 +101,7 @@ function FilterRenovation({
                   }}
                 />
                 <Typography sx={{ marginLeft: "8px", fontSize: "0.875rem" }}>
-                  {renovation === "" ? "Не указан" : renovation.trim()}
+                  {floor}
                 </Typography>
               </Box>
             ))}
@@ -112,6 +110,6 @@ function FilterRenovation({
       )}
     </Box>
   );
-}
+};
 
-export default React.memo(FilterRenovation);
+export default React.memo(FloorFilter);
