@@ -49,6 +49,8 @@ const fetchAndProcessApplications = async () => {
                 // Сравниваем номера
                 console.log(application.phone, call.callerNumber)
                 if (String(application.phone) === String(call.callerNumber)) {
+                   const translator =   application.utm_source !=='vk' || application.utm_source !=='TG' &&  call.utmSource || call.utmSource ||  call.utmCampaign ||  call.utmTerm?  'Лендинг Сансара' : application.translator
+
                     console.log('Совпадение найдено:', {
                         applicationPhone: application.phone,
                         callerPhone: call.callerNumber,
@@ -62,6 +64,7 @@ const fetchAndProcessApplications = async () => {
                             id: application.id,
                         },
                         data: {
+                            translator:translator,
                             sourceUtm: call.utmSource,
                             campaignUtm: call.utmCampaign,
                             termUtm: call.utmTerm,
