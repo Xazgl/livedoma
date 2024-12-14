@@ -4,6 +4,7 @@ FROM node:18-alpine as node_modules_dev
 WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
+RUN apk add --no-cache openssl
 RUN --mount=type=cache,target=~/.npm npm ci --verbose
 
 FROM node:18-alpine as node_modules_prod
@@ -11,6 +12,7 @@ FROM node:18-alpine as node_modules_prod
 WORKDIR /app
 # Install app dependencies
 COPY package*.json ./
+RUN apk add --no-cache openssl
 RUN --mount=type=cache,target=~/.npm npm ci --omit=dev --verbose
 
 FROM node:18-alpine AS builder
@@ -37,6 +39,7 @@ RUN --mount=type=cache,target=/app/.next/cache --mount=type=cache,target=~/.npm 
 
 FROM node:18-alpine
 # RUN imagemagick with format
+RUN apk add --no-cache openssl
 RUN apk add --update --no-cache imagemagick
 RUN apk add --update --no-cache jpeg
 RUN apk add --update --no-cache libwebp
