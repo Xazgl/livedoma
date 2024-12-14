@@ -127,8 +127,10 @@ async function getObjects() {
           ...(district ? { district: { contains: district } } : {}),
           ...(street ? { street: { contains: street, mode: "insensitive" } } : {}),
           ...(companyName ? { companyName: { contains: companyName } } : {}),
-          ...(floor ? { floor: { contains: floor } } : {}),
-          ...(floors ? { floors: { contains: floors } } : {}),
+          // ...(floor ? { floor: { contains: floor } } : {}),
+          // ...(floors ? { floors: { contains: floors } } : {}),
+          ...(floor ? { floor: { equals: floor } } : {}),
+          ...(floors ? { floors: { equals: floors } } : {}),
           ...(minPrice !== null &&
             minPrice !== undefined &&
             maxPrice !== null &&
@@ -159,8 +161,10 @@ async function getObjects() {
           ...(district ? { district: { contains: district } } : {}),
           ...(street ? { street: { contains: street, mode: "insensitive" } } : {}),
           ...(companyName ? { companyName: { contains: companyName } } : {}),
-          ...(floor ? { floor: { contains: floor } } : {}),
-          ...(floors ? { floors: { contains: floors } } : {}),
+          // ...(floor ? { floor: { contains: floor } } : {}),
+          // ...(floors ? { floors: { contains: floors } } : {}),
+          ...(floor ? { floor: { equals: floor } } : {}),
+          ...(floors ? { floors: { equals: floors } } : {}),
           ...(minPrice !== null &&
             minPrice !== undefined &&
             maxPrice !== null &&
@@ -187,20 +191,22 @@ async function getObjects() {
         ...(rooms ? { rooms: { contains: rooms } } : {}),
         ...(renovation ? { renovation: { contains: renovation } } : {}),
         ...(district ? { district: { contains: district } } : {}),
-        ...(street ? { street: { contains: street,mode: "insensitive" } } : {}),
+        ...(street ? { street: { contains: street, mode: "insensitive" } } : {}),
         ...(companyName ? { companyName: { contains: companyName } } : {}),
-        ...(floor ? { floor: { contains: floor } } : {}),
-        ...(floors ? { floors: { contains: floors } } : {}),
+        // ...(floor ? { floor: { contains: floor } } : {}),
+        // ...(floors ? { floors: { contains: floors } } : {}),
+        ...(floor ? { floor: { equals: floor } } : {}),
+        ...(floors ? { floors: { equals: floors } } : {}),
         ...(minPrice !== null &&
-        minPrice !== undefined &&
-        maxPrice !== null &&
-        maxPrice !== undefined
+          minPrice !== undefined &&
+          maxPrice !== null &&
+          maxPrice !== undefined
           ? { price: { gte: parseInt(minPrice), lte: parseInt(maxPrice) } }
           : minPrice !== null && minPrice !== undefined
-          ? { price: { gte: parseInt(minPrice) } }
-          : maxPrice !== null && maxPrice !== undefined
-          ? { price: { lte: parseInt(maxPrice) } }
-          : {}),
+            ? { price: { gte: parseInt(minPrice) } }
+            : maxPrice !== null && maxPrice !== undefined
+              ? { price: { lte: parseInt(maxPrice) } }
+              : {}),
       },
       orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       select: {
@@ -219,11 +225,11 @@ async function getObjects() {
 
     const prices = allFilteredObject
       .map((obj) => obj.price)
-      .filter((price)  => price !== null);
+      .filter((price) => price !== null);
     const maxPriceAlternative =
       prices.length > 0 ? Math.max(...prices).toString() : null;
 
-    
+
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
     if (
