@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
+import noPhoto from "/public/images/noPhoto.jpg";
 
 type Props = {
   src: string;
   alt: string;
 };
 
+
 const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
 
+  const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = noPhoto.src; 
+  };
 
   const getContainerStyles = () => {
       return {
@@ -35,6 +40,7 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
         ref={imgRef}
         src={src}
         alt={alt}
+        onError={handleError}
         
         className="dynamic-image"
         style={getImageStyles()}
