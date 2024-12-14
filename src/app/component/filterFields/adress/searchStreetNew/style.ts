@@ -4,7 +4,7 @@ export const getStyles = (theme: string) => ({
   textField: {
     color: theme === "dark" ? "white" : "black",
     "& .MuiInputBase-root": {
-      borderRadius: "5px",
+      borderRadius: "20px",
       bgcolor: theme === "dark" ? "#3a3f467a" : "white",
       color: theme === "dark" ? "white" : "black",
     },
@@ -17,12 +17,18 @@ export const getStyles = (theme: string) => ({
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
         borderColor: theme === "dark" ? "#e5e7ebb0" : "#3a3f467d",
+        borderRight: 'none !important', 
+        borderRadius: '20px 0 0 20px !important'
       },
       "&:hover fieldset": {
-        borderColor: theme === "dark" ? "white" : "#3a3f4635",
+        // borderColor: theme === "dark" ? "white" : "#3a3f4635",
+        borderColor: theme === "dark" ? "#e5e7ebb0" : "#3a3f467d",
       },
       "&.Mui-focused fieldset": {
-        borderColor: theme === "dark" ? "white" : "#3a3f4635",
+        // borderColor: theme === "dark" ? "white" : "#3a3f4635",
+        border: `1px solid ${
+          theme === "dark" ? "#e5e7ebb0" : "#3a3f467d"
+        }`
       },
     },
   },

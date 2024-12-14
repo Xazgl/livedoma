@@ -15,7 +15,7 @@ type Props = {
 export function CategoriesCheckbox({filteblackProps,currentFilter,setCurrentFilter,resetPageAndReloadData}: Props) {
   const { theme} = useTheme();
   return (
-    <Accordion defaultExpanded={true} 
+    <Accordion defaultExpanded={false} 
        sx={{ 
         width: "100%",
         bgcolor: theme === "dark" ? "#3a3f467a" : "white",
@@ -28,7 +28,11 @@ export function CategoriesCheckbox({filteblackProps,currentFilter,setCurrentFilt
         id="panel1a-header"
       >
         <Typography sx={{ fontSize: "14px" }}>
-          <HouseIcon /> Категория{" "}
+          <HouseIcon />
+          {" "}
+          {currentFilter.category?.length
+            ? `Категория: ${currentFilter.category.join(", ")}`
+            : "Категория"}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

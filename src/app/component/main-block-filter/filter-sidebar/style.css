@@ -1,26 +1,26 @@
 
 
 #aside::-webkit-scrollbar {
-  width: 7px;
+  width: 7px !important;
   /* Ширина скроллбара */
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 #aside::-webkit-scrollbar-track {
-  background-color:   #3C3C3D;
+  background-color:   #3C3C3D !important;
   /* Цвет фона трека скроллбара */
-  cursor: pointer;
+  cursor: pointer !important;;
 }
 
 #aside::-webkit-scrollbar-thumb {
   border-radius: 4px;
-  background-color: #f15282cc;
+  background-color: #BEAF99 !important;
   /* Цвет ползунка скроллбара */
-  cursor: pointer;
+  cursor: pointer !important;;
 }
 
 #aside::-webkit-scrollbar-thumb:hover {
-  background-color: #F15281;
+  background-color: #BEAF99 !important;
   /* Цвет ползунка скроллбара при наведении */
   
 }

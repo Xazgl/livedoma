@@ -61,7 +61,7 @@ export function SortPriceSelect({
                 : "#FFFFFF"
               : currentFilter.sortPrice && currentFilter.sortPrice.length > 0
               ? "rgba(84, 82, 159, 0.5)"
-              : "#54529F",
+              : "black",
           fontFamily: "bold",
           justifyContent: "center",
           alignItems: "center",

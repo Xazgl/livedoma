@@ -45,12 +45,14 @@ const FloorFilter: React.FC<Props> = ({
         : a.localeCompare(b);
     });
 
-  const handleFloorToggle = (floor: string) => {
-    setCurrentFilter((prev) => ({
-      ...prev,
-      floors: prev.floors?.includes(floor) ? [] : [floor],
-    }));
-  };
+    const handleFloorToggle = (floor: string) => {
+      setCurrentFilter((prev) => ({
+        ...prev,
+        floors: prev.floors?.some((f) => f === floor)
+          ? prev.floors.filter((f) => f !== floor) 
+          : [...(prev.floors || []), floor], 
+      }));
+    };
 
   const selectedFloors = useMemo(() => {
     const selected = currentFilter.floors || [];
@@ -87,7 +89,7 @@ const FloorFilter: React.FC<Props> = ({
                   cursor: "pointer",
                   fontSize: "0.875rem",
                   "&:hover": {
-                    backgroundColor: checkTheme(theme, "#4a4f567a", "#f0f0f0"),
+                    backgroundColor: checkTheme(theme, "#4a4f567a", "white"),
                   },
                 }}
               >

@@ -7,18 +7,24 @@ import {
   allObjects,
 } from "../../../../../@types/dto";
 import { Dispatch, SetStateAction, useState } from "react";
+import "./style.css";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Link,
+  Skeleton,
+  Slide,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import RangeSlider from "../../filterFields/price/RangeSlider";
 import { CategoriesCheckbox } from "../../filterFields/categories/CategoriesCheckbox";
-import { StreetSelect } from "../../filterFields/adress/StreetSelect";
-import styles from "./Filter.module.css";
 import { CompanySelect } from "../../filterFields/company/CompanySelect";
 import TuneIcon from "@mui/icons-material/Tune";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -34,6 +40,12 @@ import { DistSelect } from "../../filterFields/adress/DistSelect";
 import { useTheme } from "../../provider/ThemeProvider";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
+import CloseIcon from "@mui/icons-material/Close";
+import { checkTheme } from "@/shared/utils";
+import StreetSelectBig from "../../filterFields/adress/searchStreetNew/StreetSelectBig";
+import { TransitionProps } from "@mui/material/transitions";
+import React from "react";
+import FilterSkeleton from "./skeleton/Skeleton";
 
 type Props = {
   objects: allObjects;
@@ -50,9 +62,17 @@ type Props = {
   setValueSliderPrice: Dispatch<SetStateAction<[number, number]>>;
   countObjects: number;
   resetPageAndReloadData: () => void;
+  loading: boolean;
 };
 
 const filterRow = "flex  w-full  p-4  h-auto";
+
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & { children: React.ReactElement },
+  ref: React.Ref<unknown>
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function FilterMobile({
   filteblackProps,
@@ -68,11 +88,11 @@ export default function FilterMobile({
   setValueSliderPrice,
   countObjects,
   resetPageAndReloadData,
+  loading,
 }: Props) {
   const { favorites } = useSelector((state: RootState) => state.favorite);
   const { theme } = useTheme();
-  const [expanded, setExpanded] = useState<string | false>(false);
-  
+
   //функция для сброса фильтров
   function resetFilteblackCars() {
     setFilteredHouse(objects);
@@ -99,52 +119,250 @@ export default function FilterMobile({
     resetPageAndReloadData();
   }
 
-  const handleChangeBar =
-    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
-      setExpanded(newExpanded ? panel : false);
-    };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
-    <aside className="flex  md:hidden  w-full  justify-center  sticky  top-0  left-0  z-[999]">
-      <div className="flex  flex-col  items-center  w-[90%]  h-[auto]  ">
-        <Accordion
-          expanded={expanded === "panel1"}
-          onChange={handleChangeBar("panel1")}
+    <aside className="flex md:hidden w-full justify-center sticky top-0 left-0 z-[999]">
+      <div className="flex flex-col items-center w-[90%] h-[auto] mt-[2px]">
+        {/* Заменяем аккордеон на кнопку */}
+        <Button
+          onClick={handleOpenModal}
           sx={{
-            backgroundColor: theme === "dark" ? "#445465fc" : "#131313f0",
+            backgroundColor: checkTheme(
+              theme,
+              "#37455b", 
+              "#131313f0" 
+            ),
             color: "white",
-            margin: "1px",
             width: "100%",
-            position: "relative",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "10px",
+            "&:hover": {
+              backgroundColor: "#131313f0",
+              opacity: 1,
+            },
           }}
         >
-          <AccordionSummary
-            expandIcon={<TuneIcon sx={{ color: "white", width: "40px" }} />}
-            aria-controls="panel1bh-content"
-            id="panel1bh-header"
+          <Typography
+            sx={{ fontSize: "14px", display: "flex", alignItems: "center" }}
           >
-            <h1 className="flex w-[100%] text-[14px] s:text-[16px]">
-              Параметры поиска
-              { favorites  &&  favorites .length > 0 ? (
-                <div className="flex pl-[10%] md:pl-[50%] items-center gap-[3px]">
-                  <FavoriteBorderIcon sx={{ fontSize: "18px" }} />{" "}
-                  { favorites .length}
-                </div>
-              ) : (
-                ""
-              )}
-            </h1>
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{ backgroundColor: "#f2f2f21a", width: "100%" }}
-            // sx={{zIndex:'999', backgroundColor: "#f2f2f21a", width: "100%",position:`${expanded ? ' absolute' : 'relative'}`    }}
+            <TuneIcon sx={{ marginRight: "8px", fontSize: "19px" }} />
+            Параметры поиска 
+          </Typography>
+          {favorites && favorites.length > 0 && (
+            <div className="flex items-center gap-[3px]">
+              <FavoriteBorderIcon sx={{ fontSize: "18px" }} />{" "}
+              {favorites.length}
+            </div>
+          )}
+        </Button>
+
+        {/* Модальное окно */}
+        <Dialog
+          open={isModalOpen}
+          onClose={handleCloseModal}
+          fullWidth
+          maxWidth="md"
+          TransitionComponent={Transition}
+          sx={{ backgroundColor: checkTheme(theme, "#111827", "f2f2f229") }}
+        >
+          <DialogTitle
+            sx={{
+              backgroundColor: checkTheme(theme, "#37455b", "black"),
+              color: "white",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Typography>
+            {loading ? (
+              <CircularProgress size={'17px'} color="inherit" />
+            ) : (
+              "Ваши фильтры"
+            )}
+            </Typography>
+            <CloseIcon sx={{ cursor: "pointer" }} onClick={handleCloseModal} />
+          </DialogTitle>
+          <DialogContent
+            sx={{
+              backgroundColor: checkTheme(theme, "#111827", "f2f2f229"),
+              color: "white",
+            }}
           >
             <div
-              className={`flex  flex-col w-full  md:w-[20%]   items-center 
-                                    sticky  top-0  right-0  h-[70vh]  overflow-auto`}
-              id={styles.aside}
+              id="aside"
+              className="flex flex-col w-full items-center mt-[5px] justify-start "
+              style={{ height: "70vh", overflow: "auto" }}
             >
+              {/*контент */}
+
               <div className={filterRow}>
+                {loading ? (
+                  <Skeleton
+                    variant="rectangular"
+                    animation="pulse"
+                    width="100%"
+                    height="56px"
+                    sx={{
+                      borderRadius: "20px",
+                      bgcolor: checkTheme(
+                        theme,
+                        "#3a3f46c9",
+                        "rgba(255, 255, 255, .7)"
+                      ),
+                    }}
+                  />
+                ) : (
+                  <StreetSelectBig
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                    resetPageAndReloadData={resetPageAndReloadData}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+                {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                  <CitySelect
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                    resetPageAndReloadData={resetPageAndReloadData}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+                {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                  <DistSelect
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                    resetPageAndReloadData={resetPageAndReloadData}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+                {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                  <CategoriesCheckbox
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                    resetPageAndReloadData={resetPageAndReloadData}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+                {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                  <RoomsSelector
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                    resetPageAndReloadData={resetPageAndReloadData}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+                {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                  <CompanySelect
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                    resetPageAndReloadData={resetPageAndReloadData}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+                {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                  <Renovation
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+                {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                  <Floor
+                    filteblackProps={filteblackProps}
+                    currentFilter={currentFilter}
+                    setCurrentFilter={setCurrentFilter}
+                  />
+                )}
+              </div>
+
+              <div className={filterRow}>
+              {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
+                <Accordion
+                  sx={{
+                    width: "100%",
+                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
+                    color: theme === "dark" ? "white" : "black",
+                  }}
+                >
+                  <AccordionSummary
+                    expandIcon={
+                      <ExpandMoreIcon
+                        sx={{ color: theme === "dark" ? "white" : "#0000008a" }}
+                      />
+                    }
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Typography sx={{ fontSize: "14px" }}>Цена, ₽</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <RangeSlider
+                      minPrice={minPrice}
+                      maxPrice={maxPrice}
+                      valueSliderPrice={valueSliderPrice}
+                      setValueSliderPrice={setValueSliderPrice}
+                      setMinPrice={setMinPrice}
+                      setMaxPrice={setMaxPrice}
+                      resetPageAndReloadData={resetPageAndReloadData}
+                    />
+                  </AccordionDetails>
+                </Accordion>
+                 )}
+              </div>
+
+              <div className={filterRow}>
+              {loading ? (
+                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+                ) : (
                 <Accordion
                   sx={{
                     width: "100%",
@@ -180,143 +398,12 @@ export default function FilterMobile({
                     </div>
                   </AccordionDetails>
                 </Accordion>
-              </div>
-              <div className={filterRow}>
-                <Accordion
-                  sx={{
-                    width: "100%",
-                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-                    color: theme === "dark" ? "white" : "black",
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={
-                      <ExpandMoreIcon
-                        sx={{ color: theme === "dark" ? "white" : "#0000008a" }}
-                      />
-                    }
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography sx={{ fontSize: "14px" }}>
-                      <RoomIcon /> Местоположение
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <StreetSelect
-                      filteblackProps={filteblackProps}
-                      currentFilter={currentFilter}
-                      setCurrentFilter={setCurrentFilter}
-                      resetPageAndReloadData={resetPageAndReloadData}
-                    />
-                  </AccordionDetails>
-                </Accordion>
+                 )}
               </div>
 
-              <div className={filterRow}>
-                <CitySelect
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                  resetPageAndReloadData={resetPageAndReloadData}
-                />
-              </div>
-
-              <div className={filterRow}>
-                <DistSelect
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                  resetPageAndReloadData={resetPageAndReloadData}
-                />
-              </div>
-
-              <div className={filterRow}>
-                <CategoriesCheckbox
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                  resetPageAndReloadData={resetPageAndReloadData}
-                />
-              </div>
-
-              {/* {!currentFilter.category ||currentFilter.category.length === 0 ||currentFilter.category[0] !== "Земельные участки"   && currentFilter.category[0] !== "Гаражи и машиноместа" ? ( */}
-              <div className={filterRow}>
-                <RoomsSelector
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                  resetPageAndReloadData={resetPageAndReloadData}
-                />
-              </div>
-              {/* ) : null} */}
-
-              <div className={filterRow}>
-                <CompanySelect
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                  resetPageAndReloadData={resetPageAndReloadData}
-                />
-              </div>
-
-              <div className={filterRow}>
-                <Renovation
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                />
-                {/* <CitySelect
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                /> */}
-              </div>
-
-              <div className={filterRow}>
-                <Floor
-                  filteblackProps={filteblackProps}
-                  currentFilter={currentFilter}
-                  setCurrentFilter={setCurrentFilter}
-                />
-              </div>
-
-              <div className={filterRow}>
-                <Accordion
-                  sx={{
-                    width: "100%",
-                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-                    color: theme === "dark" ? "white" : "black",
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={
-                      <ExpandMoreIcon
-                        sx={{ color: theme === "dark" ? "white" : "#0000008a" }}
-                      />
-                    }
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography sx={{ fontSize: "14px" }}>Цена, ₽</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <RangeSlider
-                      minPrice={minPrice}
-                      maxPrice={maxPrice}
-                      valueSliderPrice={valueSliderPrice}
-                      setValueSliderPrice={setValueSliderPrice}
-                      setMinPrice={setMinPrice}
-                      setMaxPrice={setMaxPrice}
-                      resetPageAndReloadData={resetPageAndReloadData}
-                    />
-                  </AccordionDetails>
-                </Accordion>
-              </div>
-
-              { favorites &&  favorites .length > 0 && (
+              {favorites && favorites.length > 0 && (
                 <div className={filterRow}>
-                  { favorites  &&  favorites .length > 0 ? (
+                  {favorites && favorites.length > 0 ? (
                     <Link
                       href={`/cart/${favorites[0].sessionId}`}
                       className="w-[100%] h-[100%] text-white"
@@ -332,7 +419,7 @@ export default function FilterMobile({
                           <>
                             Избранное
                             <FavoriteBorderIcon sx={{ fontSize: "15px" }} />
-                            <span className="text-sm">{ favorites.length}</span>
+                            <span className="text-sm">{favorites.length}</span>
                           </>
                         </button>
                       </a>
@@ -345,10 +432,15 @@ export default function FilterMobile({
 
               <div className={filterRow}>
                 <button
-                  style={{ transition: "all 1s" }}
+                  style={{ transition: "all 1s",
+                    backgroundColor: checkTheme(
+                      theme,
+                      "#37455b", 
+                      "#131313f0" 
+                    )
+                   }}
                   className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded color-[white] 
-                     bg-[#563D82]  hover:bg-[#54529F]  cursor-pointer 
-                       transition  duration-700  ease-in-out "
+                      cursor-pointer transition  duration-700  ease-in-out "
                   onClick={resetFilteblackCars}
                 >
                   Очистить фильтр
@@ -365,8 +457,8 @@ export default function FilterMobile({
                 )}
               </div>
             </div>
-          </AccordionDetails>
-        </Accordion>
+          </DialogContent>
+        </Dialog>
       </div>
     </aside>
   );

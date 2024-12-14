@@ -59,6 +59,7 @@ const FilterContainer = ({
       category: [],
       operationType: [],
       state: [],
+      district: [],
       city: [],
       street: [],
       minPrice: 0,
@@ -107,22 +108,28 @@ const FilterContainer = ({
         currentFilter={currentFilter}
         setCurrentFilter={setCurrentFilter}
       />
-      <div className={`flex mt-[20px] w-[100%] justify-between`}>
-        <div className={`flex w-[49%] `}>
-          <FloorFilter
-            filteblackProps={filteblackProps}
-            currentFilter={currentFilter}
-            setCurrentFilter={setCurrentFilter}
-          />
+      {loading ? (
+         <div className={`flex mt-[20px] w-[100%] justify-between`}>
+        <SkeletonLoader count={1} width="49%" />
         </div>
-        <div className={`flex w-[49%] `}>
-          <FloorSelector
-            filteblackProps={filteblackProps}
-            currentFilter={currentFilter}
-            setCurrentFilter={setCurrentFilter}
-          />
+      ) : (
+        <div className={`flex mt-[20px] w-[100%] justify-between`}>
+          <div className={`flex w-[49%] `}>
+            <FloorFilter
+              filteblackProps={filteblackProps}
+              currentFilter={currentFilter}
+              setCurrentFilter={setCurrentFilter}
+            />
+          </div>
+          <div className={`flex w-[49%] `}>
+            <FloorSelector
+              filteblackProps={filteblackProps}
+              currentFilter={currentFilter}
+              setCurrentFilter={setCurrentFilter}
+            />
+          </div>
         </div>
-      </div>
+      )}
       <div className={`flex mt-[20px] w-[100%] justify-end`}>
         <div className={`flex  w-[15%]`}>
           <button

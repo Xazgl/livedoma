@@ -65,7 +65,7 @@ body.dark-mode .css-gdh49b-MuiAutocomplete-listbox {
   
   /* Для тёмной темы */
 body.dark-mode .MuiPaper-root.MuiAutocomplete-paper {
-  background-color: #3a3f46c9 !important; /* Тёмная тема */
+  background-color: #3a3f46 !important; /* Тёмная тема */
   color:white;
 }
 
@@ -88,11 +88,11 @@ body.dark-mode .MuiAutocomplete-noOptions {
 
 
 .MuiInputBase-root.MuiOutlinedInput-root {
-  border-radius: 20px !important;
+  border-radius: 20px 0 0 20px !important;
 }
 
 
 .MuiAutocomplete-root.MuiAutocomplete-hasPopupIcon {
-  border-radius: 20px !important; 
+  border-radius: 20px 0 0 20px !important;
 }
 

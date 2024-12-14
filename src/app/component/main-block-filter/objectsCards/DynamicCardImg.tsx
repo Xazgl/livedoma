@@ -6,31 +6,18 @@ type Props = {
 };
 
 const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
-  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
-  useEffect(() => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => {
-      const { width, height } = img;
-      setAspectRatio(width / height);
-    };
-  }, [src]);
 
   const getContainerStyles = () => {
-    if (aspectRatio) {
       return {
         width: "100%",
         height: "100%",
         position: "relative" as const,
       };
-    }
-    return {};
   };
 
   const getImageStyles = () => {
-    if (aspectRatio) {
       return {
         position: "absolute" as const,
         top: 0,
@@ -40,8 +27,6 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
         borderRadius:'5px',
         objectFit: "cover" as const,
       };
-    }
-    return {};
   };
 
   return (
@@ -53,7 +38,7 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
         
         className="dynamic-image"
         style={getImageStyles()}
-        // loading="lazy"
+         loading="lazy"
       />
 
       <style jsx>{`

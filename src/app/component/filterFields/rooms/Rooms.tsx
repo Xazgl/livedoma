@@ -155,7 +155,10 @@ export function RoomsSelector({ filteblackProps, currentFilter, setCurrentFilter
         id="panel1a-header"
       >
         <Typography sx={{ fontSize: "14px" }}>
-          <SchemaIcon /> Кол-во комнат
+          <SchemaIcon /> {" "}
+          {currentFilter.rooms?.length
+            ? `Кол-во комнат: ${currentFilter.rooms.join(", ")}`
+            : "Кол-во комнат"}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

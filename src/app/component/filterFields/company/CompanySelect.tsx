@@ -28,7 +28,11 @@ export function CompanySelect({ filteblackProps, currentFilter, setCurrentFilter
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography sx={{ fontSize: '14px' }}><StoreIcon/>Компании</Typography>
+                <Typography sx={{ fontSize: '14px' }}><StoreIcon/>{" "}
+                {currentFilter.companyName?.length
+            ? `Компания: ${currentFilter.companyName.join(", ")}`
+            : "Компании"}
+                </Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <div className="flex flex-col w-full justify-start">

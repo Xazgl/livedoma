@@ -2,6 +2,7 @@
 import React from 'react';
 import { Pagination, PaginationItem, Stack } from "@mui/material";
 import { useTheme } from '../provider/ThemeProvider';
+import { checkTheme } from '@/shared/utils';
 
 
 type Props = {
@@ -48,12 +49,12 @@ export function PaginationRow({ currentPage, totalPages, handlePageChange }: Pro
             '& .MuiPaginationItem-root': {
               transition: 'all 1s',
               '&:hover': {
-                backgroundColor: '#55529fbd',
+                backgroundColor: checkTheme(theme, "#586f93", "#55529fbd"),
                 color: 'white',
                 opacity: 1,
               },
               '&.Mui-selected': {
-                backgroundColor: '#55529fbd',
+                backgroundColor: checkTheme(theme, "#586f93", "#55529fbd"),
                 color: 'white',
               },
               '&:not(.Mui-selected):not(:hover)': {

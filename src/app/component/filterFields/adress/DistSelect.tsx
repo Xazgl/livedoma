@@ -32,7 +32,10 @@ export function DistSelect({filteblackProps,currentFilter,setCurrentFilter,reset
         id="panel1a-header"
       >
         <Typography sx={{ fontSize: "14px" }}>
-          < ZoomInMapIcon  /> Район {" "}
+          < ZoomInMapIcon  /> {" "}
+          {currentFilter.district?.length
+            ? `Район: ${currentFilter.district.join(", ")}`
+            : "Район"}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

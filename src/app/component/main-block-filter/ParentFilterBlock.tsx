@@ -25,7 +25,7 @@ import {
 import { usePathname, useSearchParams } from "next/navigation";
 import { PaginationRow } from "../paginationRow/PaginatiowRow";
 import { useTheme } from "../provider/ThemeProvider";
-import ObjectsMap from "../mapObject/objectsMap";
+// import ObjectsMap from "../mapObject/objectsMap";
 import dynamic from "next/dynamic";
 import React from "react";
 import ObjectsCardsTest from "./objectsCards/ObjectsCardsTest";
@@ -132,7 +132,6 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
       }
 
       window.addEventListener("resize", handleResize);
-      // Вызываем handleResize сразу при монтировании компонента
 
       setCurrentFilter((prevFilterState) => {
         const newFilterState = { ...prevFilterState, ...filterFromParams };
@@ -185,7 +184,6 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
           });
       }
       handleResize();
-      // Убираем обработчик события при размонтировании компонента
       return () => window.removeEventListener("resize", handleResize);
     }
   }, [filterFromParams, isFirstRender, searchParams]);
@@ -457,8 +455,8 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
             >
               Лучшие предложения для
               <span
-                className={` border-b-2 lg:border-b-3    xl:border-b-4  border-[#54529F] ${
-                  theme === "dark" ? "text-[white]" : "text-[#54529F]"
+                className={` border-b-2 lg:border-b-3    xl:border-b-4  border-[#37455b] ${
+                  theme === "dark" ? "text-[white]" : "text-[black]"
                 } `}
               >
                 <br />
@@ -491,8 +489,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
           resetPageAndReloadData={resetPageAndReloadData}
         />
       )}
-
-      <section className="flex  flex-col  md:flex-row md w-full  h-full  relative   mt-[50px] overflow-hidden">
+      <section className="flex  flex-col  md:flex-row w-full  h-full  relative  mt-[50px] ">
         {mobile && (
           <FilterMobile
             objects={objects}
@@ -509,6 +506,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
             setValueSliderPrice={setValueSliderPrice}
             countObjects={countObjects}
             resetPageAndReloadData={resetPageAndReloadData}
+            loading={loading}
           />
         )}
 
@@ -524,25 +522,6 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
           currentFilter={currentFilter}
           setCurrentFilter={setCurrentFilter}
         />
-        {/* {mobile == false && (
-          <Filter
-            isVisibleFilter={isVisibleFilter}
-            objects={objects}
-            currentFilter={currentFilter}
-            setCurrentFilter={setCurrentFilter}
-            filteredHouse={filteredHouse}
-            setFilteredHouse={setFilteredHouse}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            setMinPrice={setMinPrice}
-            setMaxPrice={setMaxPrice}
-            filteblackProps={filteblackProps}
-            valueSliderPrice={valueSliderPrice}
-            setValueSliderPrice={setValueSliderPrice}
-            countObjects={countObjects}
-            resetPageAndReloadData={resetPageAndReloadData}
-          />
-        )} */}
       </section>
       <div className="hidden sm:flex">
         <PaginationRow

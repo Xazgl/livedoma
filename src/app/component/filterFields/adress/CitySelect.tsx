@@ -32,7 +32,10 @@ export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,reset
         id="panel1a-header"
       >
         <Typography sx={{ fontSize: "14px" }}>
-          <LocationCityIcon /> Город {" "}
+          <LocationCityIcon />{" "} 
+          {currentFilter.city?.length
+            ? `Город: ${currentFilter.city.join(", ")}`
+            : "Город"}
         </Typography>
       </AccordionSummary>
       <AccordionDetails>

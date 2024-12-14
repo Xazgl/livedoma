@@ -23,7 +23,7 @@ const ProgressBar = () => {
           width: "100%",
           height: "10px",
           borderRadius:'5px',
-          backgroundColor: theme === "dark" ? "#222" : "#f0f0f0",
+          backgroundColor:'#55529fbd',
           "& .MuiLinearProgress-bar": {
             backgroundColor: theme === "dark" ? "#563D82" : "#8E44AD",
           },
