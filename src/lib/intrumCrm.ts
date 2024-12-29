@@ -315,6 +315,7 @@ export async function managerFind() {
         manager_id: true,
       },
     });
+    console.log('ЖДД список менеджеров из БД',managers)
 
     const existingQueue: ManagerQueue[] = await db.managerQueue.findMany({
       orderBy: { createdAt: "desc" },
