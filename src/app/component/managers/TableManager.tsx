@@ -4,21 +4,20 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { ActiveManagers } from "@prisma/client";
 import axios from "axios";
-import {
-  Button,
-  Checkbox,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { fetchManagers, statusChange } from "./utils";
 import { getColumns } from "./columns/columns";
 import { DeleteConfirmationDialog } from "./modals/DeleteModal";
 import { AddManagerDialog } from "./modals/AddManager";
+
+const customLocaleText = {
+  columnMenuSortAsc: "Сортировать по возрастанию",
+  columnMenuSortDesc: "Сортировать по убыванию",
+  columnMenuFilter: "Фильтр",
+  columnMenuHideColumn: "Скрыть колонку",
+  columnMenuUnsort: "Сбросить сортировку",
+};
 
 type Props = {
   managersAll: ActiveManagers[];
@@ -96,8 +95,10 @@ export default function TableManager({ managersAll }: Props) {
 
   return (
     <section className="flex flex-col w-[100%] h-full">
-      <div className="flex w-full bg-white mt-5 text-black justify-between items-center px-4">
-        <h3 className="text-[16px] p-[0px]">Менеджеры</h3>
+      <div className="flex w-full bg-white mt-5 text-black justify-between items-center px-5">
+        <h3 className="flex items-center h-[60px] text-[20px] p-[0px]">
+          Прием заявок ЖДД
+        </h3>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
@@ -107,16 +108,27 @@ export default function TableManager({ managersAll }: Props) {
         </Button>
       </div>
 
-      <div className="flex flex-col w-full bg-white h-full mt-[10px] md:mt-[5px]">
+      <div className="flex flex-col w-full bg-white h-full">
         {loading ? (
           <div className="flex w-full h-[100vh] items-center justify-center">
             <CircularProgress />
           </div>
         ) : (
           <DataGrid
-            sx={{ height: "100%" }}
+            sx={{
+              height: "100%",
+              padding: "5px",
+              "& .MuiDataGrid-columnSeparator": {
+                display: "none",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                fontSize: "16px", 
+                fontWeight: "bold", 
+              },
+            }}
             rows={managers || []}
             columns={columns}
+            localeText={customLocaleText}
             initialState={{
               pagination: {
                 paginationModel: {
@@ -125,6 +137,7 @@ export default function TableManager({ managersAll }: Props) {
               },
             }}
             pageSizeOptions={[managers?.length]}
+            disableColumnResize
           />
         )}
       </div>

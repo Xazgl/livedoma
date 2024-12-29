@@ -117,7 +117,7 @@ export const AddManagerDialog: React.FC<AddManagerDialogProps> = ({
         />
         <TextField
           fullWidth
-          label="Имя"
+          label="ФИО"
           margin="normal"
           value={newManager.name}
           onChange={(e) => handleInputChange("name", e.target.value)}
@@ -134,7 +134,7 @@ export const AddManagerDialog: React.FC<AddManagerDialogProps> = ({
               })
             }
           />
-          <span>Активен</span>
+          <span>Включить в очередь</span>
         </div>
       </DialogContent>
       <DialogActions>

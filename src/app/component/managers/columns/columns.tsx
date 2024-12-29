@@ -14,12 +14,12 @@ export const getColumns = ({
   handleStatusChange,
   openDeleteConfirmation,
 }: ColumnProps): GridColDef[] => [
-  { field: "manager_id", headerName: "Id Intrum", width: 150 },
-  { field: "name", headerName: "Имя", width: 200 },
+  { field: "manager_id", headerName: "ID Intrum",  flex: 1 },
+  { field: "name", headerName: "ФИО",flex: 1  },
   {
     field: "company_JDD_active",
     headerName: "Заявки ЖДД",
-    width: 180,
+    flex: 1,
     renderCell: (params) => (
       <Checkbox
         checked={params.row.company_JDD_active}
@@ -30,7 +30,9 @@ export const getColumns = ({
   {
     field: "delete",
     headerName: "Удалить",
-    width: 150,
+
+    headerAlign: "right", 
+    align: "right",
     renderCell: (params) => (
       <IconButton
         onClick={() => openDeleteConfirmation(params.row.id)}
