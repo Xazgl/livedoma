@@ -58,23 +58,20 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
 
   console.log(doubleMessage);
 
-  const managers = [
-    // { name: "Политов", id: "391" },
-    { name: "Максимова Людмила", id: "332" },
-    // { name: "Трофимов", id: "1140" },
-    { name: "Петрухин*", id: "2417" },
-    // { name: "Ломакин*", id: "2447" },
-    // { name: "Максимова Юлия", id: "2109" },
-    // { name: "Исаева", id: "39" },
-    // { name: "Трубачева", id: "1460" },
-    // { name: "Бородина", id: "353" },
-    // { name: "Выходцева", id: "1944" },
-  ];
+  const managers = await db.activeManagers.findMany({
+    where: {
+      company_JDD_active: true,
+    },
+    select: {
+      name: true,
+      manager_id: true,
+    },
+  });
 
   // Случайный выбор менеджера
   const randomManager = managers[Math.floor(Math.random() * managers.length)];
   // Получение id выбранного менеджера
-  const managerIdRandom = randomManager.id;
+  const managerIdRandom = randomManager.manager_id;
 
   const messageCreatedAt = new Date(message.createdAt); // Получаем дату создания сообщения
   const nextDay = new Date(messageCreatedAt.getTime() + 24 * 60 * 60 * 1000); // Добавляем один день
@@ -158,108 +155,24 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   }
 }
 
-//для контакта
-// export default async function sendIntrumCrm(message: Wazzup) {
-//   const obj = {
-//     apikey: "7917e0838a4d494b471ceb36d7e3a67b",
-//     params: [
-//       {
-//         manager_id: 0,
-//         name: message.name,
-//         surname: "dfdfdfd",
-//         email: [""],
-//         phone: [message.phone],
-//         fields: [],
-//       }
-//     ]
-//   };
-
-//   // Создаем объект с параметрами
-//   const params = new URLSearchParams();
-//   params.append("apikey", '7917e0838a4d494b471ceb36d7e3a67b');
-//   params.append("params[0][manager_id]", '0');
-//   params.append("params[0][name]", message.name? message.name : '');
-//   params.append(`params[0][phone][]`, message.phone);
-//   // obj.params[0].phone.forEach((phone, index) => {
-//   //   params.append(`params[0][phone][${index}]`, phone);
-//   // });
-//   try {
-//   const postResponse = await axios.post(
-//     "http://jivemdoma.intrumnet.com:81/sharedapi/purchaser/insert",
-//     params,
-//     {
-//       headers: {
-//         "Content-Type": "application/x-www-form-urlencoded",
-//       },
-//     }
-//   );
-
-//   return postResponse.data;
-
-//   } catch (error) {
-//       console.error(error);
-//       return new Response(`Запрос в Intrum не выполнен ошибка ${error}`, { status: 404 });
-//   }
-// }
-//для заявки
-// const obj2 = {
-//   apikey: "7917e0838a4d494b471ceb36d7e3a67b",
-//   params: [
-//     {
-//       request_type: 1,
-//       employee_id: 0,
-//       customers_id: 10543,
-//       fields: [
-//         { id: 1213, value: "Сайт" },
-//         { id: 1563, value: "Вариант1,Вариант2" },
-//         { id: 1562, value: "2020-06-02 13:12:47" },
-//         { id: 579, value: 1 },
-//         { id: 781, value: 7.12 },
-//         { id: 1234, value: { lat: "35.013116", lon: "41.906049" } },
-//         { id: 774, value: { from: 1, to: 2 } },
-//         { id: 1845, value: "89/aa/5ee243c5ca694.jpg" },
-//         { id: 1845, value: "89/aa/5ee243c86a388.jpg" },
-//         { id: 701, value: 2000000 },
-//         { id: 1565, value: "Отличная квартира в хорошем районе" },
-//       ],
-//     }
-//   ]
-// };
-
-// "params[0][customer][manager_id]"; "0",
-
-// "params[0][customer][name]":'Test',
-// `params[0][customer][phone][]:[+745434343]`
-
-// "params[0][request][request_type]": "23",
-// "params[0][request][employee_id]": "0",
-// "params[0][request][customers_id]": "пример",
-// "params[0][request][fields][]": "[
-//   { id: 4056, value: "WhatsApp" }
-//   { id:   4059, value: "WhatsApp" }
-// ]"
 
 export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   const doubleMessage = double;
 
-  const managers = [
-    // { name: "Политов", id: "391" },
-    { name: "Максимова Людмила", id: "332" },
-    // { name: "Трофимов", id: "1140" },
-    { name: "Петрухин*", id: "2417" },
-    // { name: "Ломакин*", id: "2447" },
-    // { name: "Максимова Юлия", id: "2109" },
-    // { name: "Исаева", id: "39" },
-    // { name: "Трубачева", id: "1460" },
-    // { name: "Бородина", id: "353" },
-    // { name: "Выходцева", id: "1944" },
-  ];
+  const managers = await db.activeManagers.findMany({
+    where: {
+      company_JDD_active: true,
+    },
+    select: {
+      name: true,
+      manager_id: true,
+    },
+  });
 
-  
   // Случайный выбор менеджера
   const randomManager = managers[Math.floor(Math.random() * managers.length)];
   // Получение id выбранного менеджера
-  const managerIdRandom = randomManager.id;
+  const managerIdRandom = randomManager.manager_id;
 
   const messageCreatedAt = new Date(message.createdAt); // Получаем дату создания сообщения
   const nextDay = new Date(messageCreatedAt.getTime() + 24 * 60 * 60 * 1000); // Добавляем один день
@@ -326,12 +239,14 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append(
     "params[request][fields][1][value]",
-    message.utm_source =='sayt_GD'? "Сайт Живем Дома" :
-    message.utm_source =='vk' || message.utm_source =='TG' ? 'Наш сайт' : 
-    message.utm_campaign ||
-      message.utm_content ||
-      message.utm_term ||
-      message.utm_source
+    message.utm_source == "sayt_GD"
+      ? "Сайт Живем Дома"
+      : message.utm_source == "vk" || message.utm_source == "TG"
+      ? "Наш сайт"
+      : message.utm_campaign ||
+        message.utm_content ||
+        message.utm_term ||
+        message.utm_source
       ? "лендинг"
       : "Наш сайт"
   ); //доп поле 2
@@ -389,20 +304,18 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   }
 }
 
-const managers = [
-  // { name: "Политов", id: "391" },
-  { name: "Максимова Людмила", id: "332" },
-  // { name: "Трофимов", id: "1140" },
-  // { name: "Исаева", id: "39" },
-  // { name: "Трубачева", id: "1460" },
-  // { name: "Бородина", id: "353" },
-  // { name: "Выходцева", id: "1944" },
-  { name: "Петрухин*", id: "2417" },
-  // { name: "Ломакин*", id: "2447" },
-];
-
 export async function managerFind() {
   try {
+    const managers = await db.activeManagers.findMany({
+      where: {
+        company_JDD_active: true,
+      },
+      select: {
+        name: true,
+        manager_id: true,
+      },
+    });
+
     const existingQueue: ManagerQueue[] = await db.managerQueue.findMany({
       orderBy: { createdAt: "desc" },
     });
@@ -414,7 +327,7 @@ export async function managerFind() {
           existingQueue.slice(0, 5).map((record) => record.managerId)
         );
         const availableManagers = managers.filter(
-          (manager) => !lastFiveManagers.has(manager.id)
+          (manager) => !lastFiveManagers.has(manager.manager_id)
         );
 
         if (availableManagers.length > 0) {
@@ -426,11 +339,11 @@ export async function managerFind() {
             async (manager) => {
               const count = await db.managerQueue.count({
                 where: {
-                  managerId: manager.id,
+                  managerId: manager.manager_id,
                   createdAt: { gte: oneWeekAgo },
                 },
               });
-              return { managerId: manager.id, count };
+              return { managerId: manager.manager_id, count };
             }
           );
 
@@ -442,7 +355,7 @@ export async function managerFind() {
           return leastLoadedManager.managerId;
         } else {
           // Если все менеджеры уже были в последних 5 заявках, выбираем того, у кого меньше заявок за последнюю неделю
-          const allManagerIds = managers.map((manager) => manager.id);
+          const allManagerIds = managers.map((manager) => manager.manager_id);
 
           const oneWeekAgo = new Date();
           oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -481,6 +394,15 @@ export async function managerFind() {
 
 async function oldManagerFind() {
   try {
+    const managers = await db.activeManagers.findMany({
+      where: {
+        company_JDD_active: true,
+      },
+      select: {
+        name: true,
+        manager_id: true,
+      },
+    });
     const existingContactsWazzup: Wazzup[] = await db.wazzup.findMany({
       take: 2,
       orderBy: { createdAt: "desc" },
@@ -507,8 +429,8 @@ async function oldManagerFind() {
     // console.log({ hasNonEmptyManagerIds: hasNonEmptyManagerIds });
 
     if (hasNonEmptyManagerIds) {
-      const unusedManagers: { name: string; id: string }[] = managers.filter(
-        (manager) => !allManagerIds.has(manager.id)
+      const unusedManagers: { name: string; manager_id: string }[] = managers.filter(
+        (manager) => !allManagerIds.has(manager.manager_id)
       );
       // console.log({ unusedManagers: unusedManagers });
 
@@ -516,7 +438,7 @@ async function oldManagerFind() {
         //берем id менеджера из тех, у кого не было последних заявок
         // return unusedManagers[0].id;
 
-        const unusedManagerIds = unusedManagers.map((manager) => manager.id); //массив их id
+        const unusedManagerIds = unusedManagers.map((manager) => manager.manager_id); //массив их id
 
         // console.log({ unusedManagerIds: unusedManagerIds });
 
@@ -549,11 +471,11 @@ async function oldManagerFind() {
         // Возвращаем id менеджера с наименьшим количеством заявок
         return leastLoadedManager.managerId;
       } else {
-        return managers[Math.floor(Math.random() * managers.length)].id;
+        return managers[Math.floor(Math.random() * managers.length)].manager_id;
       }
     } else {
       // Если все заявки без менеджеров или пустые '', выбираем случайного менеджера
-      return managers[Math.floor(Math.random() * managers.length)].id;
+      return managers[Math.floor(Math.random() * managers.length)].manager_id;
     }
   } catch (error) {
     console.error("Error in managerFind:", error);
