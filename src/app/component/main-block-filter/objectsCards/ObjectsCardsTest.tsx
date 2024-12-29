@@ -88,7 +88,7 @@ function ObjectsCardsTest({
   }, []);
 
   //Redux
-  const dispatch = useDispatch<AppDispatch>(); // Используй типизированный dispatch
+  const dispatch = useDispatch<AppDispatch>();
   const { favorites, error } = useSelector(
     (state: RootState) => state.favorite
   );

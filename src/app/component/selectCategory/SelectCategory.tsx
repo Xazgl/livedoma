@@ -134,8 +134,8 @@ export function SelectCategory({
     },
   ];
 
-  const styleCard = `flex  h-[100px] w-[180px]  relative rounded
-    xs:w-[300px] xs:h-[150px]
+  const styleCard = `flex  h-[100px] w-[170px]  relative rounded
+    xs:w-[250px] xs:h-[150px]
     sm:w-[400px] sm:h-[200px]
     md:w-[500px] md:h-[200px]
     lg:w-[700px] lg:h-[270px] 

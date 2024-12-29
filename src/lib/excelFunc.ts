@@ -143,7 +143,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
     { name: "Максимова", id: "332" },
     { name: "Исаева", id: "39" },
     { name: "Трофимов Николай", id: "1140" },
-     { name: "Трубачева", id: "1460" },
+    { name: "Трубачева", id: "1460" },
     { name: "Бородина", id: "353" },
     { name: "Выходцева", id: "1944" },
     { name: "Петрухин*", id: "2417" },
@@ -162,18 +162,27 @@ export async function generateExcel2(applications: constructionApplications[]) {
     termUtm?: string | null,
     translator?: string | null
   ): string {
-    if (translator  && translator !== 'WhatsApp'  && translator !== 'Авито' 
-      && translator !== 'ДомКлик' && translator !== 'Яндекс Услуги'
-      && translator !== 'Циан' && translator !== 'рекомендация'
-      && translator !== 'Сбербанк'
+    if (
+      translator &&
+      translator !== "WhatsApp" &&
+      translator !== "Авито" &&
+      translator !== "ДомКлик" &&
+      translator !== "Яндекс Услуги" &&
+      translator !== "Циан" &&
+      translator !== "рекомендация" &&
+      translator !== "Сбербанк"
     ) {
-      if(sourceUtm == "TG" || sourceUtm == "vk"){ 
-        return 'Наш сайт';
+      if (sourceUtm == "TG" || sourceUtm == "vk") {
+        return "Наш сайт";
       } else {
-        return (sourceUtm && sourceUtm !== 'нету')||  (campaignUtm && campaignUtm !== 'нету') || (termUtm && termUtm !== 'нету') ? "лендинг" : 'Наш сайт';
+        return (sourceUtm && sourceUtm !== "нету") ||
+          (campaignUtm && campaignUtm !== "нету") ||
+          (termUtm && termUtm !== "нету")
+          ? "лендинг"
+          : "Наш сайт";
       }
     }
-    return translator? translator  : "";
+    return translator ? translator : "";
   }
 
   const applicationsNew = applications.map((appl) => ({
@@ -239,6 +248,9 @@ export async function generateExcel2(applications: constructionApplications[]) {
   let applicationsByType: Record<string, constructionApplicationsExcel[]> = {};
   applicationsNew.forEach((application) => {
     const type = application.typeApplication || "Заявка без типа";
+    if (application.services === "Бытовка" || application.services === "Производство"  ) {
+      return; 
+    }
     if (!applicationsByType[type]) {
       applicationsByType[type] = [];
     }
@@ -441,11 +453,14 @@ export async function generateExcel2(applications: constructionApplications[]) {
     }
   });
 
-
   // Фильтрация  по типу услуг
-  let applicationsByService: Record<string, constructionApplicationsExcel[]> = {};
+  let applicationsByService: Record<string, constructionApplicationsExcel[]> =
+    {};
   applicationsNew.forEach((application) => {
     const service = application.services || "Услуга не указана";
+    if (service === "Строительство") {
+      return; // Пропускаем эту услугу
+    }
     if (!applicationsByService[service]) {
       applicationsByService[service] = [];
     }
@@ -617,20 +632,32 @@ export async function generateExcel5(applications: constructionApplications[]) {
     termUtm?: string | null,
     translator?: string | null
   ): string {
-    if (translator  && translator !== 'WhatsApp'  && translator !== 'Avito' 
-      && translator !== 'Дом Клик' && translator !== 'yandex'
-      && translator !== 'Циан' && translator !== 'VK' && translator !== 'забор Сансары'
-      && translator !== 'Telegram Сансара' && translator !== 'Мир квартир'
-      && translator !== 'М2 ВТБ' && translator !== 'jivem-doma.ru'
-      && translator !== 'Сайт Сансара'
+    if (
+      translator &&
+      translator !== "WhatsApp" &&
+      translator !== "Avito" &&
+      translator !== "Дом Клик" &&
+      translator !== "yandex" &&
+      translator !== "Циан" &&
+      translator !== "VK" &&
+      translator !== "забор Сансары" &&
+      translator !== "Telegram Сансара" &&
+      translator !== "Мир квартир" &&
+      translator !== "М2 ВТБ" &&
+      translator !== "jivem-doma.ru" &&
+      translator !== "Сайт Сансара"
     ) {
-      if(sourceUtm == "TG" || sourceUtm == "vk"){ 
-        return 'Сайт Сансара';
+      if (sourceUtm == "TG" || sourceUtm == "vk") {
+        return "Сайт Сансара";
       } else {
-        return (sourceUtm && sourceUtm !== 'нету') || (campaignUtm && campaignUtm !== 'нету') || (termUtm && termUtm !== 'нету')   ? "Лендинг Сансара" : 'Сайт Сансара';
+        return (sourceUtm && sourceUtm !== "нету") ||
+          (campaignUtm && campaignUtm !== "нету") ||
+          (termUtm && termUtm !== "нету")
+          ? "Лендинг Сансара"
+          : "Сайт Сансара";
       }
     }
-    return translator? translator  : "";
+    return translator ? translator : "";
   }
 
   const applicationsNew = applications.map((appl) => {
@@ -647,7 +674,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
         //   : hasUtm
         //   ? "Лендинг Сансара"
         //   : "Сайт Сансара",
-         getTranslatorSansara(
+        getTranslatorSansara(
           appl.sourceUtm,
           appl.campaignUtm,
           appl.termUtm,
@@ -655,7 +682,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
         ),
       responsibleMain: appl.responsibleMain,
       status: appl.status ? appl.status : "",
-      services:'',
+      services: "",
       postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
       desc: appl.desc ? appl.desc : "",
       typeApplication: appl.typeApplication ? appl.typeApplication : "",
@@ -1017,14 +1044,17 @@ export async function generateExcel6(applications: constructionApplications[]) {
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
     idApplicationIntrum: appl.idApplicationIntrum,
-    translator: appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo?  "лендинг" :"наш сайт",
-        // appl.translator? appl.translator
-        //   :  appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
-        //   ? "лендинг"
-        //   : "наш сайт",
+    translator:
+      appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
+        ? "лендинг"
+        : "наш сайт",
+    // appl.translator? appl.translator
+    //   :  appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
+    //   ? "лендинг"
+    //   : "наш сайт",
     responsibleMain: appl.responsibleMain,
     status: appl.status ? appl.status : "",
-    services:'',
+    services: "",
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
     desc: appl.desc ? appl.desc : "",
     typeApplication: appl.typeApplication ? appl.typeApplication : "",

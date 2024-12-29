@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {  useRef } from "react";
 import noPhoto from "/public/images/noPhoto.jpg";
 
 type Props = {
@@ -41,10 +41,9 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
         src={src}
         alt={alt}
         onError={handleError}
-        
         className="dynamic-image"
         style={getImageStyles()}
-         loading="lazy"
+        //  loading="lazy"
       />
 
       <style jsx>{`

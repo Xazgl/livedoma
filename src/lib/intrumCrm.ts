@@ -59,16 +59,16 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   console.log(doubleMessage);
 
   const managers = [
-    { name: "Политов", id: "391" },
+    // { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
-    { name: "Трофимов", id: "1140" },
+    // { name: "Трофимов", id: "1140" },
     { name: "Петрухин*", id: "2417" },
-    { name: "Ломакин*", id: "2447" },
+    // { name: "Ломакин*", id: "2447" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
     // { name: "Трубачева", id: "1460" },
-    { name: "Бородина", id: "353" },
-    { name: "Выходцева", id: "1944" },
+    // { name: "Бородина", id: "353" },
+    // { name: "Выходцева", id: "1944" },
   ];
 
   // Случайный выбор менеджера
@@ -243,18 +243,19 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   const doubleMessage = double;
 
   const managers = [
-    { name: "Политов", id: "391" },
+    // { name: "Политов", id: "391" },
     { name: "Максимова Людмила", id: "332" },
-    { name: "Трофимов", id: "1140" },
+    // { name: "Трофимов", id: "1140" },
     { name: "Петрухин*", id: "2417" },
-    { name: "Ломакин*", id: "2447" },
+    // { name: "Ломакин*", id: "2447" },
     // { name: "Максимова Юлия", id: "2109" },
     // { name: "Исаева", id: "39" },
     // { name: "Трубачева", id: "1460" },
-    { name: "Бородина", id: "353" },
-    { name: "Выходцева", id: "1944" },
+    // { name: "Бородина", id: "353" },
+    // { name: "Выходцева", id: "1944" },
   ];
 
+  
   // Случайный выбор менеджера
   const randomManager = managers[Math.floor(Math.random() * managers.length)];
   // Получение id выбранного менеджера
@@ -389,15 +390,15 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
 }
 
 const managers = [
-  { name: "Политов", id: "391" },
+  // { name: "Политов", id: "391" },
   { name: "Максимова Людмила", id: "332" },
-  { name: "Трофимов", id: "1140" },
+  // { name: "Трофимов", id: "1140" },
   // { name: "Исаева", id: "39" },
   // { name: "Трубачева", id: "1460" },
-  { name: "Бородина", id: "353" },
-  { name: "Выходцева", id: "1944" },
+  // { name: "Бородина", id: "353" },
+  // { name: "Выходцева", id: "1944" },
   { name: "Петрухин*", id: "2417" },
-  { name: "Ломакин*", id: "2447" },
+  // { name: "Ломакин*", id: "2447" },
 ];
 
 export async function managerFind() {
