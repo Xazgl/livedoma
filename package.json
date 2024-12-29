@@ -34,7 +34,8 @@
     "start8": "node inparse/index.js",
     "start9": "node inparse/send.js",
     "start10": "node prisma/wazzup.js",
-    "start11": "node xmlTasks/test.js"
+    "start11": "node xmlTasks/test.js",
+    "seedManagers": "node prisma/seedManagers.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",

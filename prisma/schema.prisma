@@ -13,7 +13,7 @@ datasource db {
 model ObjectIntrum {
   id                String   @id @default(cuid())
   id_intrum         String   @unique
-  category          String    // категория  - Квартиры, дома и тп 
+  category          String // категория  - Квартиры, дома и тп 
   operationType     String // тип продам 
   state             String? // Область
   city              String? // Волгоград или Волжский
@@ -78,10 +78,10 @@ model ObjectIntrum {
   @@index([floors])
   @@index([price])
   @@index([operationType])
-  @@index([city,street]) 
-  @@index([category,price])
-  @@index([thubmnail,createdAt,active])
-  @@index([category,city,rooms,street,district,companyName,renovation,floors,price,createdAt])
+  @@index([city, street])
+  @@index([category, price])
+  @@index([thubmnail, createdAt, active])
+  @@index([category, city, rooms, street, district, companyName, renovation, floors, price, createdAt])
 }
 
 model SessionClient {
@@ -313,8 +313,8 @@ model constructionApplications {
 
   createdAtCrm String?
 
-  typeApplicationCrm String @default("ЖДД") // Тип заявки ЖДД или Сансара 
-  services String? @default("") // услуги
+  typeApplicationCrm String  @default("ЖДД") // Тип заявки ЖДД или Сансара 
+  services           String? @default("") // услуги
 
   mangoUtm Boolean? @default(false)
 
@@ -421,4 +421,14 @@ model ReviewLink {
   identifier String   @unique
   createdAt  DateTime @default(now())
   objectIds  String[]
+}
+
+model ActiveManagers {
+  id                     String   @id @default(cuid())
+  manager_id             String   @unique
+  name                   String
+  company_Sansara_active Boolean
+  company_JDD_active     Boolean
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 }
