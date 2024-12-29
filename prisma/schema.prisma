@@ -427,8 +427,9 @@ model ActiveManagers {
   id                     String   @id @default(cuid())
   manager_id             String   @unique
   name                   String
-  company_Sansara_active Boolean
-  company_JDD_active     Boolean
+  company_Sansara_active Boolean  @default(false)
+  sansara_priority       Int?
+  company_JDD_active     Boolean  @default(false)
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 }
