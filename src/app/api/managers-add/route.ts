@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Manager added successfully",
+      message: `Пользователь ${newManager.name} добавлен`,
       newManager,
     });
   } catch (error) {

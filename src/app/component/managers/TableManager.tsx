@@ -4,7 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { ActiveManagers } from "@prisma/client";
 import axios from "axios";
-import { Button, CircularProgress } from "@mui/material";
+import { Button} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {
   customLocaleText,
@@ -144,7 +144,6 @@ export default function TableManager({ managersAll }: Props) {
             sx={styleForTableManager.root}
             rows={managers || []}
             columns={columns}
-            loading={loading}
             localeText={customLocaleText}
             initialState={{
               pagination: {

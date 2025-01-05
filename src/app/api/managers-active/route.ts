@@ -14,7 +14,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Manager status updated successfully",
+      message: "Статус пользователя обновлен",
       updatedManager,
     });
   } catch (error) {

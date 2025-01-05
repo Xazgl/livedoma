@@ -11,7 +11,7 @@ export async function DELETE (request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: "Manager delete successfully",
+      message: `Пользователь ${deleteManager.name} успешно удален`,
       deleteManager,
     });
   } catch (error) {
