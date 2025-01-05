@@ -20,19 +20,21 @@ export const validateManagerId = (
   return undefined;
 };
 
-
 /**
  * Проверяет, является ли имя менеджера валидным
  * @param {string} name - Имя менеджера для проверки
  * @returns {string | undefined} - Сообщение об ошибке, если имя некорректно, иначе undefined
  */
 export const validateManagerName = (name: string): string | undefined => {
-  if (!name) {
+  if (!name.trim()) {
     return "Имя обязательно";
+  } else {
+    if (!/^[A-Za-zА-Яа-яёЁ]+$/.test(name)) {
+      return "ФИО может содержать только буквы";
+    }
   }
   return undefined;
 };
-
 
 /**
  * Проверяет все поля нового менеджера

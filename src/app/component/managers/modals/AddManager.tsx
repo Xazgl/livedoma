@@ -34,7 +34,7 @@ interface AddManagerDialogProps {
   >;
 }
 
-export const AddManagerDialog: React.FC<AddManagerDialogProps> = ({
+const AddManagerDialog: React.FC<AddManagerDialogProps> = ({
   open,
   onClose,
   onAdd,
@@ -53,7 +53,7 @@ export const AddManagerDialog: React.FC<AddManagerDialogProps> = ({
         ...prev,
         manager_id: validateManagerId(value, existingManagerIds),
       }));
-    }, 400),
+    }, 250),
     [existingManagerIds]
   );
 
@@ -63,7 +63,7 @@ export const AddManagerDialog: React.FC<AddManagerDialogProps> = ({
         ...prev,
         name: validateManagerName(value),
       }));
-    }, 400),
+    }, 250),
     []
   );
 
@@ -152,3 +152,5 @@ export const AddManagerDialog: React.FC<AddManagerDialogProps> = ({
     </Dialog>
   );
 };
+
+export default React.memo(AddManagerDialog);
