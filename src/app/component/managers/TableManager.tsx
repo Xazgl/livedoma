@@ -4,7 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useMemo, useState } from "react";
 import { ActiveManagers } from "@prisma/client";
 import axios from "axios";
-import { Button} from "@mui/material";
+import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {
   customLocaleText,
@@ -17,6 +17,8 @@ import { DeleteConfirmationDialog } from "./modals/DeleteModal";
 import AddManagerDialog from "./modals/AddManager";
 import ToastNotification from "./toast/Toast";
 import { styleForTableManager } from "./tableStylesForManager";
+import { useTheme } from "../provider/ThemeProvider";
+import { checkTheme } from "@/shared/utils";
 
 type Props = {
   managersAll: ActiveManagers[];
@@ -29,6 +31,7 @@ export type NewManager = {
 };
 
 export default function TableManager({ managersAll }: Props) {
+  const { theme } = useTheme();
   const [toast, setToast] = React.useState({
     open: false,
     message: "",
@@ -119,15 +122,20 @@ export default function TableManager({ managersAll }: Props) {
   };
 
   const columns = getColumns({ handleStatusChange, openDeleteConfirmation });
-  
-  const existingManagerIds = useMemo(() => managers.map((manager) => Number(manager.manager_id)), [managers]);
+
+  const existingManagerIds = useMemo(
+    () => managers.map((manager) => Number(manager.manager_id)),
+    [managers]
+  );
 
   const closeToast = () => setToast({ open: false, message: "", status: "" });
 
   return (
     <section className="flex flex-col w-[100%]  h-full">
-      <div className="flex w-full bg-white mt-5 text-black justify-between items-center px-5">
-        <h3 className="flex items-center h-[60px] text-[20px] p-[0px]">
+      <div className="flex w-full  mt-5  justify-between items-center px-5">
+        <h3
+          className={`flex items-center h-[60px] text-[20px] p-[0px] ${checkTheme(theme, "text-white", "text-dark")} `}
+        >
           Прием заявок ЖДД
         </h3>
         <Button
@@ -139,22 +147,25 @@ export default function TableManager({ managersAll }: Props) {
         </Button>
       </div>
 
-      <div className="flex flex-col w-full bg-white h-full">
-          <DataGrid
-            sx={styleForTableManager.root}
-            rows={managers || []}
-            columns={columns}
-            localeText={customLocaleText}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 10,
-                },
+      <div
+        className={`flex flex-col w-full h-full ${
+          checkTheme(theme, "bg-[transparent]", "bg-white")}`}
+      >
+        <DataGrid
+          sx={styleForTableManager(theme).root}
+          rows={managers || []}
+          columns={columns}
+          localeText={customLocaleText}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
               },
-            }}
-            pageSizeOptions={[managers?.length]}
-            disableColumnResize
-          />
+            },
+          }}
+          pageSizeOptions={[managers?.length]}
+          disableColumnResize
+        />
       </div>
 
       <DeleteConfirmationDialog
