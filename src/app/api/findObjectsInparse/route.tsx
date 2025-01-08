@@ -26,6 +26,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         // console.log(normalizedAddress)
 
         if (address) {
+          const floor = obj.floor; 
+          const price = obj.price; 
           const foundObjects = await db.inparseObjects.findMany({
             where: {
               OR: [
@@ -41,6 +43,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
                     mode: "insensitive",
                   },
                 },
+              ],
+              AND: [
+                // Сравнение этажей, если этаж указан в обоих источниках
+                floor !== null
+                  ? {
+                      OR: [
+                        { floor: floor.toString() }, // Совпадение этажей
+                        { floor: null }, // Если этаж отсутствует в базе
+                      ],
+                    }
+                  : {},
+                // Сравнение цен, если цена и этаж указаны в обоих источниках
+                price !== null && floor !== null
+                  ? { price: { lte: price.toString() } } // Цена в базе <= цене из объекта
+                  : {},
               ],
             },
           });
