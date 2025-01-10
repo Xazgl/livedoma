@@ -17,7 +17,7 @@ const managers : Manager[]  = [
   { name: "Грубляк*", id: "1829" },
   { name: "Костенко Любовь", id: "1793" },
   { name: "Мартынов", id: "214" },
-  // { name: "Найданова", id: "190" },
+  { name: "Найданова", id: "190" },
   { name: "Петрова Анна", id: "215" },
   { name: "Попова", id: "1618" },
   { name: "Рубан", id: "1857" },
@@ -30,8 +30,8 @@ const firstRoundManagers = ["190"];
 const secondRoundManagers = ["190", "1385", "353"];
 const fourthRoundManagers = managers.filter(
   (manager) => 
-    // !firstRoundManagers.includes(manager.id) &&
-               !secondRoundManagers.includes(manager.id) 
+     !firstRoundManagers.includes(manager.id) &&
+     !secondRoundManagers.includes(manager.id) 
 ).map((manager) => manager.id);
 
 async function getPreviousManagerId(index: number): Promise<string | null> {
@@ -74,14 +74,13 @@ async function getManagerWithLeastRequests(managerIds: string[]): Promise<string
 export async function managerFindSansara(): Promise<string> {
   try {
     const existingQueueCount = await db.managerSansaraQueue.count();
-    const totalManagers = 2; // количество кругов
+    const totalManagers = 3; // количество кругов
     const currentManagerIndex = existingQueueCount % totalManagers;
     let selectedManagerId;
 
-    // if (currentManagerIndex === 0) {
-    //   selectedManagerId = firstRoundManagers[0];
-    // } else if (currentManagerIndex === 1) {
     if (currentManagerIndex === 0) {
+      selectedManagerId = firstRoundManagers[0];
+    } else if (currentManagerIndex === 1) {
         const previousManagerId = await getPreviousManagerId(existingQueueCount);
       if (previousManagerId) {
         const availableManagers = secondRoundManagers.filter(id => id !== previousManagerId);
