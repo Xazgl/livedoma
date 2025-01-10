@@ -81,7 +81,7 @@ export async function managerFindSansara(): Promise<string> {
     if (currentManagerIndex === 0) {
       selectedManagerId = firstRoundManagers[0];
     } else if (currentManagerIndex === 1) {
-        const previousManagerId = await getPreviousManagerId(existingQueueCount);
+      const previousManagerId = await getPreviousManagerId(existingQueueCount);
       if (previousManagerId) {
         const availableManagers = secondRoundManagers.filter(id => id !== previousManagerId);
         selectedManagerId = await getManagerWithLeastRequests(availableManagers);
