@@ -9,9 +9,9 @@ interface Manager {
 
 const managers : Manager[]  = [
   { name: "Сторожук", id: "1385" },
-  { name: "Максимова Людмила", id: "332" },
+  // { name: "Максимова Людмила", id: "332" },
   { name: "Бочарникова", id: "1767" },
-  { name: "Трофимов", id: "1140" },
+  // { name: "Трофимов", id: "1140" },
   { name: "Бородина", id: "353" },
   { name: "Выходцева", id: "1944" },
   { name: "Грубляк*", id: "1829" },
@@ -28,7 +28,7 @@ const managers : Manager[]  = [
 ];
 
 const firstRoundManagers = ["190"];
-const secondRoundManagers = ["190", "1385", "1140", "353"];
+const secondRoundManagers = ["190", "1385", "353"];
 const fourthRoundManagers = managers.filter(
   (manager) => !firstRoundManagers.includes(manager.id) &&
                !secondRoundManagers.includes(manager.id) 
