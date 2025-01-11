@@ -172,9 +172,9 @@ export default function FilterMobile({
           open={isModalOpen}
           onClose={handleCloseModal}
           fullWidth
-          maxWidth="md"
           TransitionComponent={Transition}
-          sx={{ backgroundColor: checkTheme(theme, "#111827", "f2f2f229") }}
+          sx={{
+             backgroundColor: checkTheme(theme, "#111827", "f2f2f229") }}
         >
           <DialogTitle
             sx={{
@@ -195,7 +195,10 @@ export default function FilterMobile({
             <CloseIcon sx={{ cursor: "pointer" }} onClick={handleCloseModal} />
           </DialogTitle>
           <DialogContent
+            
             sx={{
+              width:'100%',
+              padding:0,
               backgroundColor: checkTheme(theme, "#111827", "f2f2f229"),
               color: "white",
             }}
