@@ -126,7 +126,6 @@ function ObjectsCardsTest({
             resetPageAndReloadData={resetPageAndReloadData}
           />
         </div>
-        <>
           {loading ? (
             <ProgressBar />
           ) : (
@@ -393,7 +392,6 @@ function ObjectsCardsTest({
               ))}
             </>
           )}
-        </>
         <div className="flex mt-[35px] sm:hidden">
           <PaginationRow
             currentPage={currentPage}

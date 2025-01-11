@@ -75,7 +75,7 @@ const SkeletonCard: React.FC = () => {
 
 const ProgressBar: React.FC = () => {
   return (
-    <div className="flex flex-col items-center w-full gap-[20px]">
+    <div className="flex flex-col items-center w-full gap-[20px] overflow-hidden">
       {Array.from({ length: 10 }, (_, index) => (
         <SkeletonCard key={index} />
       ))}

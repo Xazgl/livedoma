@@ -20,6 +20,7 @@ export function CitySelect({filteblackProps,currentFilter,setCurrentFilter,reset
   const { theme} = useTheme();
   return (
     <Accordion defaultExpanded={false} 
+     slotProps={{transition: { timeout: 0 } }}
     sx={{
      width: "100%",
      bgcolor: theme === "dark" ? "#3a3f467a" : "white",
