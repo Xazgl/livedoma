@@ -111,7 +111,18 @@ export function Floor({ filteblackProps, currentFilter, setCurrentFilter }: Prop
                           }}
                         />
                       }
-                      label={floors}
+                      // label={floors}
+                      label={
+                        <Typography
+                          sx={{
+                            whiteSpace: "nowrap", 
+                            overflow: "hidden", 
+                            textOverflow: "ellipsis", 
+                          }}
+                        >
+                          {floors}
+                        </Typography>
+                      }
                     />
                   ))}
                 </FormGroup>
@@ -161,7 +172,18 @@ export function Floor({ filteblackProps, currentFilter, setCurrentFilter }: Prop
                                 }}
                               />
                             }
-                            label={floor}
+                            // label={floor}
+                            label={
+                              <Typography
+                                sx={{
+                                  whiteSpace: "nowrap", 
+                                  overflow: "hidden", 
+                                  textOverflow: "ellipsis", 
+                                }}
+                              >
+                                {floor}
+                              </Typography>
+                            }
                           />
                         ))}
                       </FormGroup>
