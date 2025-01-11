@@ -362,48 +362,6 @@ export default function FilterMobile({
                  )}
               </div>
 
-              <div className={filterRow}>
-              {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                <Accordion
-                  sx={{
-                    width: "100%",
-                    bgcolor: theme === "dark" ? "#3a3f467a" : "white",
-                    color: theme === "dark" ? "white" : "black",
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={
-                      <ExpandMoreIcon
-                        sx={{ color: theme === "dark" ? "white" : "#0000008a" }}
-                      />
-                    }
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography sx={{ fontSize: "14px" }}>
-                      <ImportExportIcon /> Сортировка
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <div className="flex w-[full] justify-between">
-                      <SortDateSelect
-                        currentFilter={currentFilter}
-                        setCurrentFilter={setCurrentFilter}
-                        resetPageAndReloadData={resetPageAndReloadData}
-                      />
-                      <SortPriceSelect
-                        currentFilter={currentFilter}
-                        setCurrentFilter={setCurrentFilter}
-                        resetPageAndReloadData={resetPageAndReloadData}
-                      />
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-                 )}
-              </div>
-
               {favorites && favorites.length > 0 && (
                 <div className={filterRow}>
                   {favorites && favorites.length > 0 ? (
