@@ -23,7 +23,7 @@ const SecondFilterRow: React.FC<Props> = ({
   return (
     <div className={`flex mt-[20px] w-[100%] justify-between`}>
       {loading ? (
-        <SkeletonLoader count={3} width="33%" />
+        <SkeletonLoader count={3} width="32%" />
       ) : (
         <>
           <div className={`flex w-[32%]`}>

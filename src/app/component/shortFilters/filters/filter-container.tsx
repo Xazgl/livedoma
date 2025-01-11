@@ -82,7 +82,7 @@ const FilterContainer = ({
     <div className={classFilterBox}>
       <div className={`flex w-[100%] justify-between`}>
         {loading ? (
-          <SkeletonLoader count={3} width="33%" />
+          <SkeletonLoader count={3} width="32%" />
         ) : (
           visibleFiltersFirstRow.map((filter) => (
             <div
