@@ -6,23 +6,15 @@ import { getCookie} from "cookies-next";
 
 import { cookies } from "next/headers";
 import { AuthForm } from "@/app/component/admin/auth/Auth";
-import { TableFour } from "@/app/component/table/TableFour";
+import { TableNovodvinskaya } from "@/app/component/table/TableNovodvinskaya";
 
 export const dynamic = "force-dynamic";
 
 async function getObjects() {
   try {
-    // Получаем текущую дату
-    // const currentDate = new Date();
-    // // Отнимаем один день от текущей даты
-    // const yesterday = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
-    // // Форматируем дату в нужный формат (YYYY-MM-DD)
-    // const formattedYesterday = yesterday.toISOString().split("T")[0];
-
     const applications = await db.constructionApplications.findMany({
       where: {
-        typeApplicationCrm:'Сансара'
-        // dateStage: formattedYesterday,
+        typeApplicationCrm: "Новодвинская",
       },
     });
 
@@ -58,7 +50,7 @@ export default async function Home() {
       {login ? (
         <>
           {applications.length > 0  ? (
-              <TableFour applications={applications} />
+              <TableNovodvinskaya applications={applications} />
           ) : (
             <div className="flex w-full h-[100vh] items-center justify-center">
               <CircularProgress />

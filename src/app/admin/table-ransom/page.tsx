@@ -19,7 +19,7 @@ async function getObjects() {
 
     const sid = getCookie("sid", { cookies });
     const admin = await checkSession(sid ? sid : "");
-    console.log(admin);
+
     if (admin) {
       const { login } = admin.admin;
       return {
@@ -40,8 +40,8 @@ async function getObjects() {
 }
 
 export default async function Home() {
-  const { applications, login, admin } = await getObjects();
-  console.log(admin);
+  const { applications, login } = await getObjects();
+
 
   return (
     <section className="flex flex-col w-full h-full">

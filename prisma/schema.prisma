@@ -128,6 +128,14 @@ model ManagerSansaraQueue {
   createdAt DateTime @default(now())
 }
 
+model ManagerNovodvinskayaQueue {
+  id        String   @id @default(cuid())
+  managerId String
+  url       String?
+  type      String?
+  createdAt DateTime @default(now())
+}
+
 model ManagerRansomQueue {
   id        String   @id @default(cuid())
   managerId String

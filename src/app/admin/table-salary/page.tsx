@@ -39,12 +39,10 @@ async function getObjects() {
     let uniqueDateStages = [...new Set(dateStages)];
     uniqueDateStages.length > 0 ? uniqueDateStages : ["Значений нет"];
 
-    // const sid = req.cookies['sid']
-
     const sid = getCookie("sid", { cookies });
-    // console.log(sid)
+
     const admin = await checkSession(sid ? sid : "");
-    console.log( admin)
+
     if (admin) {
       const { login } = admin.admin;
       return {
@@ -68,9 +66,9 @@ async function getObjects() {
 }
 
 export default async function Home() {
-  const { sales, uniqueDateStages, formattedYesterday, login,  admin  } =
+  const { sales, uniqueDateStages, formattedYesterday, login  } =
     await getObjects();
-    console.log( admin )
+
 
   return (
     <>
