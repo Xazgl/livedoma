@@ -155,7 +155,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
       message.managerId == "Ошибка в выборе менеджера"? managerIdRandom : message.managerId ? message.managerId : managerIdRandom
     ); //id главного отв заявки
   }
-  //колцентр 309 , 1584, 1693, 2220, 2146
+  //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв

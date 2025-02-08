@@ -68,6 +68,7 @@ async function start() {
 //   params.append("params[fields][statuses][4]", 'postponed');
             (application.status !== 'cancelled' && application.status !== 'processed' && application.status !=='malformed') &&
             application.employee_id !== '2220' &&
+            application.employee_id !== '2588' &&
             application.employee_id !== '309' && 
             application.employee_id !== '1584' && 
             application.employee_id !== '1693' &&  

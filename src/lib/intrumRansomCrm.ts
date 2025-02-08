@@ -163,7 +163,7 @@ export async function sendIntrumCrmTildaRansom(
   } else {
     params.append("params[request][employee_id]", "1693");
   }
-  //колцентр 309 , 1584, 1693, 2220, 2146
+  //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв

@@ -61,11 +61,11 @@ export default async function sendIntrumCrmWazzupJD(
       //   : managerIdRandom
     ); //id главного отв заявки
   }
-  //колцентр 309 , 1584, 1693, 2220, 2146
+  //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
-  params.append("params[request][additional_employee_id][3]", "2220"); //массив доп отв
+  params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
   params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
 
