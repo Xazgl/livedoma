@@ -4,6 +4,8 @@ import FilterCategories from "../../../filterFields/categories/new/CategoriesChe
 import FilterRooms from "../../../filterFields/rooms/new/Rooms";
 import React from "react";
 import { FilterConfigProps } from "./type";
+import OperationTypeSelectDesktop from "@/app/component/filterFields/operationType/new/OperationTypeSelectDesktop";
+import FilterCompany from "@/app/component/filterFields/company/new/FilterCompany";
 
 export const getFilterConfig = ({
   filteblackProps,
@@ -12,6 +14,21 @@ export const getFilterConfig = ({
   resetPageAndReloadData,
 }: FilterConfigProps) => {
   return [
+    {
+      key: "operationType",
+      component: (
+        <OperationTypeSelectDesktop
+          key={"operationType"}
+          filteblackProps={filteblackProps}
+          currentFilter={currentFilter}
+          setCurrentFilter={setCurrentFilter}
+          resetPageAndReloadData={resetPageAndReloadData}
+        />
+      ),
+      isVisible:
+        filteblackProps.operationTypes?.filter((type) => type.trim() !== "")
+          .length > 0,
+    },
     {
       key: "city",
       component: (
@@ -54,6 +71,19 @@ export const getFilterConfig = ({
       ),
       isVisible:
         filteblackProps.rooms?.filter((room) => room.trim() !== "").length > 0,
+    },
+    {
+      key: "company",
+      component: (
+        <FilterCompany
+          filteblackProps={filteblackProps}
+          currentFilter={currentFilter}
+          setCurrentFilter={setCurrentFilter}
+          resetPageAndReloadData={resetPageAndReloadData}
+        />
+      ),
+      isVisible:
+        filteblackProps.companyNames?.filter((company) => company.trim() !== "").length > 0,
     },
   ];
 };

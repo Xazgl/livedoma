@@ -5,8 +5,6 @@ import React, { useMemo } from "react";
 import { getFilterConfig } from "./firstRowFilter/first-row-filter";
 import SkeletonLoader from "./sketelot-filter";
 import SecondFilterRow from "./secondRowFilter/second-row-filter";
-import FloorFilter from "@/app/component/filterFields/floor/new/Floor";
-import FloorSelector from "../../filterFields/floor/new/FloorSelector";
 import { checkTheme } from "@/shared/utils";
 import { Typography } from "@mui/material";
 
@@ -80,9 +78,9 @@ const FilterContainer = ({
 
   return (
     <div className={classFilterBox}>
-      <div className={`flex w-[100%] justify-between`}>
+      <div className={`flex h-[44px] w-[100%] justify-between`}>
         {loading ? (
-          <SkeletonLoader count={3} width="32%" />
+          <SkeletonLoader count={4} width="24%" />
         ) : (
           visibleFiltersFirstRow.map((filter) => (
             <div
@@ -108,28 +106,6 @@ const FilterContainer = ({
         currentFilter={currentFilter}
         setCurrentFilter={setCurrentFilter}
       />
-      {loading ? (
-         <div className={`flex mt-[20px] w-[100%] justify-between`}>
-        <SkeletonLoader count={1} width="49%" />
-        </div>
-      ) : (
-        <div className={`flex mt-[20px] w-[100%] justify-between`}>
-          <div className={`flex w-[49%] `}>
-            <FloorFilter
-              filteblackProps={filteblackProps}
-              currentFilter={currentFilter}
-              setCurrentFilter={setCurrentFilter}
-            />
-          </div>
-          <div className={`flex w-[49%] `}>
-            <FloorSelector
-              filteblackProps={filteblackProps}
-              currentFilter={currentFilter}
-              setCurrentFilter={setCurrentFilter}
-            />
-          </div>
-        </div>
-      )}
       <div className={`flex mt-[20px] w-[100%] justify-end`}>
         <div className={`flex  w-[15%]`}>
           <button

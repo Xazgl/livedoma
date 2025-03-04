@@ -10,7 +10,6 @@ async function sendEmail(email, link,  emailWithError, maxAttempts = 3) {
     while (attempt < maxAttempts && !success) {
         try {
             await new Promise((resolve) => setTimeout(resolve, 500));
-
             const response = await axios.get(`${link}&email=${email}`);
             console.log(`Email ${email} успешно отправлен на курс.`);
             console.log(response.data);

@@ -163,6 +163,9 @@ export async function generateExcel2(applications: constructionApplications[]) {
     termUtm?: string | null,
     translator?: string | null
   ): string {
+    if (campaignUtm == "(none)" || termUtm == "(none)") {
+      return "Наш сайт";
+    }
     if (
       translator &&
       translator !== "WhatsApp" &&
@@ -173,11 +176,11 @@ export async function generateExcel2(applications: constructionApplications[]) {
       translator !== "рекомендация" &&
       translator !== "Сбербанк"
     ) {
-      if (sourceUtm == "TG" || sourceUtm == "vk") {
+      if (sourceUtm == "TG" || sourceUtm == "vk" || sourceUtm == "sayt_GD") {
         return "Наш сайт";
       } else {
-        return (sourceUtm && sourceUtm !== "нету") ||
-          (campaignUtm && campaignUtm !== "нету") ||
+        return ( sourceUtm && sourceUtm !== "нету")  ||
+          ( campaignUtm && campaignUtm !== "нету")  ||
           (termUtm && termUtm !== "нету")
           ? "лендинг"
           : "Наш сайт";
@@ -633,6 +636,9 @@ export async function generateExcel5(applications: constructionApplications[]) {
     termUtm?: string | null,
     translator?: string | null
   ): string {
+    if (campaignUtm == "(none)" || termUtm == "(none)") {
+      return "Сайт Сансара";
+    }
     if (
       translator &&
       translator !== "WhatsApp" &&
@@ -648,12 +654,12 @@ export async function generateExcel5(applications: constructionApplications[]) {
       translator !== "jivem-doma.ru" &&
       translator !== "Сайт Сансара"
     ) {
-      if (sourceUtm == "TG" || sourceUtm == "vk") {
+      if (sourceUtm == "TG" || sourceUtm == "vk" ) {
         return "Сайт Сансара";
       } else {
-        return (sourceUtm && sourceUtm !== "нету") ||
-          (campaignUtm && campaignUtm !== "нету") ||
-          (termUtm && termUtm !== "нету")
+        return (sourceUtm && sourceUtm !== "нету")  ||
+        ( campaignUtm && campaignUtm !== "нету")  ||
+        (termUtm && termUtm !== "нету") 
           ? "Лендинг Сансара"
           : "Сайт Сансара";
       }
@@ -1168,6 +1174,9 @@ export async function generateExcelNovodvinskaya(applications: constructionAppli
     termUtm?: string | null,
     translator?: string | null
   ): string {
+    if (campaignUtm == "(none)" || termUtm == "(none)") {
+      return "Сайт «Дом на Новодвинской»";
+    }
     if (
       translator &&
       translator !== "WhatsApp" &&
@@ -1187,7 +1196,7 @@ export async function generateExcelNovodvinskaya(applications: constructionAppli
         return "Сайт «Дом на Новодвинской»";
       } else {
         return (sourceUtm && sourceUtm !== "нету") ||
-          (campaignUtm && campaignUtm !== "нету") ||
+        ( campaignUtm && campaignUtm !== "нету") ||
           (termUtm && termUtm !== "нету")
           ? "Лендинг дом на Новодвинской"
           : "Сайт «Дом на Новодвинской»";

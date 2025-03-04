@@ -2,11 +2,11 @@
 
 import { AccordionDetails, Box, Checkbox, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LocationCityIcon from "@mui/icons-material/LocationCity";
+import WysiwygIcon from "@mui/icons-material/Wysiwyg";
 import React, { useState, useMemo, useRef } from "react";
 import { useTheme } from "@/app/component/provider/ThemeProvider";
 import { checkTheme } from "@/shared/utils";
-import { Props } from "./type";
+
 import {
   accordionContainerStyles,
   accordionContentStyles,
@@ -14,8 +14,10 @@ import {
   useOutsideClick,
   useToggleAccordion,
 } from "@/app/component/shortFilters/filters/utils";
+import { Props } from "../../adress/new/type";
+import { operationTypeNormalize } from "../utils";
 
-function CityFilter({
+function OperationTypeSelectDesktop({
   filteblackProps,
   currentFilter,
   setCurrentFilter,
@@ -27,21 +29,24 @@ function CityFilter({
 
   const toggleAccordion = useToggleAccordion(setIsExpanded);
 
-  const handleCityToggle = (city: string) => {
+  const handleOperationTypeToggle = (type: string) => {
     setCurrentFilter((prevFilterState) => {
-      const isCitySelected = prevFilterState.city?.includes(city);
+      const isTypeSelected = prevFilterState.operationType?.includes(type);
       return {
         ...prevFilterState,
-        city: isCitySelected ? [] : [city], // Убираем город, если он уже выбран
+        operationType: isTypeSelected ? [] : [type],
       };
     });
     resetPageAndReloadData();
-    setIsExpanded(false); // Закрываем аккордеон после выбора
+    setIsExpanded(false);
   };
 
-  const selectedCity = useMemo(() => {
-    return currentFilter.city?.[0] || "Город";
-  }, [currentFilter.city]);
+  const selectedType = useMemo(() => {
+    const label = currentFilter.operationType?.[0]
+      ? operationTypeNormalize(currentFilter.operationType?.[0])
+      : "Выберите тип";
+    return label;
+  }, [currentFilter.operationType]);
 
   // Закрытие аккордеона при клике вне его пределов
   useOutsideClick(accordionRef, () => setIsExpanded(false));
@@ -51,10 +56,10 @@ function CityFilter({
       {/* Заголовок аккордеона */}
       <Box onClick={toggleAccordion} sx={accordionHeaderStyles(isExpanded)}>
         <Typography
-          sx={{ fontSize: "14px", display: "flex", alignItems: "center" }}
+          sx={{ fontSize: "14px", display: "flex", alignItems: "center"}}
         >
-          <LocationCityIcon style={{ marginRight: "8px", fontSize: "19px" }} />{" "}
-          {selectedCity}
+          <WysiwygIcon style={{ marginRight: "8px", fontSize: "19px" }} />{" "}
+          {selectedType}
         </Typography>
         <ExpandMoreIcon
           sx={{
@@ -68,12 +73,14 @@ function CityFilter({
       {isExpanded && (
         <AccordionDetails sx={accordionContentStyles(theme)}>
           <div className="flex flex-col w-full justify-start">
-            {Array.from(new Set(filteblackProps.cities.map((city) => city)))
-              .filter((city) => city !== "")
-              .map((city) => (
+            {Array.from(
+              new Set(filteblackProps.operationTypes.map((type) => type))
+            )
+              .filter((type) => type !== "")
+              .map((type) => (
                 <Box
-                  key={city}
-                  onClick={() => handleCityToggle(city)}
+                  key={type}
+                  onClick={() => handleOperationTypeToggle(type)}
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -91,7 +98,7 @@ function CityFilter({
                       "& .MuiSvgIcon-root": { fontSize: "14px" },
                       color: checkTheme(theme, "white", "black"),
                     }}
-                    checked={currentFilter.city?.includes(city)}
+                    checked={currentFilter.operationType?.includes(type)}
                     onClick={(e) => e.stopPropagation()}
                   />
                   <Typography
@@ -100,7 +107,7 @@ function CityFilter({
                       fontSize: "0.875rem",
                     }}
                   >
-                    {city}
+                    {operationTypeNormalize(type)}
                   </Typography>
                 </Box>
               ))}
@@ -111,4 +118,4 @@ function CityFilter({
   );
 }
 
-export default React.memo(CityFilter);
+export default React.memo(OperationTypeSelectDesktop);

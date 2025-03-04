@@ -1,6 +1,5 @@
 import { InparseObjects, ObjectIntrum } from "@prisma/client";
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import { number } from "zod";
 
 export type FilterUserOptions = {
   category?: string[];
@@ -238,6 +237,7 @@ export type Tilda = {
   utm_campaign: string;
   utm_content: string;
   utm_term: string;
+  formname: string;
 };
 
 

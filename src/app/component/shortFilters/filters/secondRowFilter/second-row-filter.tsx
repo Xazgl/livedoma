@@ -1,11 +1,11 @@
 "use client";
 import FilterPrice from "../../../filterFields/price/new/RangeSlider";
-import FilterCompany from "../../../filterFields/company/new/FilterCompany";
+import FloorFilter from "@/app/component/filterFields/floor/new/Floor";
 import FilterRenovation from "../../../filterFields/renovation/new/renovation";
 import SkeletonLoader from "../sketelot-filter";
 import { Props } from "./type";
 import React from "react";
-
+import FloorSelector from "@/app/component/filterFields/floor/new/FloorSelector";
 
 const SecondFilterRow: React.FC<Props> = ({
   loading,
@@ -20,13 +20,14 @@ const SecondFilterRow: React.FC<Props> = ({
   currentFilter,
   setCurrentFilter,
 }) => {
+  
   return (
-    <div className={`flex mt-[20px] w-[100%] justify-between`}>
+    <div className={`flex  h-[44px] mt-[20px] w-[100%] justify-between`}>
       {loading ? (
-        <SkeletonLoader count={3} width="32%" />
+        <SkeletonLoader count={4} width="24%" />
       ) : (
         <>
-          <div className={`flex w-[32%]`}>
+          <div className={`flex w-[24%]`}>
             <FilterPrice
               minPrice={minPrice}
               maxPrice={maxPrice}
@@ -37,16 +38,22 @@ const SecondFilterRow: React.FC<Props> = ({
               resetPageAndReloadData={resetPageAndReloadData}
             />
           </div>
-          <div className={`flex w-[32%]`}>
-            <FilterCompany
+          <div className={`flex w-[24%]`}>
+            <FilterRenovation
               filteblackProps={filteblackProps}
               currentFilter={currentFilter}
               setCurrentFilter={setCurrentFilter}
-              resetPageAndReloadData={resetPageAndReloadData}
             />
           </div>
-          <div className={`flex w-[32%]`}>
-            <FilterRenovation
+          <div className={`flex w-[24%] `}>
+            <FloorFilter
+              filteblackProps={filteblackProps}
+              currentFilter={currentFilter}
+              setCurrentFilter={setCurrentFilter}
+            />
+          </div>
+          <div className={`flex w-[24%] `}>
+            <FloorSelector
               filteblackProps={filteblackProps}
               currentFilter={currentFilter}
               setCurrentFilter={setCurrentFilter}

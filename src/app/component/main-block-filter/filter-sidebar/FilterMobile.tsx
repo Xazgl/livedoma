@@ -41,6 +41,7 @@ import StreetSelectBig from "../../filterFields/adress/searchStreetNew/StreetSel
 import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
 import FilterSkeleton from "./skeleton/Skeleton";
+import { OperationTypeSelect } from "../../filterFields/operationType/OperationTypeSelect";
 
 type Props = {
   objects: allObjects;
@@ -125,205 +126,229 @@ export default function FilterMobile({
   };
 
   return (
-    <aside className="flex md:hidden w-full justify-center sticky top-0 left-0 z-[999]">
-      <div className="flex flex-col items-center w-[90%] h-[auto] mt-[2px]">
-        {/* Заменяем аккордеон на кнопку */}
-        <Button
-          onClick={handleOpenModal}
+    // <div className="flex md:hidden w-full justify-center sticky top-0 left-0 z-[999]">
+    <div className="flex ">
+      <Button
+        onClick={handleOpenModal}
+        sx={{
+          // backgroundColor: checkTheme(
+          //   theme,
+          //   "#37455b",
+          //   "#131313f0"
+          // ),
+          // color: "white",
+          backgroundColor: checkTheme(
+            theme,
+            "#3a3f46c9",
+            "rgba(255, 255, 255, .7)"
+          ),
+          color: checkTheme(theme, "white", "black"),
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          borderRadius: "8px",
+          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+          // padding: "10px",
+          // "&:hover": {
+          //   backgroundColor: "#131313f0",
+          //   opacity: 1,
+          // },
+        }}
+      >
+        <Typography
+          sx={{ fontSize: "14px", display: "flex", alignItems: "center" }}
+        >
+          <TuneIcon sx={{ marginRight: "8px", fontSize: "19px" }} />
+          {/* Параметры поиска  */}
+        </Typography>
+        {favorites && favorites.length > 0 && (
+          <div className="flex items-center gap-[3px]">
+            <FavoriteBorderIcon sx={{ fontSize: "18px" }} /> {favorites.length}
+          </div>
+        )}
+      </Button>
+
+      {/* Модальное окно */}
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        fullWidth
+        TransitionComponent={Transition}
+        PaperProps={{
+          sx: {
+            height: "100vh",
+            backgroundColor: checkTheme(theme, "#111827", "f2f2f229"),
+          },
+        }}
+        sx={{
+          backgroundColor: checkTheme(theme, "#111827", "f2f2f229"),
+        }}
+      >
+        <DialogTitle
           sx={{
-            backgroundColor: checkTheme(
-              theme,
-              "#37455b", 
-              "#131313f0" 
-            ),
+            backgroundColor: checkTheme(theme, "#37455b", "black"),
             color: "white",
-            width: "100%",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            padding: "10px",
-            "&:hover": {
-              backgroundColor: "#131313f0",
-              opacity: 1,
-            },
           }}
         >
-          <Typography
-            sx={{ fontSize: "14px", display: "flex", alignItems: "center" }}
-          >
-            <TuneIcon sx={{ marginRight: "8px", fontSize: "19px" }} />
-            Параметры поиска 
-          </Typography>
-          {favorites && favorites.length > 0 && (
-            <div className="flex items-center gap-[3px]">
-              <FavoriteBorderIcon sx={{ fontSize: "18px" }} />{" "}
-              {favorites.length}
-            </div>
-          )}
-        </Button>
-
-        {/* Модальное окно */}
-        <Dialog
-          open={isModalOpen}
-          onClose={handleCloseModal}
-          fullWidth
-          TransitionComponent={Transition}
-          sx={{
-             backgroundColor: checkTheme(theme, "#111827", "f2f2f229") }}
-        >
-          <DialogTitle
-            sx={{
-              backgroundColor: checkTheme(theme, "#37455b", "black"),
-              color: "white",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography>
+          <Typography>
             {loading ? (
-              <CircularProgress size={'17px'} color="inherit" />
+              <CircularProgress size={"17px"} color="inherit" />
             ) : (
               "Ваши фильтры"
             )}
-            </Typography>
-            <CloseIcon sx={{ cursor: "pointer" }} onClick={handleCloseModal} />
-          </DialogTitle>
-          <DialogContent
-            
-            sx={{
-              width:'100%',
-              padding:0,
-              backgroundColor: checkTheme(theme, "#111827", "f2f2f229"),
-              color: "white",
-            }}
+          </Typography>
+          <CloseIcon sx={{ cursor: "pointer" }} onClick={handleCloseModal} />
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            width: "100%",
+            padding: 0,
+            backgroundColor: checkTheme(theme, "#111827", "f2f2f229"),
+            color: "white",
+          }}
+        >
+          <div
+            id="aside"
+            className="flex flex-col w-full items-center mt-[5px] justify-start "
+            style={{ height: "100vh", overflow: "auto" }}
           >
-            <div
-              id="aside"
-              className="flex flex-col w-full items-center mt-[5px] justify-start "
-              style={{ height: "70vh", overflow: "auto" }}
-            >
-              {/*контент */}
+            {/*контент */}
 
-              <div className={filterRow}>
-                {loading ? (
-                  <Skeleton
-                    variant="rectangular"
-                    animation="pulse"
-                    width="100%"
-                    height="56px"
-                    sx={{
-                      borderRadius: "20px",
-                      bgcolor: checkTheme(
-                        theme,
-                        "#3a3f46c9",
-                        "rgba(255, 255, 255, .7)"
-                      ),
-                    }}
-                  />
-                ) : (
-                  <StreetSelectBig
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                    resetPageAndReloadData={resetPageAndReloadData}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
-                {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                  <CitySelect
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                    resetPageAndReloadData={resetPageAndReloadData}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
-                {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                  <DistSelect
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                    resetPageAndReloadData={resetPageAndReloadData}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
-                {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                  <CategoriesCheckbox
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                    resetPageAndReloadData={resetPageAndReloadData}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
-                {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                  <RoomsSelector
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                    resetPageAndReloadData={resetPageAndReloadData}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
-                {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                  <CompanySelect
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                    resetPageAndReloadData={resetPageAndReloadData}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
-                {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                  <Renovation
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
-                {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
-                  <Floor
-                    filteblackProps={filteblackProps}
-                    currentFilter={currentFilter}
-                    setCurrentFilter={setCurrentFilter}
-                  />
-                )}
-              </div>
-
-              <div className={filterRow}>
+            <div className={filterRow}>
               {loading ? (
-                  <FilterSkeleton height={"48px"} borderRadius={"4px"} />
-                ) : (
+                <Skeleton
+                  variant="rectangular"
+                  animation="pulse"
+                  width="100%"
+                  height="56px"
+                  sx={{
+                    borderRadius: "20px",
+                    bgcolor: checkTheme(
+                      theme,
+                      "#3a3f46c9",
+                      "rgba(255, 255, 255, .7)"
+                    ),
+                  }}
+                />
+              ) : (
+                <StreetSelectBig
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <OperationTypeSelect
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <CitySelect
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <DistSelect
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <CategoriesCheckbox
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <RoomsSelector
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <CompanySelect
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                  resetPageAndReloadData={resetPageAndReloadData}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <Renovation
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
+                <Floor
+                  filteblackProps={filteblackProps}
+                  currentFilter={currentFilter}
+                  setCurrentFilter={setCurrentFilter}
+                />
+              )}
+            </div>
+
+            <div className={filterRow}>
+              {loading ? (
+                <FilterSkeleton height={"48px"} borderRadius={"4px"} />
+              ) : (
                 <Accordion
                   sx={{
                     width: "100%",
@@ -354,68 +379,65 @@ export default function FilterMobile({
                     />
                   </AccordionDetails>
                 </Accordion>
-                 )}
-              </div>
+              )}
+            </div>
 
-              {favorites && favorites.length > 0 && (
-                <div className={filterRow}>
-                  {favorites && favorites.length > 0 ? (
-                    <Link
-                      href={`/cart/${favorites[0].sessionId}`}
-                      className="w-[100%] h-[100%] text-white"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <a rel="noopener noreferrer">
-                        <button
-                          className={`flex justify-center  gap-[5px] items-center w-[100%]  h-[40px] rounded
+            {favorites && favorites.length > 0 && (
+              <div className={filterRow}>
+                {favorites && favorites.length > 0 ? (
+                  <Link
+                    href={`/cart/${favorites[0].sessionId}`}
+                    className="w-[100%] h-[100%] text-white"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <a rel="noopener noreferrer">
+                      <button
+                        className={`flex justify-center  gap-[5px] items-center w-[100%]  h-[40px] rounded
                  bg-[#54529F] #54529F  hover:bg-[#F15281]  cursor-pointer 
                        transition  duration-700  ease-in-out 
                  `}
-                        >
-                          <>
-                            Избранное
-                            <FavoriteBorderIcon sx={{ fontSize: "15px" }} />
-                            <span className="text-sm">{favorites.length}</span>
-                          </>
-                        </button>
-                      </a>
-                    </Link>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              )}
-
-              <div className={filterRow}>
-                <button
-                  style={{ transition: "all 1s",
-                    backgroundColor: checkTheme(
-                      theme,
-                      "#37455b", 
-                      "#131313f0" 
-                    )
-                   }}
-                  className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded color-[white] 
-                      cursor-pointer transition  duration-700  ease-in-out "
-                  onClick={resetFilteblackCars}
-                >
-                  Очистить фильтр
-                </button>
-              </div>
-
-              <div className="flex w-full p-4 h-auto">
-                {countObjects == 1 ? (
-                  <h6 className="text-[#88898b]">{countObjects} объект</h6>
-                ) : countObjects > 1 && countObjects <= 4 ? (
-                  <h6 className="text-[#d1d7dd]">{countObjects} объекта</h6>
+                      >
+                        <>
+                          Избранное
+                          <FavoriteBorderIcon sx={{ fontSize: "15px" }} />
+                          <span className="text-sm">{favorites.length}</span>
+                        </>
+                      </button>
+                    </a>
+                  </Link>
                 ) : (
-                  <h6 className="text-[#d1d7dd]"> {countObjects} объекта</h6>
+                  ""
                 )}
               </div>
+            )}
+
+            <div className={filterRow}>
+              <button
+                style={{
+                  transition: "all 1s",
+                  backgroundColor: checkTheme(theme, "#37455b", "#131313f0"),
+                }}
+                className="flex  justify-center  items-center  w-[100%]  h-[40px] rounded color-[white] 
+                      cursor-pointer transition  duration-700  ease-in-out "
+                onClick={resetFilteblackCars}
+              >
+                Очистить фильтр
+              </button>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </aside>
+
+            <div className="flex w-full p-4 h-auto">
+              {countObjects == 1 ? (
+                <h6 className="text-[#88898b]">{countObjects} объект</h6>
+              ) : countObjects > 1 && countObjects <= 4 ? (
+                <h6 className="text-[#d1d7dd]">{countObjects} объекта</h6>
+              ) : (
+                <h6 className="text-[#d1d7dd]"> {countObjects} объекта</h6>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+    // </div>
   );
 }

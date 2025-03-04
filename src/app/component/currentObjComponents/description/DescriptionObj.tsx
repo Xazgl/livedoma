@@ -5,7 +5,10 @@ import floor from "/public/svg/floor.svg";
 import PropertyInfo from "./PropertyInfo";
 import Link from "next/link";
 import Image from "next/image";
-import { logoFind, numberWithSpaces } from "../../main-block-filter/objectsCards/functionCard";
+import {
+  logoFind,
+  numberWithSpaces,
+} from "../../main-block-filter/objectsCards/functionCard";
 import { useTheme } from "../../provider/ThemeProvider";
 import React from "react";
 
@@ -59,17 +62,25 @@ function DescriptionObj({ object }: Props) {
       </div>
 
       <div
-        className={`flex flex-col mt-[50px] w-full h-auto text-sm  ${theme === "dark" ? "text-[#868b9a]" : "text-[#4c505b]"}`}
+        className={`flex flex-col mt-[50px] w-full h-auto text-sm  ${
+          theme === "dark" ? "text-[#868b9a]" : "text-[#4c505b]"
+        }`}
       >
-        <Image
-          className="flex "
-          src={logoFind(object.companyName) ?? ""}
-          alt={object.category}
-          width={150}
-          height={100}
-          loading="lazy"
-        />
-        <span className={`flex w-full  font-bold text-[25px] sm:text-[22px]  ${theme === "dark" ? "text-[white]" : "text-[#4c505b]"}`}>
+        {object.companyName && object.companyName !== "ООО СЗ АБН-СТРОЙ" && (
+          <Image
+            className="flex "
+            src={logoFind(object.companyName) ?? ""}
+            alt={object.category}
+            width={150}
+            height={100}
+            loading="lazy"
+          />
+        )}
+        <span
+          className={`flex w-full  font-bold text-[25px] sm:text-[22px]  ${
+            theme === "dark" ? "text-[white]" : "text-[#4c505b]"
+          }`}
+        >
           {numberWithSpaces(Number(object.price))} ₽
         </span>
         <p
@@ -79,7 +90,7 @@ function DescriptionObj({ object }: Props) {
           }}
         ></p>
 
-        {object.companyName  !== "Владис" && (
+        {object.companyName !== "Владис" && (
           <div className="flex mt-[20px]">
             <Link
               href={`https://jivemdoma.intrumnet.com/crm/tools/exec/stock/${object.id_intrum}#stock`}
@@ -102,7 +113,11 @@ function DescriptionObj({ object }: Props) {
            md:rounded-bl-[15px]  md:rounded-tr-[15px] md:bg-[transparent]
             md:hover:bg-[#f2c200]   md:hover:rounded-br-[10px]  md:hover:rounded-tl-[10px]  
           md:hover:rounded-bl-[0px]   md:hover:rounded-tr-[0px]  md:hover:rounded-[3px]
-          ${theme === "dark"? "md:text-[white] hover:text-[black] ":"md:text-[black] hover:text-[white] "}`}
+          ${
+            theme === "dark"
+              ? "md:text-[white] hover:text-[black] "
+              : "md:text-[black] hover:text-[white] "
+          }`}
           >
             Построить маршурт{"  "}
             <svg

@@ -9,121 +9,121 @@ interface Manager {
 
 const managers: Manager[] = [
   { name: "Сторожук", id: "1385" },
-  { name: "Бочарникова", id: "1767" },
+  { name: "Трофимов", id: "1140" },
+  { name: "Василевская-Руцкая", id: "2019" },
   { name: "Бородина", id: "353" },
-  { name: "Выходцева", id: "1944" },
-  { name: "Грубляк*", id: "1829" },
-  { name: "Костенко Любовь", id: "1793" },
-  { name: "Мартынов", id: "214" },
-  { name: "Найданова", id: "190" },
-  { name: "Петрова Анна", id: "215" },
-  { name: "Попова", id: "1618" },
-  { name: "Рубан", id: "1857" },
-  { name: "Ткачева", id: "35" },
-  { name: "Чеботарева", id: "1232" },
-  { name: "Меньшова", id: "230" },
+  { name: "Москвина*", id: "2466" },
 ];
 
-const firstRoundManagers = ["190"];
-const secondRoundManagers = ["190", "1385", "353"];
-const fourthRoundManagers = managers
-  .filter(
-    (manager) =>
-      !firstRoundManagers.includes(manager.id) &&
-      !secondRoundManagers.includes(manager.id)
-  )
-  .map((manager) => manager.id);
-
-async function getPreviousManagerId(index: number): Promise<string | null> {
-  if (index < 2) {
-    return null;
-  }
-
-  const previousQueueItem = await db.managerNovodvinskayaQueue.findFirst({
-    skip: index - 2,
-    take: 1,
-    orderBy: { createdAt: "desc" },
-  });
-
-  return previousQueueItem ? previousQueueItem.managerId : null;
-}
-
-async function getManagerWithLeastRequests(
-  managerIds: string[]
-): Promise<string> {
-  if (managerIds.length === 0) {
-    throw new Error("No manager IDs provided.");
-  }
-
-  const managerRequestCounts = await db.managerNovodvinskayaQueue.groupBy({
-    by: ["managerId"],
-    _count: {
-      managerId: true,
-    },
-    where: {
-      managerId: { in: managerIds },
-    },
-  });
-
-  const managerCountMap: { [key: string]: number } =
-    managerRequestCounts.reduce(
-      (acc: { [key: string]: number }, { managerId, _count }) => {
-        acc[managerId] = _count.managerId;
-        return acc;
-      },
-      {}
-    );
-
-  return managerIds.sort(
-    (a, b) => (managerCountMap[a] || 0) - (managerCountMap[b] || 0)
-  )[0];
-}
+const Round1Managers = ["2466"]; // две заявки
+const Round2Managers = ["353"]; //две заявки
+const Round3Managers = ["1385"]; //две заявки
+const Round4Managers = ["1140"]; //две заявки
+const Round5Managers = ["2019"]; //одна заявка
 
 export async function managerFindNovodvinskaya(): Promise<string> {
   try {
     const existingQueueCount = await db.managerNovodvinskayaQueue.count();
-    const totalManagers = 3; // количество кругов
-    const currentManagerIndex = existingQueueCount % totalManagers;
-    let selectedManagerId;
 
-    if (currentManagerIndex === 0) {
-      selectedManagerId = firstRoundManagers[0];
-    } else if (currentManagerIndex === 1) {
-      const previousManagerId = await getPreviousManagerId(existingQueueCount);
-      if (previousManagerId) {
-        const availableManagers = secondRoundManagers.filter(
-          (id) => id !== previousManagerId
-        );
-        selectedManagerId = await getManagerWithLeastRequests(
-          availableManagers
-        );
-      } else {
-        selectedManagerId = await getManagerWithLeastRequests(
-          secondRoundManagers
-        );
-      }
-    } else {
-      const previousManagerId = await getPreviousManagerId(existingQueueCount);
-      if (previousManagerId) {
-        const availableManagers = fourthRoundManagers.filter(
-          (id) => id !== previousManagerId
-        );
-        selectedManagerId = await getManagerWithLeastRequests(
-          availableManagers
-        );
-      } else {
-        selectedManagerId = await getManagerWithLeastRequests(
-          fourthRoundManagers
-        );
-      }
+    // Определяем раунды распределения заявок
+    const rounds = [
+      { managerIds: Round1Managers, count: 2 },
+      { managerIds: Round2Managers, count: 2 },
+      { managerIds: Round3Managers, count: 2 },
+      { managerIds: Round4Managers, count: 2 },
+      { managerIds: Round5Managers, count: 1 },
+    ];
+
+    // Собираем все актуальные ID менеджеров из раундов в Set для быстрой проверки
+    const currentManagerIds = new Set(
+      rounds.flatMap((round) => round.managerIds)
+    );
+
+    // Получаем последнюю заявку из очереди
+    const lastEntry = await db.managerNovodvinskayaQueue.findFirst({
+      orderBy: { createdAt: "desc" },
+      select: { managerId: true },
+    });
+
+    // Если последняя заявка есть, но её менеджер не входит в текущие раунды,
+    // сбрасываем цикл и начинаем с первого раунда.
+    if (lastEntry && !currentManagerIds.has(lastEntry.managerId)) {
+      // Например, можно логировать сброс и возвращать первого менеджера первого раунда
+      console.info(
+        "Сброс цикла распределения, так как последний менеджер отсутствует в текущих раундах"
+      );
+      return Round1Managers[0];
     }
 
-    return selectedManagerId;
+    // Вычисляем общее количество заявок в одном цикле
+    const cycleTotal = rounds.reduce((sum, round) => sum + round.count, 0);
+
+    // Вычисляем позицию текущей заявки в цикле
+    let posInCycle = existingQueueCount % cycleTotal;
+
+    // Определяем нужный раунд, в котором должна попасть текущая заявка
+    let selectedRound = null;
+    for (const round of rounds) {
+      if (posInCycle < round.count) {
+        selectedRound = round;
+        break;
+      }
+      posInCycle -= round.count;
+    }
+
+    if (selectedRound) {
+      // Если в раунде несколько менеджеров, выбираем их циклично по количеству заявок,
+      // а если один – просто возвращаем его
+      const managerIndex = existingQueueCount % selectedRound.managerIds.length;
+      return selectedRound.managerIds[managerIndex];
+    } else {
+      throw new Error("Невозможно найти подходящего менеджера");
+    }
   } catch (error) {
-    console.error("Error in managerFindNovodvinskaya:", error);
-    throw new Error("Unable to find a suitable manager.");
+    console.error("Ошибка в managerFindNovodvinskaya:", error);
+    throw new Error("Невозможно найти подходящего менеджера");
   }
 }
+
+//старый вариант который работал
+// export async function managerFindNovodvinskaya(): Promise<string> {
+//   try {
+//     const existingQueueCount = await db.managerNovodvinskayaQueue.count();
+
+//     // Если в базе меньше 2 заявок, выбираем случайного менеджера
+//     if (existingQueueCount < 2) {
+//       const randomManager =
+//         managers[Math.floor(Math.random() * managers.length)];
+//       return randomManager.id;
+//     }
+
+//     // Получаем последние две заявки
+//     const lastTwoManagers = await db.managerNovodvinskayaQueue.findMany({
+//       take: 2,
+//       orderBy: { createdAt: "desc" },
+//       select: { managerId: true },
+//     });
+
+//     const lastManagerIds = lastTwoManagers.map((entry) => entry.managerId);
+
+//     // Фильтруем менеджеров, исключая тех, кто был в последних двух заявках
+//     const availableManagers = managers.filter(
+//       (manager) => !lastManagerIds.includes(manager.id)
+//     );
+
+//     if (availableManagers.length === 0) {
+//       // Если все менеджеры были в последних двух заявках, выбираем по кругу
+//       return managers[existingQueueCount % managers.length].id;
+//     }
+
+//     // Выбираем менеджера циклично из доступных
+//     const currentManagerIndex = existingQueueCount % availableManagers.length;
+//     return availableManagers[currentManagerIndex].id;
+//   } catch (error) {
+//     console.error("Error in managerFindNovodvinskaya:", error);
+//     throw new Error("Unable to find a suitable manager.");
+//   }
+// }
 
 export async function sendIntrumCrmTildaNovodvinskaya(
   message: Tilda,
@@ -260,7 +260,7 @@ export async function sendIntrumCrmTildaNovodvinskaya(
   params.append("params[request][fields][13][id]", "5269"); // доп поле 12 Дата следующего действия
   params.append("params[request][fields][13][value]", "1");
 
-  console.log('Все параметры для Новодвиской перед отправкой црм', params)
+  console.log("Все параметры для Новодвиской перед отправкой црм", params);
   try {
     const postResponse = await axios.post(
       "http://jivemdoma.intrumnet.com:81/sharedapi/applications/addCustomer",

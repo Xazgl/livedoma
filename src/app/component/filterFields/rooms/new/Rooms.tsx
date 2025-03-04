@@ -51,7 +51,7 @@ function FilterRooms({
   );
 
   const selectedRooms = useMemo(() => {
-    return currentFilter.rooms?.join(", ") || "Кол-во комнат";
+    return currentFilter.rooms?.join(", ") || "Комнат";
   }, [currentFilter.rooms]);
 
   const handleRoomToggle = (room: string) => {

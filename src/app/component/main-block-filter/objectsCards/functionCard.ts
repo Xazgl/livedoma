@@ -21,13 +21,21 @@ export const LogoList: LogoArr[] = [
     {
         name: 'Живем дома',
         img: `${jd.src}`,
-    },
+    },	
     {
         name: 'Агентство "Партнер"',
         img: `${part.src}`
     },
     {
+        name: 'Партнер Недвижимость',
+        img: `${part.src}`
+    },
+    {
         name: 'Метры',
+        img: `${metr.src}`
+    },
+    {
+        name: 'Метры Недвижимость' ,
         img: `${metr.src}`
     },
     {

@@ -3,6 +3,12 @@ import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
 import { SelectCategory } from "../selectCategory/SelectCategory";
+import WysiwygIcon from "@mui/icons-material/Wysiwyg";
+import SchemaIcon from "@mui/icons-material/Schema";
+import StoreIcon from "@mui/icons-material/Store";
+import HouseIcon from "@mui/icons-material/House";
+import FormatPaintIcon from "@mui/icons-material/FormatPaint";
+
 import {
   categoryFilter,
   ceilingHeightFilter,
@@ -29,6 +35,11 @@ import { useTheme } from "../provider/ThemeProvider";
 import dynamic from "next/dynamic";
 import React from "react";
 import ObjectsCardsTest from "./objectsCards/ObjectsCardsTest";
+import { checkTheme } from "@/shared/utils";
+import { operationTypeNormalize } from "../filterFields/operationType/utils";
+import UniversalMobileFilter from "../universalFilter/UniversalMobileFilter";
+import MobileFilterContainer from "../mobile-filter-container/MobileFilterContainer";
+import StickyMobileFilter from "../mobile-filter-container/StickyMobileFilter";
 
 // Динамический импорт компонентов фильтра
 const FilterMobile = dynamic(() => import("./filter-sidebar/FilterMobile"));
@@ -70,6 +81,9 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
   const filterFromParams = useMemo(() => {
     const params = new URLSearchParams(searchParams);
     const filter: Partial<FilterUserOptions> = {};
+    if (params.has("operationType")) {
+      filter.operationType = params.getAll("operationType");
+    }
     if (params.has("category")) {
       filter.category = params.getAll("category");
     }
@@ -162,6 +176,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
             setMapObj(el.allFilteredObject);
             setFilteblackProps((prevFilterState) => ({
               ...prevFilterState,
+              operationTypes: el.filter.operationType,
               categories: el.filter.category,
               cities: el.filter.city,
               rooms: el.filter.rooms,
@@ -194,8 +209,8 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
 
   //Конкретные выбранные фильтры
   const [currentFilter, setCurrentFilter] = useState<FilterUserOptions>({
-    category: [],
-    operationType: [],
+    category: ["Квартиры"],
+    operationType: ["Продам"],
     state: [],
     city: [],
     district: [],
@@ -294,6 +309,11 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
           params.append("category", cat);
         });
       }
+      if (currentFilter.operationType) {
+        currentFilter.operationType.forEach((type) => {
+          params.append("operationType", type);
+        });
+      }
       if (currentFilter.city) {
         currentFilter.city.forEach((cit) => {
           params.append("city", cit);
@@ -371,6 +391,7 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
           setFilteblackProps((prevFilterState) => ({
             ...prevFilterState,
             categories: el.filter.category,
+            operationTypes: el.filter.operationType,
             cities: el.filter.city,
             rooms: el.filter.rooms,
             renovationTypes: el.filter.renovation,
@@ -491,22 +512,23 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
       )}
       <section className="flex  flex-col  md:flex-row w-full  h-full  relative  mt-[50px] ">
         {mobile && (
-          <FilterMobile
-            objects={objects}
+          <StickyMobileFilter
+            theme={theme}
+            filteblackProps={filteblackProps}
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
+            resetPageAndReloadData={resetPageAndReloadData}
+            loading={loading}
+            objects={objects}
             filteredHouse={filteredHouse}
             setFilteredHouse={setFilteredHouse}
             minPrice={minPrice}
             maxPrice={maxPrice}
             setMinPrice={setMinPrice}
             setMaxPrice={setMaxPrice}
-            filteblackProps={filteblackProps}
             valueSliderPrice={valueSliderPrice}
             setValueSliderPrice={setValueSliderPrice}
             countObjects={countObjects}
-            resetPageAndReloadData={resetPageAndReloadData}
-            loading={loading}
           />
         )}
 

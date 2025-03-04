@@ -155,8 +155,11 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   }
 }
 
-
-export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
+export async function sendIntrumCrmTilda(
+  message: Tilda,
+  double: boolean,
+  formName?: string
+) {
   const doubleMessage = double;
 
   const managers = await db.activeManagers.findMany({
@@ -168,6 +171,33 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
       manager_id: true,
     },
   });
+  let answerFor5291 = ""; // Выбор типа услуги
+  let title = ""; // Выбор типа услуги
+  if (
+    formName === "Ремонты-бесплатный замер" ||
+    message?.formid === "form714887068" ||
+    message?.formid === "form716183792" ||
+    formName === "Ремонты-консультация" ||
+    formName === "Ремонты - заказать 3д" || formName?.includes("Ремонт")
+  ) {
+    answerFor5291 = "Ремонты";
+    title = "Заявка на ремонт";
+  } else if (
+    formName === "Производство Получить консультацию" ||
+    message?.formid === "form790140565" ||
+    formName === "Производство Индив предл по скидке" ||
+    message?.formid === "form867970463" ||  formName?.includes("Производство")
+  ) {
+    answerFor5291 = "Производство";
+    title = "Заявка на производство";
+  } else {
+    answerFor5291 = "Строительство";
+    title = "Заявка на строительство";
+  }
+
+  console.log("answerFor5291", answerFor5291);
+  console.log("formName", formName);
+  console.log("message?.formid", message?.formid);
 
   // Случайный выбор менеджера
   const randomManager = managers[Math.floor(Math.random() * managers.length)];
@@ -206,7 +236,8 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   } else {
     params.append(
       "params[request][request_name]",
-      message.answers ? message.answers : "Заявка на строительство"
+      message.answers ? message.answers : title
+      // message.answers ? message.answers : "Заявка на строительство"
     ); //статус сделки
   }
 
@@ -284,6 +315,9 @@ export async function sendIntrumCrmTilda(message: Tilda, double: boolean) {
   params.append("params[request][fields][9][id]", "5268"); // доп поле 8
   params.append("params[request][fields][9][value]", "1"); //доп поле 8
 
+  params.append("params[request][fields][11][id]", "5291");
+  params.append("params[request][fields][11][value]", answerFor5291);
+
   try {
     const postResponse = await axios.post(
       "http://jivemdoma.intrumnet.com:81/sharedapi/applications/addCustomer",
@@ -315,7 +349,7 @@ export async function managerFind() {
         manager_id: true,
       },
     });
-    console.log('ЖДД список менеджеров из БД',managers)
+    console.log("ЖДД список менеджеров из БД", managers);
 
     const existingQueue: ManagerQueue[] = await db.managerQueue.findMany({
       orderBy: { createdAt: "desc" },
@@ -430,16 +464,17 @@ async function oldManagerFind() {
     // console.log({ hasNonEmptyManagerIds: hasNonEmptyManagerIds });
 
     if (hasNonEmptyManagerIds) {
-      const unusedManagers: { name: string; manager_id: string }[] = managers.filter(
-        (manager) => !allManagerIds.has(manager.manager_id)
-      );
+      const unusedManagers: { name: string; manager_id: string }[] =
+        managers.filter((manager) => !allManagerIds.has(manager.manager_id));
       // console.log({ unusedManagers: unusedManagers });
 
       if (unusedManagers.length > 0) {
         //берем id менеджера из тех, у кого не было последних заявок
         // return unusedManagers[0].id;
 
-        const unusedManagerIds = unusedManagers.map((manager) => manager.manager_id); //массив их id
+        const unusedManagerIds = unusedManagers.map(
+          (manager) => manager.manager_id
+        ); //массив их id
 
         // console.log({ unusedManagerIds: unusedManagerIds });
 

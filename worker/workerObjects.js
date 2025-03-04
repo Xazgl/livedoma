@@ -6,6 +6,7 @@ const db = new PrismaClient()
 async function getObjects() {
   try {
     const {
+      operationType,
       category,
       city,
       rooms,
@@ -22,8 +23,15 @@ async function getObjects() {
       sortPrice,
     } = workerData;
 
-    console.log(maxPrice)
     let filter = {};
+
+    const countOperationType = await db.objectIntrum.groupBy({
+      by: ["operationType"],
+      _count: true,
+      where: {
+        ...(operationType ? { operationType: { contains: operationType } } : {}),
+      },
+    });
 
     const countCategory = await db.objectIntrum.groupBy({
       by: ["category"],
@@ -99,8 +107,9 @@ async function getObjects() {
       },
     });
 
-    if (!category && !city && !rooms && !street && !district && !companyName && !renovation && !floors) {
+    if (!operationType && !category && !city && !rooms && !street && !district && !companyName && !renovation && !floors) {
       filter = {
+        operationType: countOperationType.map((el) => el.operationType),
         category: countCategory.map((el) => el.category),
         city: countCity.map((el) => el.city),
         rooms: countRooms.map((el) => el.rooms),
@@ -115,11 +124,12 @@ async function getObjects() {
 
     let allObjects = [];
 
-    if (page === 1 && !category && !city && !rooms && !street && !district &&
+    if (page === 1 && !operationType && !category && !city && !rooms && !street && !district &&
       !companyName && !renovation && !floors && !sortOrder && !sortPrice) {
       allObjects = await db.objectIntrum.findMany({
         where: {
           active: true,
+          ...(operationType ? { operationType: { contains: operationType } } : {}),
           ...(category ? { category: { contains: category } } : {}),
           ...(city ? { city: { contains: city } } : {}),
           ...(rooms ? { rooms: { contains: rooms } } : {}),
@@ -154,6 +164,7 @@ async function getObjects() {
       allObjects = await db.objectIntrum.findMany({
         where: {
           active: true,
+          ...(operationType ? { operationType: { contains: operationType } } : {}),
           ...(category ? { category: { contains: category } } : {}),
           ...(city ? { city: { contains: city } } : {}),
           ...(rooms ? { rooms: { contains: rooms } } : {}),
@@ -186,6 +197,7 @@ async function getObjects() {
     const allFilteredObject = await db.objectIntrum.findMany({
       where: {
         active: true,
+        ...(operationType ? { operationType: { contains: operationType } } : {}),
         ...(category ? { category: { contains: category } } : {}),
         ...(city ? { city: { contains: city } } : {}),
         ...(rooms ? { rooms: { contains: rooms } } : {}),
@@ -210,6 +222,7 @@ async function getObjects() {
       },
       orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       select: {
+        operationType:true,
         category: true,
         city: true,
         rooms: true,
@@ -232,7 +245,8 @@ async function getObjects() {
 
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if (
+    if ( 
+      operationType ||
       category ||
       city ||
       rooms ||
@@ -246,6 +260,7 @@ async function getObjects() {
       maxPrice
     ) {
       filter = {
+        operationType:[...new Set(allFilteredObject.map((el) => el.operationType))],
         category: [...new Set(allFilteredObject.map((el) => el.category))],
         city: [...new Set(allFilteredObject.map((el) => el.city))],
         rooms: [...new Set(allFilteredObject.map((el) => el.rooms))],

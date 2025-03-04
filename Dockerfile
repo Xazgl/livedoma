@@ -81,7 +81,7 @@ RUN (crontab -u $(whoami) -l; echo "0 */2 * * * /usr/local/bin/node /app/xmlTask
 RUN (crontab -u $(whoami) -l; echo "*/80 * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
 # RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
 
-# RUN (crontab -u $(whoami) -l; echo "0 */9 * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */7 * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
 
 RUN (crontab -u $(whoami) -l; echo "0 */1 * * * /usr/local/bin/node /app/report/index.js" ) | crontab -u $(whoami) -
 

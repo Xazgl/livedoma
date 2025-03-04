@@ -13,6 +13,7 @@ export async function GET(
     const sPage = searchParams.get("page");
     const workerData = {
       category: searchParams.get("category"),
+      operationType: searchParams.get("operationType"),
       city: searchParams.get("city"),
       rooms: searchParams.get("rooms"),
       district: searchParams.get("district"),

@@ -80,4 +80,4 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
   );
 };
 
-export default DynamicCardImg;
+export default React.memo(DynamicCardImg);

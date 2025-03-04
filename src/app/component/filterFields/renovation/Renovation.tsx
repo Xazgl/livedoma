@@ -6,8 +6,6 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  MenuItem,
-  Select,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";

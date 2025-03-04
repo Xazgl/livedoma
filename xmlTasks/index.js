@@ -55,12 +55,12 @@ async function start() {
         }));
 
         for (const adObject of adsObjects) {
-
-            let companyNameStr = adObject.CompanyName ? (adObject.CompanyName[0] === "Живем дома" || adObject.CompanyName[0] === "АН Живем дома" ? "Живем дома" : adObject.CompanyName[0]) : "Владис"
+            const compan = adObject.CompanyName? adObject.CompanyName[0].trim() : null;
+            let companyNameStr = adObject.CompanyName ? (compan === "Живем дома" || compan === "АН Живем дома" || compan === "Живем Дома"  ) ? "Живем дома" : (compan == 'Партнер Недвижимость' || compan == 'Партнер' )? 'Партнер': (compan == 'Метры Недвижимость' || compan == 'Метры' )? 'Метры' :  compan : "Владис";
             let state = ''
             let city = ''
             let street = ''
-            let str = adObject.Address[0]
+            let str = adObject && adObject.Address  && adObject.Address[0]? adObject.Address[0] : ''
             if (companyNameStr !== 'Владис') {
                 // Разделяем строку по запятой и удаляем лишние пробелы
                 let parts = str.split(',').map(part => part.trim());
@@ -213,6 +213,7 @@ async function start() {
                             street: street ? street : 'Не указана',
                             // state: state ? (city === "Волжский" || city === "г Волжский" ? "Волжский" : funcCity(state) ) : "Не указан",
                             price: adObject.Price ? Number(adObject.Price[0]) : 0,
+                            companyName: companyNameStr,
                             managerName: adObject.ManagerName ? String(adObject.ManagerName[0]) : "Живем Дома",
                             description: adObject.Description ? String(adObject.Description[0]) : '',
                             balconyOrLoggia: adObject.BalconyOrLoggia && adObject.BalconyOrLoggia.length > 0 ? String(adObject.BalconyOrLoggia[0]) : "Без балкона и лоджий",

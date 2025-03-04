@@ -4,6 +4,148 @@ const axios = require('axios').default
 const { sendEmail } = require("./lib");
 
 
+const emailList = [
+  "iskanderm185@gmail.com",
+  "karpovichirina@mail.ru",
+  "n.rutzkaja@yandex.ru",
+  "pshenichnaya_yelena@mail.ru",
+  "puzanovartem2@gmail.com",
+  "vlasovalybov@bk.ru",
+  "zil1311@mai.ru",
+  "shapovalova.margo1785@mail.ru",
+  "swallow888@gmail.com",
+  "utalieva.farida@mail.ru",
+  "akim.laptev@yandex.ru",
+  "twoe_@mail.ru",
+  "paparu@gmail.ru",
+  "glushkova1010@gmail.com",
+  "vladislaavvsss@mail.ru",
+  "honey-baby88@mail.ru",
+  "Sany95-95@bk.ru",
+  "tiggrilla@gmail.com",
+  "alinakurdunova7@gmail.com",
+  "albina13kiss@yandex.ru",
+  "iamirumov@mail.ru",
+  "doronin060288@gmail.com",
+  "goronov.a@mail.ru",
+  "pro55555.ru@mail.ru",
+  "severov-andrei86@mail.ru",
+  "sharaponov@gmail.com",
+  "anna7588.16@gmail.com",
+  "azubova36@gmail.com",
+  "antonkoshergin23071999@mail.ru",
+  "anufrienko.pol@yandex.ru",
+  "arkadiy.kasparov.90@mail.ru",
+  "artcheh@rambler.ru",
+  "a.artser@mail.ru",
+  "katetor1701@gmail.com",
+  "olegulybkin@gmail.ru",
+  "tkacheva.yli@gmail.com",
+  "ruslanbergaliev2005@gmail.com",
+  "lesenok1808@yandex.ru",
+  "v.dildina.l@mail.ru",
+  "viktoriaosadcenko503@gmail.com",
+  "nataliyavysockaya@yandex.ru",
+  "slavamidone@gmail.com",
+  "svetagazduk@gmail.com",
+  "gladkova9749@yandex.ru",
+  "ekgolovacheva@gmail.com",
+  "promarivirus@yandex.ru",
+  "gulmirad0703@gmail.com",
+  "artxah0@gmail.com",
+  "goga6171@gmail.com",
+  "sda7634@mail.ru",
+  "teqqquilala@gmail.com",
+  "markizoo@mail.ru",
+  "kent81@list.ru",
+  "saharkov1@mail.ru",
+  "elena.melihova@inbox.ru",
+  "Boss.akella@mail.ru",
+  "Novokshchenova18@yandex.ru",
+  "belozerovakatw@gmail.com",
+  "timurbisinov@yandex.ru",
+  "89880134175@yandex.ru",
+  "denisenckoelena@yandex.ru",
+  "elena.culig@yandex.ru",
+  "elenayudina1976g@gmail.com",
+  "pevek79@mail.ru",
+  "tigr74rak2806@mail.ru",
+  "Undina34@gmail.com",
+  "serbakovae807@gmail.com",
+  "azotova96@yandex.ru",
+  "irina2005mira@gmail.com",
+  "kalinka95@mail.ru",
+  "kamila.neskrebina@yandex.ru",
+  "tsk1502@mail.ru",
+  "koblikovae@yandex.ru",
+  "katyaliashenko.ru@yandex.ru",
+  "98rgh9wf@mail.ru",
+  "kmalcef08031998@mail.ru",
+  "zharovamarin@mal.ru",
+  "mari.necaeva.808@mail.ru",
+  "im690053@gmail.com",
+  "Alexman8@mail.ru",
+  "meshchaninov.e@gmail.com",
+  "jingle_1@mail.ru",
+  "2211md@bk.ru",
+  "nadezlabogoduhova0766@gmail.ru",
+  "nazarovalilita@gmail.com",
+  "b_famiks@mail.ru",
+  "b_fomiks@mail.ru",
+  "enotik69690000@mail.ru",
+  "yellow2381@mail.ru",
+  "dash.schevtsova@yandex.ru",
+  "hipirs932@yandex.ru",
+  "KisellOf@yandex.ru",
+  "nikita61rus91@mail.ru",
+  "petrova21.68@mail.ru",
+  "k0peika2009@gmail.com",
+  "amon94@mail.ru",
+  "ashiha927@gmail.com",
+  "pdk1993@yandex.ru",
+  "panzevaelena52@gmail.com",
+  "lil27nik08@mail.ru",
+  "tata197634@mail.ru",
+  "7014713@mail.ru",
+  "rena.kasumova@mail.ru",
+  "aqua-web@mail.ru",
+  "aqva-web@mail.ru",
+  "rom.valiew2018@gmail.com",
+  "aleksei_ri4agov@mail.ru",
+  "ryazina7@gmail.com",
+  "salenckokirill@yandex.ru",
+  "fontogorou87@mail.ru",
+  "srazvina99@gmail.com",
+  "sveta9123@mail.ru",
+  "guzhovsd@mail.ru",
+  "Stas.semushkin.1999@mail.ru",
+  "abdrashidov.vlg@gmail.com",
+  "ser-serg008@mail.ru",
+  "dlyavksani@gmail.com",
+  "anna.skachkova@mail.ru",
+  "skorikovaa2517@mail.ru",
+  "a.spodenyuk18@mail.ru",
+  "kinoworks@yandex.ru",
+  "mihail.steimashchuk@gmail.com",
+  "nsuwokina@gmail.com",
+  "k.tten606@mail.ru",
+  "Kitten606@mail.ru",
+  "marina.teteryatnikova@list.ru",
+  "anton.tishevsky@yandex.ru",
+  "r.truxliaev@yandex.ru",
+  "1alfff1@mail.ru",
+  "kharitonov199308@gmail.com",
+  "cxfcnmtvibltnb@mail.ru",
+  "cxfcnmtvjbltnb@mail.ru",
+  "zevs144@yandex.ru",
+  "jul.voznaya@yandex.ru",
+  "s-yuli@mail.ru",
+  "iurii18vlasov@yandex.ru",
+  "yuri.vorozhtcov1967@gmail.com",
+  "mar.al.yakovenko@yandex.ru"
+];
+
+
 async function fetchData() {
   const params = new URLSearchParams();
   params.append("apikey", "b6623ccbb9e2e082c27e266e77102105");
@@ -25,7 +167,7 @@ async function fetchData() {
         });
       }
     }
-    console.log(emails.length); // Выводим массив email на консоль
+    console.log('Почт в интруме у актуальных сотрудников',emails.length); // Выводим массив email на консоль
     return emails;
   } catch (error) {
     console.error('Ошибка при выполнении запроса:', error);
@@ -34,7 +176,7 @@ async function fetchData() {
 }
 
 
-async function fetchObject(){
+async function fetchObject() {
   try {
     const params2 = new URLSearchParams();
     params2.append("apikey", "58628747b0d7dceb97ae04303c31a536");
@@ -66,13 +208,13 @@ async function fetchObject(){
         }
       });
     });
-    console.log(emails.length); // Выводим массив email на консоль
+    console.log('Почт в интруме в тот объекте',emails.length); // Выводим массив email на консоль
     return emails;
   } catch (error) {
     console.error("Ошибка при выполнении запроса:", error);
   }
 }
-
+ 
 //Его типизация после fetch 
 // const oldEmployeeStr = [
 //   'test@mail.ru',
@@ -90,73 +232,86 @@ async function fetchObject(){
 async function main() {
   try {
 
-    
+
     let idActualRaw = await fetchData();
-    let  oldEmployeeStr = await fetchObject()
+    let oldEmployeeStr = await fetchObject()
     // console.log(
     //   {
     //     idActualRaw:idActualRaw,
     //     oldEmployeeStr:oldEmployeeStr
     //   }
     // )
- 
-    const oldEmployee = oldEmployeeStr ? oldEmployeeStr.map(email => email.toLowerCase()) : []; // Преобразуем в массив
 
-    const emailActual = idActualRaw.filter(email => email !== null).map(email => email.toLowerCase());
+    const oldEmployee = oldEmployeeStr ? [
+      ...new Set(oldEmployeeStr.map(email => email.toLowerCase().trim()))] : []; // Преобразуем в массив
+      console.log("oldEmployee",oldEmployee.length)
+    
+      const emailActual = [
+      ...new Set(idActualRaw.filter(email => email !== null).map(email => email.toLowerCase().trim())
+      )];
+      console.log("emailActual",emailActual.length)
 
-    const deletedEmployee =  oldEmployee.filter(email => !emailActual.includes(email)) ;
+    const deletedEmployee = [...oldEmployee].filter(email => !emailActual.includes(email));
+    console.log("deletedEmployee",deletedEmployee.length)
+
     const newEmployee = emailActual.filter(email => !oldEmployee.includes(email));
+    console.log("newEmployee",newEmployee.length)
 
     // Отправка запросов в API Skillspace для новых сотрудников
     const links = [
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1894%5D=14797",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B10026%5D=15478",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B7001%5D=14798",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1896%5D=14799",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1898%5D=14800",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1968%5D=14801",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1901%5D=2421",
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1970%5D=2427",
-       //этот тестовый 
-      "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B32298%5D=48552"
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1894%5D=14797",
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B10026%5D=15478",
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B7001%5D=14798",
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1896%5D=14799",
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1898%5D=14800",
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1968%5D=14801",
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1901%5D=2421",
+      // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1970%5D=2427",
+      //этот тестовый 
+         "https://jivem-doma.skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1901%5D=2421",
+         "https://jivem-doma.skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B1968%5D=14801"
+         // "https://skillspace.ru/api/open/v1/course/student-invite?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d&courses%5B32298%5D=48552"
     ];
-    
+
     const emailWithError = []
 
     for (const email of newEmployee) {
-      console.log(email)
       for (const link of links) {
-      sendEmail(email, link,  emailWithError);
+        sendEmail(email, link, emailWithError);
       }
     }
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     for (const email of emailWithError) {
-      console.log({emailWithError:emailWithError, status:'Массив ошибочных повторная отправка пошла'})
+      console.log({ emailWithError: emailWithError, status: 'Массив ошибочных повторная отправка пошла' })
       for (const link of links) {
-      sendEmail(email, link,  emailWithError);
+        const encodedEmail = encodeURIComponent(email.trim());
+        sendEmail(encodedEmail, link, emailWithError);
       }
     }
 
     // Отправка запросов в API Skillspace для удаления уволенных сотрудников
     const deleteLinks = [
-      "https://skillspace.ru/api/open/v1/course/1894/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/10026/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/7001/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/1896/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/1898/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/1968/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/1901/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
-      "https://skillspace.ru/api/open/v1/course/1970/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/1894/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/10026/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/7001/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/1896/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/1898/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/1968/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/1901/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      // "https://skillspace.ru/api/open/v1/course/1970/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
       //этот тестовый 
-      "https://skillspace.ru/api/open/v1/course/32298/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d"
+      "https://jivem-doma.skillspace.ru/api/open/v1/course/1901/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d",
+      "https://jivem-doma.skillspace.ru/api/open/v1/course/1968/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d"
+      // "https://skillspace.ru/api/open/v1/course/32298/student-remove?token=3f69a76b-368a-344f-9a8d-d2c5ac7ab23d"
     ];
 
     for (const email of deletedEmployee) {
       for (const link of deleteLinks) {
         try {
-          const response = await axios.get(`${link}&email=${email}`);
+          const encodedEmail = encodeURIComponent(email.trim());
+          const response = await axios.get(`${link}&email=${encodedEmail}`);
           console.log(`Email ${email} успешно удален с курса.`);
           console.log(response.data);
         } catch (error) {
@@ -167,17 +322,17 @@ async function main() {
 
     // Обновление данных в CRM
     const emailActualStr = emailActual.join(",");
-    console.log({sendOnField:emailActualStr})
+    console.log({ sendOnField: emailActualStr,length:emailActual.length})
 
     const params3 = new URLSearchParams();
     params3.append("apikey", "9a75fc323d968db797ec0ab848572aad");
     params3.append("params[0][id]", "615900");
-    params3.append("params[0][fields][0][id]", "3668"); 
-    params3.append("params[0][fields][0][value]",emailActualStr ); 
+    params3.append("params[0][fields][0][id]", "3668");
+    params3.append("params[0][fields][0][value]", emailActualStr);
 
     try {
       const updateResponse = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/stock/update',
-       params3, {
+        params3, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
