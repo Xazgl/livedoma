@@ -106,7 +106,7 @@ export async function managerFindSansara(): Promise<string> {
 }
 
 
-export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean ) {
+export async function sendIntrumCrmTildaVictory( message: Tilda,double: boolean ) {
   const doubleMessage = double;
   // Случайный выбор менеджера
   const randomManager = managers[Math.floor(Math.random() * managers.length)];
@@ -137,13 +137,13 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
     params.append(
       "params[request][request_name]",
       message.answers
-        ? "ДУБЛЬ ПОВТОРНОЕ ОБРАЩЕНИЕ Сансара!!!!! " + message.answers
-        : "ПОВТОРНАЯ заявка (ДУБЛЬ) Сансара"
+        ? "ДУБЛЬ ПОВТОРНОЕ ОБРАЩЕНИЕ ЖК «Победа парк»!!!!! " + message.answers
+        : "ПОВТОРНАЯ заявка (ДУБЛЬ) ЖК «Победа парк»"
     ); //статус сделки
   } else {
     params.append(
       "params[request][request_name]",
-      message.answers ? message.answers : "Заявка по Сансаре"
+      message.answers ? message.answers : "Заявка по ЖК «Победа парк»"
     ); //статус сделки
   }
 
@@ -172,7 +172,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
 
   params.append("params[request][fields][1][id]", "1211"); // доп поле 2 Источник
   params.append(
-    "params[request][fields][1][value]", message.utm_source =='vk' || message.utm_source =='TG' ? 'Сайт Сансара' : message.utm_campaign || message.utm_content || message.utm_term || message.utm_source ? "Лендинг Сансара" : "Сайт Сансара" 
+    "params[request][fields][1][value]", message.utm_source =='vk' || message.utm_source =='TG' ? 'Сайт ЖК «Победа парк»' : message.utm_campaign || message.utm_content || message.utm_term || message.utm_source ? "Лендинг ЖК «Победа парк»" : "Сайт ЖК «Победа парк»" 
   ); 
 
   params.append("params[request][fields][2][id]", "5147"); // доп поле 3 campaign
@@ -221,7 +221,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append( "params[request][fields][13][value]","1"); 
 
   params.append("params[request][fields][14][id]", "5420"); // доп поле 13 Дата следующего действия
-  params.append( "params[request][fields][14][value]","ЖК «Сансара»"); 
+  params.append( "params[request][fields][14][value]","ЖК «Победа парк»"); 
 
   try {
     const postResponse = await axios.post(

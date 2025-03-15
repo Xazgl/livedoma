@@ -260,6 +260,9 @@ export async function sendIntrumCrmTildaNovodvinskaya(
   params.append("params[request][fields][13][id]", "5269"); // доп поле 12 Дата следующего действия
   params.append("params[request][fields][13][value]", "1");
 
+  params.append("params[request][fields][14][id]", "5420"); // доп поле 13 Дата следующего действия
+  params.append( "params[request][fields][14][value]","ЖК «Дом на Новодвинской»"); 
+
   console.log("Все параметры для Новодвиской перед отправкой црм", params);
   try {
     const postResponse = await axios.post(

@@ -235,6 +235,51 @@ export const columnsSetsApplicationNovodvinskaya: GridColDef[][] = [
  
 ];
 
+export const columnsSetsApplicationVictory: GridColDef[][] = [
+  [
+    { field: "createdAtCrm", headerName: "Дата", width: 200 },
+    { field: "url", headerName: "Ссылка на заявку", width: 300 },
+    { field: "phone", headerName: "Номер", width: 200 },
+    { field: "typeApplication", headerName: "Вид заявки", width: 200 },
+    { field: "translator", headerName: "Источник", width: 100 },
+    { field: "sourceUtm", headerName: "sourceUtm", width: 100 },
+    { field: "campaignUtm", headerName: "campaignUtm", width: 100 },
+    { field: "termUtm", headerName: "termUtm", width: 100 },
+    { field: "responsibleMain", headerName: "Менеджер", width: 200 },
+    { field: "timecallCenter", headerName: "Время обработки КЦ", width: 200 },
+    { field: "okCallCenter", headerName: "ОК КЦ", width: 200 },
+    { field: "timesaletCenter", headerName: "Время  обработки ОП", width: 200 },
+    { field: "okSaleCenter", headerName: "ОК ОП", width: 200 },
+    { field: "status", headerName: "Статус из crm", width: 200 },
+    { field: "postMeetingStage", headerName: "Стадия работы с покупателем", width: 200 },
+    { field: "contactedClient", headerName: "Спец связался с клиентом?", width: 200 },
+    { field: "prodinfo", headerName: "prodinfo", width: 200 },
+    { field: "nextAction", headerName: "Дата след шага", width: 200 },
+    { field: "comment",headerName: "Комментарии", width: 200,},
+  ],  [
+    { field: "createdAtCrm", headerName: "Дата", width: 200 },
+    { field: "url", headerName: "Ссылка на заявку", width: 300 },
+    { field: "phone", headerName: "Номер", width: 200 },
+    { field: "typeApplication", headerName: "Вид заявки", width: 200 },
+    { field: "translator", headerName: "Источник", width: 100 },
+    { field: "sourceUtm", headerName: "sourceUtm", width: 100 },
+    { field: "campaignUtm", headerName: "campaignUtm", width: 100 },
+    { field: "termUtm", headerName: "termUtm", width: 100 },
+    { field: "responsibleMain", headerName: "Менеджер", width: 200 },
+    { field: "timecallCenter", headerName: "Время обработки КЦ", width: 200 },
+    { field: "prodinfo", headerName: "prodinfo", width: 200 },
+    { field: "okCallCenter", headerName: "ОК КЦ", width: 200 },
+    { field: "timesaletCenter", headerName: "Время  обработки ОП", width: 200 },
+    { field: "okSaleCenter", headerName: "ОК ОП", width: 200 },
+    { field: "status", headerName: "Статус из crm", width: 200 },
+    { field: "postMeetingStage", headerName: "Стадия работы с покупателем", width: 200 },
+    { field: "contactedClient", headerName: "Спец связался с клиентом?", width: 200 },
+    { field: "nextAction", headerName: "Дата след шага", width: 200 },
+    { field: "comment",headerName: "Комментарии", width: 200,},
+  ]
+ 
+];
+
 
 export const columnsSets2: GridColDef[][] = [
   [
