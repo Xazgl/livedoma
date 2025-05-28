@@ -29,7 +29,8 @@ async function getObjects() {
       by: ["operationType"],
       _count: true,
       where: {
-        ...(operationType ? { operationType: { contains: operationType } } : {}),
+        active: true
+        // ...(operationType ? { operationType: { contains: operationType } } : {}),
       },
     });
 
@@ -37,7 +38,8 @@ async function getObjects() {
       by: ["category"],
       _count: true,
       where: {
-        ...(category ? { category: { contains: category } } : {}),
+        active: true
+        // ...(category ? { category: { contains: category } } : {}),
       },
     });
 
@@ -45,7 +47,8 @@ async function getObjects() {
       by: ["city"],
       _count: true,
       where: {
-        ...(city ? { city: { contains: city } } : {}),
+        active: true
+        // ...(city ? { city: { contains: city } } : {}),
       },
     });
 
@@ -53,7 +56,8 @@ async function getObjects() {
       by: ["rooms"],
       _count: true,
       where: {
-        ...(rooms ? { rooms: { contains: rooms } } : {}),
+        active: true
+        // ...(rooms ? { rooms: { contains: rooms } } : {}),
       },
     });
 
@@ -61,7 +65,8 @@ async function getObjects() {
       by: ["renovation"],
       _count: true,
       where: {
-        ...(renovation ? { renovation: { contains: renovation } } : {}),
+        active: true
+        // ...(renovation ? { renovation: { contains: renovation } } : {}),
       },
     });
 
@@ -69,7 +74,8 @@ async function getObjects() {
       by: ["district"],
       _count: true,
       where: {
-        ...(district ? { district: { contains: district } } : {}),
+        active: true
+        // ...(district ? { district: { contains: district } } : {}),
       },
     });
 
@@ -77,7 +83,8 @@ async function getObjects() {
       by: ["street"],
       _count: true,
       where: {
-        ...(street ? { street: { contains: street } } : {}),
+        active: true
+        // ...(street ? { street: { contains: street } } : {}),
       },
     });
 
@@ -85,7 +92,8 @@ async function getObjects() {
       by: ["companyName"],
       _count: true,
       where: {
-        ...(companyName ? { companyName: { contains: companyName } } : {}),
+        active: true
+        // ...(companyName ? { companyName: { contains: companyName } } : {}),
       },
     });
 
@@ -93,8 +101,8 @@ async function getObjects() {
       by: ["floor"],
       _count: true,
       where: {
-        // ...(floor ? { floor: { contains: floor } } : {}),
-        ...(floor ? { floor: { equals: floor } } : {}),
+        active: true
+        // ...(floor ? { floor: { equals: floor } } : {}),
       },
     });
 
@@ -102,25 +110,25 @@ async function getObjects() {
       by: ["floors"],
       _count: true,
       where: {
-        // ...(floors ? { floors: { contains: floors } } : {}),
-        ...(floors ? { floors: { equals: floors } } : {}),
+        active: true
+        // ...(floors ? { floors: { equals: floors } } : {}),
       },
     });
 
-    if (!operationType && !category && !city && !rooms && !street && !district && !companyName && !renovation && !floors) {
-      filter = {
-        operationType: countOperationType.map((el) => el.operationType),
-        category: countCategory.map((el) => el.category),
-        city: countCity.map((el) => el.city),
-        rooms: countRooms.map((el) => el.rooms),
-        renovation: countRenovation.map((el) => el.renovation),
-        district: countDistrict.map((el) => el.district),
-        street: countStreet.map((el) => el.street),
-        companyName: countCompanyName.map((el) => el.companyName),
-        floor: countFloor.map((el) => el.floor),
-        floors: countFloors.map((el) => el.floors),
-      };
-    }
+    // if (!operationType && !category && !city && !rooms && !street && !district && !companyName && !renovation && !floors) {
+    filter = {
+      operationType: countOperationType.map((el) => el.operationType),
+      category: countCategory.map((el) => el.category),
+      city: countCity.map((el) => el.city),
+      rooms: countRooms.map((el) => el.rooms),
+      renovation: countRenovation.map((el) => el.renovation),
+      district: countDistrict.map((el) => el.district),
+      street: countStreet.map((el) => el.street),
+      companyName: countCompanyName.map((el) => el.companyName),
+      floor: countFloor.map((el) => el.floor),
+      floors: countFloors.map((el) => el.floors),
+    };
+    // }
 
     let allObjects = [];
 
@@ -222,7 +230,7 @@ async function getObjects() {
       },
       orderBy: sortPrice ? { price: sortPrice } : { createdAt: sortOrder },
       select: {
-        operationType:true,
+        operationType: true,
         category: true,
         city: true,
         rooms: true,
@@ -245,38 +253,39 @@ async function getObjects() {
 
     //Если есть значения в фильтре, то сохраняем их в объект filter, беря их из все объектов
     //а не только с первой страницы из 10 объектов
-    if ( 
-      operationType ||
-      category ||
-      city ||
-      rooms ||
-      district ||
-      street ||
-      companyName ||
-      renovation ||
-      floor ||
-      floors ||
-      minPrice ||
-      maxPrice
-    ) {
-      filter = {
-        operationType:[...new Set(allFilteredObject.map((el) => el.operationType))],
-        category: [...new Set(allFilteredObject.map((el) => el.category))],
-        city: [...new Set(allFilteredObject.map((el) => el.city))],
-        rooms: [...new Set(allFilteredObject.map((el) => el.rooms))],
-        renovation: [...new Set(allFilteredObject.map((el) => el.renovation))],
-        floor: [...new Set(allFilteredObject.map((el) => el.floor))],
-        floors: [...new Set(allFilteredObject.map((el) => el.floors))],
-        maxPrice: maxPrice ? maxPrice : maxPriceAlternative,
-        minPrice: minPrice ? minPrice : 0,
-        //@ts-ignore
-        district: [...new Set(allFilteredObject.map((el) => el.district))],
-        street: [...new Set(allFilteredObject.map((el) => el.street))],
-        companyName: [
-          ...new Set(allFilteredObject.map((el) => el.companyName)),
-        ],
-      };
-    }
+
+    // if ( 
+    //   operationType ||
+    //   category ||
+    //   city ||
+    //   rooms ||
+    //   district ||
+    //   street ||
+    //   companyName ||
+    //   renovation ||
+    //   floor ||
+    //   floors ||
+    //   minPrice ||
+    //   maxPrice
+    // ) {
+    //   filter = {
+    //     operationType:[...new Set(allFilteredObject.map((el) => el.operationType))],
+    //     category: [...new Set(allFilteredObject.map((el) => el.category))],
+    //     city: [...new Set(allFilteredObject.map((el) => el.city))],
+    //     rooms: [...new Set(allFilteredObject.map((el) => el.rooms))],
+    //     renovation: [...new Set(allFilteredObject.map((el) => el.renovation))],
+    //     floor: [...new Set(allFilteredObject.map((el) => el.floor))],
+    //     floors: [...new Set(allFilteredObject.map((el) => el.floors))],
+    //     maxPrice: maxPrice ? maxPrice : maxPriceAlternative,
+    //     minPrice: minPrice ? minPrice : 0,
+    //     //@ts-ignore
+    //     district: [...new Set(allFilteredObject.map((el) => el.district))],
+    //     street: [...new Set(allFilteredObject.map((el) => el.street))],
+    //     companyName: [
+    //       ...new Set(allFilteredObject.map((el) => el.companyName)),
+    //     ],
+    //   };
+    // }
 
     if (allObjects.length > 0) {
       const countObjects = allFilteredObject.length;
@@ -296,6 +305,15 @@ async function getObjects() {
           countObjects: countObjects,
           allFilteredObject: [],
         });
+      }
+    } else {
+      // Если совсем нет совпадений, возвращаем пустую структуру,но filter сохраняем
+      return {
+        allObjects: [],
+        filter,
+        totalPages: 1,
+        countObjects: 0,
+        allFilteredObject: [],
       }
     }
 

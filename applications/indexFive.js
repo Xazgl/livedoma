@@ -12,11 +12,11 @@ const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату
-  const prevDay = new Date(currentDate.getTime() - (31 * 24 * 60 * 60 * 1000)); // Вычитаем 30 дней
-  const formattedPrevDate = prevDay.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
+  const prevDay = new Date(currentDate.getTime() - (31 * 24 * 60 * 60 * 1000)); 
+  const formattedPrevDate = prevDay.toISOString().split('T')[0]; 
 
   const day = new Date(currentDate.getTime());
-  const formattedDateCurrent = day.toISOString().split('T')[0]; // Преобразуем в формат Y-m-d
+  const formattedDateCurrent = day.toISOString().split('T')[0]; 
 
   const params = new URLSearchParams();
   params.append("apikey", "9a75fc323d968db797ec0ab848572aad");
@@ -26,9 +26,7 @@ async function start() {
   params.append("params[date][from]", formattedPrevDate);
   params.append("params[date][to]", formattedDateCurrent);
   params.append("params[fields][0][id]", "5420");
-  params.append("params[fields][0][value]", 'ЖК «Сансара»');
-  // params.append("params[fields][0][id]", "5060");
-  // params.append("params[fields][0][value]", '1');
+  params.append("params[fields][0][value]", 'ЖК «5 вершин»');
 
   try {
     const response = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/applications/filter',
@@ -37,8 +35,6 @@ async function start() {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
-
-    
 
     const data = response.data.data.list;
     console.log(data)
@@ -96,7 +92,7 @@ async function start() {
             postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
                   (getField(application.fields, "5081") ?  getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),
             desc: application.request_name,
-            typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
+            typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по ЖК «5 вершин»",
             contactedClient: getField(application.fields, "5069"),
             campaignUtm: existingSale.mangoUtm? existingSale.campaignUtm : getField(application.fields, "5147")? getField(application.fields, "5147") : 'нету',
             sourceUtm: existingSale.mangoUtm? existingSale.sourceUtm: getField(application.fields, "5185")? getField(application.fields, "5185") : 'нету',
@@ -104,7 +100,6 @@ async function start() {
             prodinfo: getField(application.fields, "5169")?  getField(application.fields, "5169") :'нету',
             nextAction: getField(application.fields, "1404"),
             rejection: '',//отклонение работы с заявок
-            //errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false, исправлена ошибка 
             datecallCenter: getField(application.fields, "5068"),
             timecallCenter: getField(application.fields, "5067"),
             timesaletCenter: getField(application.fields, "5071"),
@@ -112,7 +107,7 @@ async function start() {
             phone: phone,
             url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
             comment: await commentArr(application.id),
-            typeApplicationCrm: "Сансара",
+            typeApplicationCrm: "5 вершин",
             createdAtCrm: application.date_create,
             createdAt: new Date(`${application.date_create}`)
           },
@@ -125,21 +120,19 @@ async function start() {
             postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
                   (getField(application.fields, "5081") ?  getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),            
             desc: application.request_name,
-            typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
+            typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по ЖК «5 вершин",
             contactedClient: getField(application.fields, "5069"),
             campaignUtm: 'нету',
             termUtm: 'нету',
             nextAction: getField(application.fields, "1404"),
-            rejection: '',//отклонение работы с заявок
-            //errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false, исправлена ошибка 
+            rejection: '',
             datecallCenter: getField(application.fields, "5068"),
             timecallCenter: getField(application.fields, "5067"),
             timesaletCenter: getField(application.fields, "5071"),
             dateFirstContact: getField(application.fields, "5072"),
             phone: phone,
-            url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
             comment: await commentArr(application.id),
-            typeApplicationCrm: "Сансара",
+            typeApplicationCrm: "5 вершин",
             createdAtCrm: application.date_create,
             createdAt: new Date(`${application.date_create}`)
           },
@@ -147,7 +140,6 @@ async function start() {
       }
     }));
 
-    // console.log(mappedData)
     return 'Заявки успешно скачены';
 
   } catch (error) {

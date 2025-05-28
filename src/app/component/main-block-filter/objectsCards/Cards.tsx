@@ -1,7 +1,7 @@
 "use client";
 import { ObjectIntrum } from "@prisma/client";
 import Image from "next/image";
-import { getRoomsEnding, logoFind, numberWithSpaces } from "./functionCard";
+import { getRoomsEnding, logoFind, numberWithSpaces } from "./card/functionCard";
 import ProgressBar from "../../progressBar/ProgressBar";
 import {
   Dispatch,
@@ -23,7 +23,7 @@ import { FavoriteObj, FilterUserOptions } from "../../../../../@types/dto";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import noPhoto from "/public/images/noPhoto.jpg";
 import Link from "next/link";
-import DynamicCardImg from "./DynamicCardImg";
+import DynamicCardImg from "./card/card-img/DynamicCardImg";
 import { SortDateSelect } from "../../filterFields/sortPrice/SortPriceSelect";
 import { SortPriceSelect } from "../../filterFields/sortDate/SortDateSelect";
 import { useTheme } from "../../provider/ThemeProvider";

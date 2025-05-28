@@ -23,7 +23,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       //@ts-ignore
       if (answer) {
         const name = answer.contacts.name;
-        const phone = await normalizePhoneNumber(answer.contacts.phone);
+        const phone = answer.contacts.phone? await normalizePhoneNumber(answer.contacts.phone) : '';
         const clientCallTime = answer.contacts.text;
         const formid = answer.form.id ? answer.form.id : "Нету";
         let utm_medium = "";

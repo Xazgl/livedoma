@@ -12,3 +12,15 @@ export function checkTheme(
 ) {
   return theme === "dark" ? darkValue : lightValue;
 }
+
+/**
+ * Проверяет формат изображения
+ * @param {string} url - Текущая ссылка на изображение
+ */
+export const isImage = (url: string): boolean => {
+  const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg"];
+  const urlWithoutParams = url.split("?")[0]; // Убираем параметры из URL
+  return imageExtensions.some((ext) =>
+    urlWithoutParams.toLowerCase().endsWith(ext)
+  );
+};

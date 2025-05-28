@@ -15,7 +15,7 @@ import { useTheme } from "../provider/ThemeProvider";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 
-export default function MobileHeader({}) {
+export default function MobileHeader() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { theme, toggleTheme } = useTheme();
@@ -29,7 +29,7 @@ export default function MobileHeader({}) {
   };
 
   return (
-    <header className="w-[100%] md:hidden h-[50px] ">
+    <header className="w-[100%] md:hidden h-[50px]">
       <div
         style={{
           backgroundColor: theme === "dark" ? "#3a3f4635" : "#000000d1",
@@ -41,24 +41,34 @@ export default function MobileHeader({}) {
           justifyContent: "space-between",
           alignItems: "center",
           borderRadius: "5px",
+          padding: "0 20px",
         }}
       >
-        <div className="flex  gap-4 items-center pl-[20px] ">
-          {logoArr.map((el, index) => (
-            <React.Fragment key={el.key}>
-              <Image
-                src={el.img}
-                width={45}
-                height={45}
-                sizes="100vh"
-                alt={el.img}
-                className="flex"
-              />
-              {index !== logoArr.length - 1 && (
-                <div className="flex w-[2px] h-[34px] border-l-[1px] border-solid border-white border-opacity-20" />
-              )}
-            </React.Fragment>
-          ))}
+        <Link legacyBehavior href={"/"}>
+          <div className="flex gap-2 items-center cursor-pointer">
+            {logoArr.map((el, index) => (
+              <React.Fragment key={el.key}>
+                <Image
+                  src={el.img}
+                  width={45}
+                  height={45}
+                  sizes="100vh"
+                  alt={el.img}
+                  className="flex"
+                />
+                {index !== logoArr.length - 1 && (
+                  <div className="flex w-[2px] h-[34px] border-l-[1px] border-solid border-white border-opacity-20" />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </Link>
+
+        {/* Номер телефона, сразу доступен в шапке */}
+        <div className="text-white text-[11px] font-bold flex items-center gap-2">
+          <a href="tel:+78442520505" className="flex items-center">
+            8 (8442) 52-05-05
+          </a>
         </div>
 
         <IconButton
@@ -94,18 +104,6 @@ export default function MobileHeader({}) {
             </MenuItem>
           ))}
           <MenuItem>
-            <a href="tel:+78442520505" className="flex w-[auto] mt-1">
-              <button
-                type="button"
-                style={{ transition: "all 1s" }}
-                className="text-white border-[2px] border-[#563D82] hover:bg-[#3d295f] focus:ring-4 focus:outline-none focus:ring-purple-300 font-bold rounded-lg text-sm px-4 py-2 text-center me-2 mb-2 dark:border-bg-[#563D82] dark:hover:bg-[#563D82] dark:focus:ring-bg-[#563D82]"
-              >
-                8 (8442) 52-05-05
-              </button>
-            </a>
-          </MenuItem>
-
-          <MenuItem>
             <FormControlLabel
               sx={{ fontSize: "16px" }}
               control={
@@ -134,19 +132,21 @@ export default function MobileHeader({}) {
               label={
                 <div className="flex items-center">
                   {theme === "light" ? (
-                     <LightModeIcon
-                     sx={{
-                       color: "#e9e979",
-                       filter: "drop-shadow(0 0 10px rgba(255, 223, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 223, 0, 0.6))",
-                     }}
-                   />
-                 ) : (
-                   <DarkModeIcon
-                     sx={{
-                       color: "white",
-                       filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))",
-                     }}
-                   />
+                    <LightModeIcon
+                      sx={{
+                        color: "#e9e979",
+                        filter:
+                          "drop-shadow(0 0 10px rgba(255, 223, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 223, 0, 0.6))",
+                      }}
+                    />
+                  ) : (
+                    <DarkModeIcon
+                      sx={{
+                        color: "white",
+                        filter:
+                          "drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))",
+                      }}
+                    />
                   )}
                 </div>
               }

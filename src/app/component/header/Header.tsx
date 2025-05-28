@@ -23,24 +23,26 @@ export default function Header({}) {
       style={{ transition: "all 0.5s" }}
     >
       <div className="flex flex-row md:justify-between md:[gap-4] w-[100%]   items-center  h-[80px] ">
-        <div className="flex  gap-4  w-[50%] h-[30px] md:h-[60px] items-center ">
-          {logoArr.map((el, index) => (
-            <Fragment key={index}>
-              <Image
-                src={el.img}
-                width={el.w}
-                height={el.h}
-                sizes="100vh"
-                alt={el.img}
-                className="flex"
-                loading="lazy"
-              />
-              {index !== logoArr.length - 1 && (
-                <div className="flex w-[1px] h-[34px]  border-l-[1px] border-solid border-white border-opacity-50" />
-              )}
-            </Fragment>
-          ))}
-        </div>
+        <Link legacyBehavior href={"/"}>
+          <div className="flex  gap-4  w-[50%] h-[30px] md:h-[60px] items-center cursor-pointer">
+            {logoArr.map((el, index) => (
+              <Fragment key={index}>
+                <Image
+                  src={el.img}
+                  width={el.w}
+                  height={el.h}
+                  sizes="100vh"
+                  alt={el.img}
+                  className="flex"
+                  loading="lazy"
+                />
+                {index !== logoArr.length - 1 && (
+                  <div className="flex w-[1px] h-[34px]  border-l-[1px] border-solid border-white border-opacity-50" />
+                )}
+              </Fragment>
+            ))}
+          </div>
+        </Link>
 
         <nav className="flex h-[80px]   w-[50%]  items-center justify-start  ">
           <ul className="hidden lg:flex   sm:gap-6  md:gap-[60px]  items-center  h-[20px] ">
@@ -70,26 +72,28 @@ export default function Header({}) {
             </a>
           </div>
           <div className=" flex justify-end pl-[5px] h-full">
-          <button
+            <button
               onClick={toggleTheme}
               className="flex items-center justify-center h-[full]"
               title="Сменить тему"
             >
               {theme === "light" ? (
-                <DarkModeIcon 
+                <DarkModeIcon
                   sx={{
-                   color: "white", 
-                   filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))",                  }}
+                    color: "white",
+                    filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))",
+                  }}
                 />
               ) : (
                 <LightModeIcon
-                 sx={{ 
-                  color: "#e9e979",
-                  filter: "drop-shadow(0 0 10px rgba(255, 223, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 223, 0, 0.6))",
-                 }} 
+                  sx={{
+                    color: "#e9e979",
+                    filter:
+                      "drop-shadow(0 0 10px rgba(255, 223, 0, 0.8)) drop-shadow(0 0 20px rgba(255, 223, 0, 0.6))",
+                  }}
                 />
               )}
-          </button>
+            </button>
           </div>
         </nav>
       </div>

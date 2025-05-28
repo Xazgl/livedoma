@@ -151,9 +151,12 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
     params.append("params[request][employee_id]", "1693");
   } else {
     params.append(
-      "params[request][employee_id]",
-      message.managerId == "Ошибка в выборе менеджера"? managerIdRandom : message.managerId ? message.managerId : managerIdRandom
-    ); //id главного отв заявки
+      "params[request][employee_id]",""
+    ); 
+    // params.append(
+    //   "params[request][employee_id]",
+    //   message.managerId == "Ошибка в выборе менеджера"? managerIdRandom : message.managerId ? message.managerId : managerIdRandom
+    // ); //id главного отв заявки
   }
   //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв

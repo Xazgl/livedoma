@@ -2,7 +2,7 @@
 import { Avatar, Card, CardContent, CardHeader } from "@mui/material";
 import { ObjectIntrum } from "@prisma/client";
 import Image from 'next/image';
-import { numberWithSpaces } from "./functionCard";
+import { numberWithSpaces } from "./card/functionCard";
 import ProgressBar from "../../progressBar/ProgressBar";
 import { Dispatch, SetStateAction } from "react";
 import { PaginationRow } from "../../paginationRow/PaginatiowRow";

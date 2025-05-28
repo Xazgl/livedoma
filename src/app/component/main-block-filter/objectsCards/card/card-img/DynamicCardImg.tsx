@@ -11,6 +11,7 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.error('Ошибка загрузки изображения:', e.currentTarget.src); 
     e.currentTarget.src = noPhoto.src; 
   };
 
@@ -37,6 +38,7 @@ const DynamicCardImg: React.FC<Props> = ({ src, alt }) => {
   return (
     <div className="dynamic-image-container" style={getContainerStyles()}>
       <img
+        key={src} 
         ref={imgRef}
         src={src}
         alt={alt}

@@ -1,8 +1,8 @@
 export function operationTypeNormalize(input: string) {
   if (input == "Продам") {
-    return "Купить";
+    return "Продажа";
   } else if (input == "Сдам") {
-    return "Снять";
+    return "Аренда";
   } else {
     return input;
   }

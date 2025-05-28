@@ -73,7 +73,7 @@ async function downloadAndSaveImages(cleanLinks, folderPath) {
         // }, 5000)
         // await exec(command, { signal })
         // clearTimeout(timer)
-        await execPromise(command, { timeout: 5000 })
+        await execPromise(command, { timeout: 30000 })
         await fs.mkdir(path.join(folderPath, `thumbnail`), { recursive: true });
         await fs.mkdir(path.join(folderPath, `thumbnailMobile`), { recursive: true });
         await fs.mkdir(path.join(folderPath, `full`), { recursive: true });
@@ -92,9 +92,9 @@ async function downloadAndSaveImages(cleanLinks, folderPath) {
             imgs.full.push(fullFilename.replace(/\\+/g, '/').replace(/.*?static/, '/static'))
             // exec(`magick convert .${img} -resize 800x ${thumbnailFilename}`)
             // exec(`magick convert .${img} -resize 1200x ${fullFilename}`)
-            command2.push(execPromise(`magick convert ${img} -resize 800x ${thumbnailFilename}`, { timeout: 5000 }))
-            command2.push(execPromise(`magick convert ${img} -resize 400x ${thumbnailFileMobilename}`, { timeout: 5000 }))
-            command2.push(execPromise(`magick convert ${img} -resize 1200x ${fullFilename}`, { timeout: 5000 }))
+            command2.push(execPromise(`magick convert ${img} -resize 800x ${thumbnailFilename}`, { timeout: 25000 }))
+            command2.push(execPromise(`magick convert ${img} -resize 400x ${thumbnailFileMobilename}`, { timeout: 10000 }))
+            command2.push(execPromise(`magick convert ${img} -resize 1200x ${fullFilename}`, { timeout: 25000 }))
         }
         // await execPromise(command2.join('&&'), { timeout: 5000 })
         await Promise.allSettled(command2)

@@ -98,6 +98,8 @@ RUN (crontab -u $(whoami) -l; echo "0 */9 * * * /usr/local/bin/node /app/applica
 RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/indexSansara.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/indexNovodvinskaya.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/indexVictory.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */5 * * * /usr/local/bin/node /app/applications/indexFive.js" ) | crontab -u $(whoami) -
+
 
 RUN (crontab -u $(whoami) -l; echo "0 */6 * * * /usr/local/bin/node /app/applications/indexRansom.js" ) | crontab -u $(whoami) -
 

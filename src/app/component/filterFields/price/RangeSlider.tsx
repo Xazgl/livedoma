@@ -1,6 +1,6 @@
 import { InputAdornment,TextField } from "@mui/material";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
-import { numberWithSpaces } from "../../main-block-filter/objectsCards/functionCard";
+import { numberWithSpaces } from "../../main-block-filter/objectsCards/card/functionCard";
 import { useTheme } from "../../provider/ThemeProvider";
 import useDeb from "@/lib/hooks"; 
 import CurrencyRubleIcon from "@mui/icons-material/CurrencyRuble";

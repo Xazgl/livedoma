@@ -8,7 +8,7 @@ import Image from "next/image";
 import {
   logoFind,
   numberWithSpaces,
-} from "../../main-block-filter/objectsCards/functionCard";
+} from "../../main-block-filter/objectsCards/card/functionCard";
 import { useTheme } from "../../provider/ThemeProvider";
 import React from "react";
 

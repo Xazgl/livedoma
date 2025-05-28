@@ -27,6 +27,10 @@ export const LogoList: LogoArr[] = [
         img: `${part.src}`
     },
     {
+        name: 'Партнер',
+        img: `${part.src}`
+    },
+    {
         name: 'Партнер Недвижимость',
         img: `${part.src}`
     },

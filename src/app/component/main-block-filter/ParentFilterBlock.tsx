@@ -3,12 +3,6 @@ import { ObjectIntrum } from "@prisma/client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FilteblackProps, FilterUserOptions } from "../../../../@types/dto";
 import { SelectCategory } from "../selectCategory/SelectCategory";
-import WysiwygIcon from "@mui/icons-material/Wysiwyg";
-import SchemaIcon from "@mui/icons-material/Schema";
-import StoreIcon from "@mui/icons-material/Store";
-import HouseIcon from "@mui/icons-material/House";
-import FormatPaintIcon from "@mui/icons-material/FormatPaint";
-
 import {
   categoryFilter,
   ceilingHeightFilter,
@@ -35,10 +29,6 @@ import { useTheme } from "../provider/ThemeProvider";
 import dynamic from "next/dynamic";
 import React from "react";
 import ObjectsCardsTest from "./objectsCards/ObjectsCardsTest";
-import { checkTheme } from "@/shared/utils";
-import { operationTypeNormalize } from "../filterFields/operationType/utils";
-import UniversalMobileFilter from "../universalFilter/UniversalMobileFilter";
-import MobileFilterContainer from "../mobile-filter-container/MobileFilterContainer";
 import StickyMobileFilter from "../mobile-filter-container/StickyMobileFilter";
 
 // Динамический импорт компонентов фильтра
@@ -176,17 +166,17 @@ function ParentFilterBlock({ objects, pages, page, priceMax }: Props) {
             setMapObj(el.allFilteredObject);
             setFilteblackProps((prevFilterState) => ({
               ...prevFilterState,
-              operationTypes: el.filter.operationType,
-              categories: el.filter.category,
-              cities: el.filter.city,
-              rooms: el.filter.rooms,
-              renovationTypes: el.filter.renovation,
-              floor: el.filter.floor,
-              floors: el.filter.floors,
-              districts: el.filter.district,
-              streets: el.filter.street,
-              companyNames: el.filter.companyName,
-              price: [el.filter.minPrice, el.filter.maxPrice],
+              operationTypes: el.filter.operationType || [],
+              categories: el.filter.category || [],
+              cities: el.filter.city || [],
+              rooms: el.filter.rooms || [],
+              renovationTypes: el.filter.renovation || [],
+              floor: el.filter.floor || [],
+              floors: el.filter.floors || [],
+              districts: el.filter.district || [],
+              streets: el.filter.street || [],
+              companyNames: el.filter.companyName || [],
+              price: [el.filter?.minPrice || 0, el.filter?.maxPrice || 100000000],
             }));
           })
           .catch((err) => {
