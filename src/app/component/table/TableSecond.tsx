@@ -4,7 +4,7 @@ import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { constructionApplications } from "@prisma/client";
-import { generateExcel, generateExcel2 } from "@/lib/excelFunc";
+import { generateExcel2 } from "@/lib/excelFunc";
 import { columnsSetsApplication, titlesApplication } from "./myFilter";
 
 import dayjs, { Dayjs } from "dayjs";
@@ -15,10 +15,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 type Props = {
   applications: constructionApplications[];
-};
-
-type FilterUserOptions = {
-  dateStage: string[];
 };
 
 export function TableSecond({ applications }: Props) {
@@ -126,7 +122,6 @@ export function TableSecond({ applications }: Props) {
           }}
           pageSizeOptions={[applicationsArr.length]}
           disableRowSelectionOnClick={true}
-          // checkboxSelection
         />
         <div className="flex flex-col mt-[5px] items-center gap-[5px]">
           <h3 className="w-fill text-[12px] text-[#C0C0C0]">Вкладки таблицы</h3>

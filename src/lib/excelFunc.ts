@@ -149,6 +149,16 @@ export async function generateExcel2(applications: constructionApplications[]) {
     { name: "Выходцева", id: "1944" },
     { name: "Петрухин*", id: "2417" },
     { name: "Ломакин*", id: "2447" },
+    { name: "Татарикова", id: "2502" },
+    { name: "Питаева", id: "2535" },
+    { name: "Орлова", id: "2753" },
+    { name: "Чумаченко", id: "1659" },
+    { name: "Бусырев", id: "77" },
+    { name: "Кабулова София", id: "2536" },
+    { name: "Глущенко", id: "1681" },
+    { name: "Кузьмин", id: "4" },
+    { name: "Чумаченко", id: "1659" },
+    { name: "Шепилов", id: "44" },
   ];
 
   function findManager(id: string) {
@@ -174,7 +184,8 @@ export async function generateExcel2(applications: constructionApplications[]) {
       translator !== "Яндекс Услуги" &&
       translator !== "Циан" &&
       translator !== "рекомендация" &&
-      translator !== "Сбербанк"
+      translator !== "Сбербанк" &&
+      translator !== "Буклеты"
     ) {
       if (sourceUtm == "TG" || sourceUtm == "vk" || sourceUtm == "sayt_GD") {
         return "Наш сайт";
@@ -186,7 +197,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
           : "Наш сайт";
       }
     }
-    return translator ? translator : "";
+    return translator ??  "";
   }
 
   const applicationsNew = applications.map((appl) => ({

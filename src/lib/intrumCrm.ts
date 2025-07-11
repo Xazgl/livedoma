@@ -178,7 +178,8 @@ export async function sendIntrumCrmTilda(
     message?.formid === "form714887068" ||
     message?.formid === "form716183792" ||
     formName === "Ремонты-консультация" ||
-    formName === "Ремонты - заказать 3д" || formName?.includes("Ремонт")
+    formName === "Ремонты - заказать 3д" ||
+    formName?.includes("Ремонт")
   ) {
     answerFor5291 = "Ремонты";
     title = "Заявка на ремонт";
@@ -186,7 +187,8 @@ export async function sendIntrumCrmTilda(
     formName === "Производство Получить консультацию" ||
     message?.formid === "form790140565" ||
     formName === "Производство Индив предл по скидке" ||
-    message?.formid === "form867970463" ||  formName?.includes("Производство")
+    message?.formid === "form867970463" ||
+    formName?.includes("Производство")
   ) {
     answerFor5291 = "Производство";
     title = "Заявка на производство";
@@ -338,94 +340,255 @@ export async function sendIntrumCrmTilda(
   }
 }
 
+// Вариант 1 для точной очереди [Орлова, Шепилов, <один_ordinary>, Орлова, Шепилов, Орлова]
+// let currentCycle = -1;
+// let currentSequence: string[] = [];
+/**
+ * Выбирает следующего менеджера:
+ * – в каждом цикле N активных менеджеров (запросов),
+ * – Орлова (ID "2753") — 3 заявки в цикле,
+ * – Шепилов (ID "44") — 2 заявки в цикле,
+ * – ровно один «обычный» менеджер по кругу,
+ * – порядок: [Орлова, Шепилов, Ordinary, Орлова, Шепилов, Орлова].
+ */
+// export async function managerFind(): Promise<string> {
+//   // 1) Список активных менеджеров из БД
+//   const managers = await db.activeManagers.findMany({
+//     where: { company_JDD_active: true },
+//     select: { manager_id: true },
+//   });
+//   const ids = managers.map((m) => m.manager_id);
+//   const ordinary = ids.filter((id) => id !== "2753" && id !== "44");
+
+//   // 2) Размер цикла = кол-во менеджеров
+//   const cycleSize = ids.length;
+
+//   // 3) Сколько заявок уже отдали?
+//   const total = await db.managerQueue.count();
+//   const cycleNum = Math.floor(total / cycleSize);
+
+//   // 4) Генерируем новую последовательность при старте цикла
+//   if (cycleNum !== currentCycle) {
+//     currentCycle = cycleNum;
+//     // Выбираем «ordinary» по кругу
+//     const ord = ordinary[cycleNum % ordinary.length];
+//     currentSequence = ["2753", "44", ord, "2753", "44", "2753"];
+//   }
+
+//   // 5) Берём по текущему индексу
+//   const idx = total % cycleSize;
+//   const choice = currentSequence[idx];
+
+//   // 6) Сохраняем и возвращаем
+//   await db.managerQueue.create({ data: { managerId: choice } });
+//   return choice;
+// }
+
+//Вариант 2
+let currentCycle = -1;
+let currentSequence: string[] = [];
+let lastCycleSize = 0;
+
 export async function managerFind() {
   try {
+    // 1) Загружаем всех активных менеджеров
     const managers = await db.activeManagers.findMany({
-      where: {
-        company_JDD_active: true,
-      },
-      select: {
-        name: true,
-        manager_id: true,
-      },
-    });
-    console.log("ЖДД список менеджеров из БД", managers);
-
-    const existingQueue: ManagerQueue[] = await db.managerQueue.findMany({
-      orderBy: { createdAt: "desc" },
+      where: { company_JDD_active: true },
+      select: { manager_id: true },
     });
 
-    if (existingQueue.length > 0) {
-      if (existingQueue.length >= 3) {
-        // Проверяем последние 5 заявок и выбираем менеджера, которого там нет
-        const lastFiveManagers = new Set(
-          existingQueue.slice(0, 5).map((record) => record.managerId)
-        );
-        const availableManagers = managers.filter(
-          (manager) => !lastFiveManagers.has(manager.manager_id)
-        );
-
-        if (availableManagers.length > 0) {
-          // Подсчитываем количество заявок за последнюю неделю
-          const oneWeekAgo = new Date();
-          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-          const requestCountsPromises = availableManagers.map(
-            async (manager) => {
-              const count = await db.managerQueue.count({
-                where: {
-                  managerId: manager.manager_id,
-                  createdAt: { gte: oneWeekAgo },
-                },
-              });
-              return { managerId: manager.manager_id, count };
-            }
-          );
-
-          const requestCounts = await Promise.all(requestCountsPromises);
-          const leastLoadedManager = requestCounts.sort(
-            (a, b) => a.count - b.count
-          )[0];
-
-          return leastLoadedManager.managerId;
-        } else {
-          // Если все менеджеры уже были в последних 5 заявках, выбираем того, у кого меньше заявок за последнюю неделю
-          const allManagerIds = managers.map((manager) => manager.manager_id);
-
-          const oneWeekAgo = new Date();
-          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-          const requestCountsPromises = allManagerIds.map(async (managerId) => {
-            const count = await db.managerQueue.count({
-              where: {
-                managerId,
-                createdAt: { gte: oneWeekAgo },
-              },
-            });
-            return { managerId, count };
-          });
-
-          const requestCounts = await Promise.all(requestCountsPromises);
-          const leastLoadedManager = requestCounts.sort(
-            (a, b) => a.count - b.count
-          )[0];
-
-          return leastLoadedManager.managerId;
-        }
-      } else {
-        // Если в новой БД меньше 3 записей, работаем по старому коду
-        return await oldManagerFind();
-      }
-    } else {
-      // Если новая БД пуста, работаем по старому коду
+    // Если нет ни одного активного — откатываемся на старую логику
+    if (managers.length === 0) {
       return await oldManagerFind();
     }
+
+    // 2) Назначаем веса
+    const weights: Record<string, number> = {};
+    for (const { manager_id } of managers) {
+      if (manager_id === "2753") weights[manager_id] = 4; // Орлова
+      else if (manager_id === "44") weights[manager_id] = 2; // Шепилов
+      else weights[manager_id] = 1; // все остальные
+    }
+
+    // 3) Собираем базовый пул и определяем размер цикла
+    const basePool = Object.entries(weights).flatMap(([id, w]) =>
+      Array(w).fill(id)
+    );
+    const cycleSize = basePool.length;
+
+    // Ещё одна защита: если вдруг cycleSize == 0 (чудом), — откат
+    if (cycleSize === 0) {
+      return await oldManagerFind();
+    }
+
+    // 4) Сколько заявок уже было
+    const total = await db.managerQueue.count();
+    const cycleNum = Math.floor(total / cycleSize);
+
+    // 5) Перемешиваем на старте нового цикла
+    //    или если cycleSize изменился (новые/удалённые менеджеры)
+    if (cycleNum !== currentCycle || cycleSize !== lastCycleSize) {
+      currentCycle = cycleNum;
+      lastCycleSize = cycleSize;
+      currentSequence = shuffleArray([...basePool]);
+    }
+
+    // 6) Берём текущий элемент
+    const idx = total % cycleSize;
+    const choice = currentSequence[idx];
+
+    // Пишем в очередь и возвращаем
+    await db.managerQueue.create({ data: { managerId: choice } });
+    return choice;
   } catch (error) {
-    console.error("Error in managerFind:", error);
-    // Если произошла ошибка, работаем по старому коду
+    console.error("Error in managerFind (new version):", error);
     return await oldManagerFind();
   }
 }
+
+/** Fisher–Yates shuffle */
+function shuffleArray<T>(arr: T[]): T[] {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Вариант 3 старый
+// export async function managerFind() {
+//   try {
+//     const managers = await db.activeManagers.findMany({
+//       where: {
+//         company_JDD_active: true,
+//       },
+//       select: {
+//         name: true,
+//         manager_id: true,
+//       },
+//     });
+
+//     const oneWeekAgo = new Date();
+//     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+//     console.log("ЖДД список менеджеров из БД", managers);
+
+//     const totalManagers = managers ? managers.length : 5;
+
+//     const existingQueue: ManagerQueue[] = await db.managerQueue.findMany({
+//       orderBy: { createdAt: "desc" },
+//     });
+
+//     // Считаем заявки Орловой за неделю
+//     const orlovaWeekCount = await db.managerQueue.count({
+//       where: {
+//         managerId: "2753",
+//         createdAt: { gte: oneWeekAgo },
+//       },
+//     });
+
+//     // Считаем заявки всех остальных менеджеров за неделю
+//     const otherManagersWeekCount = await db.managerQueue.count({
+//       where: {
+//         managerId: { not: "2753" },
+//         createdAt: { gte: oneWeekAgo },
+//       },
+//     });
+
+//     if (existingQueue.length > 0) {
+//       if (existingQueue.length >= 3) {
+//         // Проверяем последние равное кол-ву менеджеров в очереди кол-во  заявок и выбираем менеджера, которого там нет
+//         const lastManagers = existingQueue
+//           .slice(0, totalManagers)
+//           .map((record) => record.managerId);
+
+//         const lastManagersArr = existingQueue.slice(0, totalManagers);
+//         // Последняя заявка и предпоследния (нулевой элемент — самая новая) была ли орлова
+//         const lastOne = existingQueue[0];
+//         const lastTwo = existingQueue[1];
+//         const notOrlovaWasLastTwo =
+//           lastOne?.managerId !== "2753" && lastTwo?.managerId !== "2753";
+//         // Сколько раз Орлова была в последних N заявках
+//         const orlovaRecentCount = lastManagersArr.filter(
+//           (manager) => manager.managerId === "2753"
+//         ).length;
+//         // Основное условие для Орловой:
+//         // 1) Меньше 2х в последних N заявках
+//         // 2) Не была последней
+//         // 3) Имеет меньше чем 2x заявок за неделю по сравнению с другими
+//         if (
+//           orlovaRecentCount < 2 &&
+//           notOrlovaWasLastTwo &&
+//           (otherManagersWeekCount === 0 || // Если другие еще не получали заявки
+//             orlovaWeekCount / otherManagersWeekCount < 2)
+//         ) {
+//           return "2753";
+//         }
+//         const availableManagers = managers.filter(
+//           (manager) => !lastManagers.includes(manager.manager_id)
+//         );
+
+//         if (availableManagers.length > 0) {
+//           // Подсчитываем количество заявок за последнюю неделю
+//           const oneWeekAgo = new Date();
+//           oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+//           const requestCountsPromises = availableManagers.map(
+//             async (manager) => {
+//               const count = await db.managerQueue.count({
+//                 where: {
+//                   managerId: manager.manager_id,
+//                   createdAt: { gte: oneWeekAgo },
+//                 },
+//               });
+//               return { managerId: manager.manager_id, count };
+//             }
+//           );
+
+//           const requestCounts = await Promise.all(requestCountsPromises);
+//           const leastLoadedManager = requestCounts.sort(
+//             (a, b) => a.count - b.count
+//           )[0];
+
+//           return leastLoadedManager.managerId;
+//         } else {
+//           // Если все менеджеры уже были в последних  заявках, выбираем того, у кого меньше заявок за последнюю неделю
+//           const allManagerIds = managers.map((manager) => manager.manager_id);
+
+//           const oneWeekAgo = new Date();
+//           oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+//           const requestCountsPromises = allManagerIds.map(async (managerId) => {
+//             const count = await db.managerQueue.count({
+//               where: {
+//                 managerId,
+//                 createdAt: { gte: oneWeekAgo },
+//               },
+//             });
+//             return { managerId, count };
+//           });
+
+//           const requestCounts = await Promise.all(requestCountsPromises);
+//           const leastLoadedManager = requestCounts.sort(
+//             (a, b) => a.count - b.count
+//           )[0];
+
+//           return leastLoadedManager.managerId;
+//         }
+//       } else {
+//         // Если в новой БД меньше 3 записей, работаем по старому коду
+//         return await oldManagerFind();
+//       }
+//     } else {
+//       // Если новая БД пуста, работаем по старому коду
+//       return await oldManagerFind();
+//     }
+//   } catch (error) {
+//     console.error("Error in managerFind:", error);
+//     // Если произошла ошибка, работаем по старому коду
+//     return await oldManagerFind();
+//   }
+// }
 
 async function oldManagerFind() {
   try {
