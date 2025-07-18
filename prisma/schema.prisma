@@ -441,3 +441,32 @@ model ActiveManagers {
   createdAt              DateTime @default(now())
   updatedAt              DateTime @updatedAt
 }
+
+model VkApplication {
+  id                String  @id @default(cuid())
+  name              String?
+  phone             String
+  typeSend          String?
+  timeForClientCall String? @default("")
+  formid            Int?
+  utm_source        String?
+  utm_medium        String?
+  utm_campaign      String?
+  utm_content       String?
+  utm_term          String?
+  sendCrm           Boolean
+  answers           String?
+  managerId         String?
+
+  prodinfo    String?
+  intrumId    String?
+  intrumUrl   String?
+  timeCall    String?
+  ok_cz       Boolean? @default(false)
+  timeManager String?
+  ok_manager  Boolean? @default(false)
+  status      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

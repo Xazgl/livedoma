@@ -1,6 +1,5 @@
 import db from "../../prisma";
-import { differenceInHours } from 'date-fns';
-
+import { differenceInHours } from "date-fns";
 
 export async function doubleFind(phone: string) {
   const doubleMessageOne = await db.tilda.findFirst({
@@ -8,7 +7,7 @@ export async function doubleFind(phone: string) {
       phone: phone,
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 
@@ -17,20 +16,29 @@ export async function doubleFind(phone: string) {
       phone: phone,
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
 
-  console.log({ doubleMessageOne: doubleMessageOne, doubleMessageTwo: doubleMessageTwo });
+  console.log({
+    doubleMessageOne: doubleMessageOne,
+    doubleMessageTwo: doubleMessageTwo,
+  });
 
   const now = new Date();
 
   // Check for duplicates within the last 24 hours
-  if (doubleMessageOne && differenceInHours(now, new Date(doubleMessageOne.createdAt)) <= 24) {
+  if (
+    doubleMessageOne &&
+    differenceInHours(now, new Date(doubleMessageOne.createdAt)) <= 24
+  ) {
     return { isDuplicate: true, within24Hours: true };
   }
 
-  if (doubleMessageTwo && differenceInHours(now, new Date(doubleMessageTwo.createdAt)) <= 24) {
+  if (
+    doubleMessageTwo &&
+    differenceInHours(now, new Date(doubleMessageTwo.createdAt)) <= 24
+  ) {
     return { isDuplicate: true, within24Hours: true };
   }
 
@@ -41,4 +49,32 @@ export async function doubleFind(phone: string) {
   }
 }
 
+export async function doubleFindVK(name: string, typeSend: string) {
+  const doubleMessageOne = await db.vkApplication.findFirst({
+    where: {
+      name: name,
+      typeSend:typeSend
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
+  console.log({ doubleMessageOne: doubleMessageOne });
+
+  const now = new Date();
+
+  // Check for duplicates within the last 24 hours
+  if (
+    doubleMessageOne &&
+    differenceInHours(now, new Date(doubleMessageOne.createdAt)) <= 24
+  ) {
+    return { isDuplicate: true, within24Hours: true };
+  }
+
+  if (!doubleMessageOne) {
+    return { isDuplicate: false, within24Hours: false };
+  } else {
+    return { isDuplicate: true, within24Hours: false };
+  }
+}

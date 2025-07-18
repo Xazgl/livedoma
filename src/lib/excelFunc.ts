@@ -185,6 +185,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
       translator !== "Циан" &&
       translator !== "рекомендация" &&
       translator !== "Сбербанк" &&
+      translator !== "Вконтакте" &&
       translator !== "Буклеты"
     ) {
       if (sourceUtm == "TG" || sourceUtm == "vk" || sourceUtm == "sayt_GD") {

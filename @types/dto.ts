@@ -94,7 +94,6 @@ export type Marquiz = {
   result: {};
 };
 
-
 export type MarquizRansom = {
   raw: { q: string; a: string | number | string[] }[];
   answers: {
@@ -142,7 +141,6 @@ export type MarquizRansom = {
   };
   result: {};
 };
-
 
 // {
 //     raw: [
@@ -226,7 +224,7 @@ export type MarquizRansom = {
 
 export type Tilda = {
   Phone: string;
-  prodinfo:string;
+  prodinfo: string;
   phone: string;
   name: string;
   Name: string;
@@ -239,8 +237,6 @@ export type Tilda = {
   utm_term: string;
   formname: string;
 };
-
-
 
 export type Message = {
   messageId: string;
@@ -268,6 +264,11 @@ export type crmAnswer = {
     customer: string;
     request: string;
   };
+};
+
+export type vkAnswer = {
+  type: string;
+  group_id: string;
 };
 
 export type FavoriteObj = {
@@ -402,10 +403,10 @@ export type constructionApplicationsExcel = {
   rejection: string; //Отклонения работы с заявкой
   errorReejctionDone: string; // Ошибка исправлена?
 
-  datecallCenter: string ; //Дата обработки заявки колл центром
+  datecallCenter: string; //Дата обработки заявки колл центром
   timecallCenter: string | number | null; // Время обработки КЦ
   okCallCenter: string;
-  timesaletCenter: string | number| null ; // время обработки ОП
+  timesaletCenter: string | number | null; // время обработки ОП
   okSaleCenter: string;
 
   dateFirstContact: string; // Дата первого контакта
@@ -418,33 +419,51 @@ export type constructionApplicationsExcel = {
   createdAt: string;
 };
 
-
-
 export type FilterInparseOptions = {
   street?: string[];
 };
-
-
 
 export type FilterInparseProps = {
   streets: string[];
 };
 
-
-
 export type CommentsProviderProps = {
   children: ReactNode;
 };
-
 
 export type ThemeContextProps = {
   theme: string;
   toggleTheme: () => void;
   setTheme: Dispatch<SetStateAction<string>>;
-}
-
+};
 
 export type ResultsWazzupMesage = {
   formattedNumber: string;
   status: string;
+};
+
+
+interface VKLeadFormAnswer {
+  key: string;          // "short_name_eng"
+  question: string;     // "Как вас зовут?"
+  answer: string | string[]; // Ответ(ы) пользователя
+}
+
+interface VKLeadFormObject {
+  lead_id: number;      // Идентификатор заявки
+  group_id: number;     // ID сообщества
+  user_id: number;      // ID пользователя
+  form_id: number;      // ID формы
+  form_name: string;    // Название формы
+  ad_id?: number;       // Опционально: ID рекламного объявления
+  answers: VKLeadFormAnswer[]; // Массив ответов
+}
+
+export interface VKLeadFormEvent {
+  group_id: number;     // ID сообщества
+  type: 'lead_forms_new'; // Тип события
+  event_id: string;     // Уникальный ID события
+  v: string;           // Версия API ("5.103")
+  object: VKLeadFormObject;
+  secret?: string;      // Секретный ключ (для проверки)       
 }

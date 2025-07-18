@@ -232,7 +232,7 @@ export async function sendIntrumCrmTilda(
     params.append(
       "params[request][request_name]",
       message.answers
-        ? "ДУБЛЬ ПОВТРНОЕ ОБРАЩЕНИЕ!!!!! " + message.answers
+        ? "ДУБЛЬ ПОВТОРНОЕ ОБРАЩЕНИЕ!!!!! " + message.answers
         : "ПОВТОРНАЯ заявка на строительство (ДУБЛЬ)"
     ); //статус сделки
   } else {
@@ -260,6 +260,8 @@ export async function sendIntrumCrmTilda(
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
   params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
+  params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
+  params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
   // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
 
   //доп поля заявки
@@ -405,7 +407,7 @@ export async function managerFind() {
     // 2) Назначаем веса
     const weights: Record<string, number> = {};
     for (const { manager_id } of managers) {
-      if (manager_id === "2753") weights[manager_id] = 4; // Орлова
+      if (manager_id === "2753") weights[manager_id] = 3; // Орлова
       else if (manager_id === "44") weights[manager_id] = 2; // Шепилов
       else weights[manager_id] = 1; // все остальные
     }
