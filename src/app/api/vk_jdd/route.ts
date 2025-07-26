@@ -8,6 +8,7 @@ import {
   sendIntrumCrVkJdd,
 } from "@/lib/intrumCrmVk";
 import { sendVKLeadNotification } from "@/lib/mail";
+import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -45,7 +46,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 // функция для обработки заявки в crm
 async function processApplicationAsync(answer: VKLeadFormEvent) {
   try {
-    const manager = await managerFind();
+    // const manager = await managerFind();
+    const manager = await managerFindNew();
     const userVkID = answer.object.user_id.toString();
     const name = userVkID ? `https://vk.com/id${userVkID}` : "Нету";
     const phone = "Нету заявка с VK";

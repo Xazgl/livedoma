@@ -176,7 +176,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
     if (campaignUtm == "(none)" || termUtm == "(none)") {
       return "Наш сайт";
     }
-    if (
+    if ( 
       translator &&
       translator !== "WhatsApp" &&
       translator !== "Авито" &&
@@ -186,7 +186,9 @@ export async function generateExcel2(applications: constructionApplications[]) {
       translator !== "рекомендация" &&
       translator !== "Сбербанк" &&
       translator !== "Вконтакте" &&
-      translator !== "Буклеты"
+      translator !== "Буклеты" &&
+      translator !== "таблички у домов"&&
+      translator !== "Вконтакте реклама"
     ) {
       if (sourceUtm == "TG" || sourceUtm == "vk" || sourceUtm == "sayt_GD") {
         return "Наш сайт";

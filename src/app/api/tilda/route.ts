@@ -4,6 +4,7 @@ import { Tilda, crmAnswer } from "../../../../@types/dto";
 import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
+import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -21,7 +22,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
       //@ts-ignore
       if (answer.test == null) {
-        const manager = await managerFind();
+        // const manager = await managerFind();
+        const manager = await managerFindNew();
         const name = answer.Name
           ? answer.Name
           : answer.name

@@ -5,6 +5,7 @@ import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { sendIntrumCrmTildaRansom } from "@/lib/intrumRansomCrm";
+import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -60,7 +61,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
         try {
           let double = await doubleFind(phone);
 
-          const manager = await managerFind();
+          // const manager = await managerFind();
+          const manager = await managerFindNew();
+          
           const newContact = await db.tilda.create({
             data: {
               name: name,

@@ -439,8 +439,8 @@ export async function managerFind() {
     const idx = total % cycleSize;
     const choice = currentSequence[idx];
 
-    // Пишем в очередь и возвращаем
-    await db.managerQueue.create({ data: { managerId: choice } });
+    // // Пишем в очередь и возвращаем
+    // await db.managerQueue.create({ data: { managerId: choice } });
     return choice;
   } catch (error) {
     console.error("Error in managerFind (new version):", error);
@@ -592,7 +592,7 @@ function shuffleArray<T>(arr: T[]): T[] {
 //   }
 // }
 
-async function oldManagerFind() {
+export async function oldManagerFind() {
   try {
     const managers = await db.activeManagers.findMany({
       where: {

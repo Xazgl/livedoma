@@ -3,6 +3,7 @@ import db from "../../../../prisma";
 import { Message, MessagesResponse, crmAnswer } from "../../../../@types/dto";
 import sendIntrumCrm, { managerFind } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
+import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -21,7 +22,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const allContacts = await Promise.all(
           messages.map(async (message) => {
             if (message.authorName) {
-              const manager = await managerFind()
+              // const manager = await managerFind()
+              const manager = await managerFindNew();
               console.log({managerid:manager} )
               const name = message.contact.name ? message.contact.name : "Нету";
               const phone = message.authorName;

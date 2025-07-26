@@ -4,6 +4,7 @@ import { Marquiz, crmAnswer } from "../../../../@types/dto";
 import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
+import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -63,7 +64,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         try {
           let double = await doubleFind(phone);
           console.log(double);
-          const manager = await managerFind();
+          // const manager = await managerFind();
+          const manager = await managerFindNew();
           console.log(manager);
           const newContact = await db.tilda.create({
             data: {

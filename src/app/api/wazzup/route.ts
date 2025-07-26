@@ -6,6 +6,7 @@ import { doubleFind } from "@/lib/doubleFind";
 import { normalizeWazzupNumber } from "@/lib/phoneMask";
 import { determineProjectType, ProjectType } from "@/lib/wazzup";
 import sendIntrumCrmWazzupJD from "@/lib/intrumCrmWazzupJd";
+import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -24,7 +25,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const allContacts = await Promise.all(
           messages.map(async (message) => {
             if (message.chatId) {
-              const manager = await managerFind();
+              // const manager = await managerFind();
+              const manager = await managerFindNew();
               console.log({ managerid: manager });
               const name = message.contact.name ? message.contact.name : "Нету";
               // const phone = message.authorName;
