@@ -11,22 +11,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-type Props = {
-  applications: constructionApplications[];
-};
 export function TableFive({ applications }: { applications: constructionApplications[] }) {
   const [applicationsArr, setApplicationsArr] = useState<constructionApplications[]>(applications);
   const [applicationsExcel, setApplicationsExcel] = useState<constructionApplications[]>(applications);
-  // const [value, setValue] = useState<Dayjs | null>(dayjs());
-  const [value, setValue] = useState<Dayjs | null>(dayjs("2024-04-01")); // Установка даты на 1 апреля 2024 года
-
+  const [value, setValue] = useState<Dayjs | null>(dayjs().subtract(30, 'day')); // Установка даты на 1 апреля 2024 года
   const [valueEnd, setValueEnd] = useState<Dayjs | null>(dayjs());
-  const [table, setTable] = useState(1);
-
-  // useEffect(() => {
-  //   //setValue(dayjs().subtract(90, 'day'));
-  //   setValue("2024-04-01")
-  // }, []);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -48,10 +37,6 @@ export function TableFive({ applications }: { applications: constructionApplicat
   }, [value, valueEnd]);
 
   const columns = columnsSetsApplicationRansom[0]; // Выбор набора столбцов по индексу
-
-  const handleChangePage = (event: React.ChangeEvent<unknown>, value: number) => {
-    setTable(value);
-  };
 
   return (
     <section className="flex flex-col w-[100%] h-full">

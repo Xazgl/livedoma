@@ -58,7 +58,7 @@ async function start() {
       function translateStatus(englishStatus) {
         const statusMap = {
           unselected: "Новое обращение или звонок",
-          processnow: "0",
+          processnow: "Дубль",
           processed: "Встреча состоялась",
           malformed: "Объект уже продан или снят с продажи",
           mustbeprocessed: "Согласование встречи",

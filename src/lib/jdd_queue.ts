@@ -26,7 +26,7 @@ export async function managerFindNew() {
         quotaLoad[manager_id] = 3;
         maxInRow[manager_id] = 1;
       } else if (manager_id === "44") {
-        quotaLoad[manager_id] = 2;
+        quotaLoad[manager_id] = 3;
         maxInRow[manager_id] = 1;
       } else {
         quotaLoad[manager_id] = 1;

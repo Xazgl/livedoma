@@ -379,6 +379,8 @@ export const columnsSetsApplicationRansom: GridColDef[][] = [
     { field: "phone", headerName: "Номер", width: 200 },
     { field: "typeApplication", headerName: "Вид заявки", width: 200 },
     { field: "translator", headerName: "Источник", width: 100 },
+    { field: "campaignUtm", headerName: "Кампания", width: 200 },
+    { field: "termUtm", headerName: "Запрос", width: 200 },
     { field: "responsibleMain", headerName: "Менеджер", width: 200 },
     { field: "dateFirstContact", headerName: "Передача в отдел рекламы", width: 200 },
     { field: "timecallCenter", headerName: "Сколько заявка была в обработке у рекламы", width: 200 },

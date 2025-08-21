@@ -64,7 +64,7 @@ async function start() {
       function translateStatus(englishStatus) {
         const statusMap = {
           unselected: "Новое обращение или звонок",
-          processnow: "0",
+          processnow: "Дубль",
           processed: "Встреча состоялась",
           malformed: "Объект уже продан или снят с продажи",
           mustbeprocessed: "Согласование встречи",
@@ -101,7 +101,6 @@ async function start() {
             data: {
               idApplicationIntrum: application.id,
               translator: determineTranslator(application.request_name),
-              // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
               responsibleMain: responsibleMain,
               status: translateStatus(application.status),
               typeApplication: 'Прием объекта Срочный Выкуп',
@@ -125,7 +124,6 @@ async function start() {
             data: {
               idApplicationIntrum: application.id,
               translator: determineTranslator(application.request_name),
-              // translator: getField(application.fields, "1277") ? getField(application.fields, "1277") : '',
               responsibleMain: responsibleMain,
               status: translateStatus(application.status),
               typeApplication: 'Прием объекта Срочный Выкуп',

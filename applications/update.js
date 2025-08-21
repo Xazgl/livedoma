@@ -41,7 +41,7 @@ async function startBatch(fromDate, toDate) {
             function translateStatus(englishStatus) {
                 const statusMap = {
                     unselected: "Новое обращение или звонок",
-                    processnow: "0",
+                    processnow: "Дубль",
                     processed: "Встреча состоялась",
                     malformed: "Объект уже продан или снят с продажи",
                     mustbeprocessed: "Согласование встречи",
@@ -88,6 +88,36 @@ async function startBatch(fromDate, toDate) {
                         createdAt: new Date(`${application.date_create}`)
                     },
                 });
+            } else {
+                return await db.constructionApplications.create({
+                    data: {
+                        idApplicationIntrum: application.id,
+                        translator: getField(application.fields, "4056") ? getField(application.fields, "4056") : '',
+                        responsibleMain: await foundName(application.employee_id) !== '0' || await foundName(application.employee_id) !== 0 ? application.employee_id.toString() : '',
+                        status: translateStatus(application.status),
+                        services: getField(application.fields, "5291") ? getField(application.fields, "5291") : 'Строительство',
+                        postMeetingStage: getField(application.fields, "4058"),
+                        desc: application.request_name,
+                        typeApplication: getField(application.fields, "4059"),
+                        contactedClient: getField(application.fields, "5079") ? getField(application.fields, "5079") : 'Не заполнено',
+                        campaignUtm: getField(application.fields, "5001"),
+                        termUtm: getField(application.fields, "5000"),
+                        sourceUtm: getField(application.fields, "5184"),
+                        nextAction: getField(application.fields, "4057"),
+                        rejection: getField(application.fields, "4992"),
+                        errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false,
+                        datecallCenter: getField(application.fields, "5002"),
+                        timecallCenter: getField(application.fields, "5003") ? getField(application.fields, "5003") : 'КЦ не проставил Статус =  на согласование',
+                        timesaletCenter: getField(application.fields, "4999") ? getField(application.fields, "4999") : 'Специалист связался с клиентом_NEW не проставили ДА',
+                        dateFirstContact: getField(application.fields, "4997"),
+                        phone: phone,
+                        url: getField(application.fields, "5032"),
+                        comment: await commentArr(application.id),
+                        typeApplicationCrm: "ЖДД",
+                        createdAtCrm: application.date_create,
+                        createdAt: new Date(`${application.date_create}`)
+                    },
+                });
             }
         }));
 
@@ -102,7 +132,7 @@ async function start() {
     const currentDate = new Date();
     let toDate = currentDate;
     const batchSize = 30; // Количество дней в одном батче
-    const totalBatches = 7; // Общее количество батчей
+    const totalBatches = 19; // Общее количество батчей
 
     for (let i = 0; i < totalBatches; i++) {
         const fromDate = new Date(toDate.getTime() - (batchSize * 24 * 60 * 60 * 1000));

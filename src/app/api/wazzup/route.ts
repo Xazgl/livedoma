@@ -20,11 +20,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
       };
       const answer: MessagesResponse = await req.json();
       console.log(answer);
-      if (answer.messages) {
+      if (answer.messages ) {
         const messages: Message[] = answer.messages;
         const allContacts = await Promise.all(
           messages.map(async (message) => {
-            if (message.chatId) {
+            if (message.chatId && message.status === 'inbound') {
               // const manager = await managerFind();
               const manager = await managerFindNew();
               console.log({ managerid: manager });
@@ -134,6 +134,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
                   }
                 );
               }
+            } else {
+              console.log('Исходящие сообщение',message);
             }
           })
         );

@@ -18,6 +18,8 @@ import {
   formatDateTimeToDDMMYYYYHHMMSS,
 } from "./dateStr";
 import { comment } from "postcss";
+import { getTranslatorSansaraNew } from "@/shared/sansara/utils";
+import { getTranslatorJdd } from "@/shared/jdd/utils";
 
 export async function generateExcel(transactions: Sales[]) {
   const workbook = new ExcelJS.Workbook();
@@ -176,7 +178,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
     if (campaignUtm == "(none)" || termUtm == "(none)") {
       return "Наш сайт";
     }
-    if ( 
+    if (
       translator &&
       translator !== "WhatsApp" &&
       translator !== "Авито" &&
@@ -187,7 +189,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
       translator !== "Сбербанк" &&
       translator !== "Вконтакте" &&
       translator !== "Буклеты" &&
-      translator !== "таблички у домов"&&
+      translator !== "таблички у домов" &&
       translator !== "Вконтакте реклама"
     ) {
       if (sourceUtm == "TG" || sourceUtm == "vk" || sourceUtm == "sayt_GD") {
@@ -200,13 +202,13 @@ export async function generateExcel2(applications: constructionApplications[]) {
           : "Наш сайт";
       }
     }
-    return translator ??  "";
+    return translator ?? "";
   }
 
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
     idApplicationIntrum: appl.idApplicationIntrum,
-    translator: getTranslator(
+    translator: getTranslatorJdd(
       appl.sourceUtm,
       appl.campaignUtm,
       appl.termUtm,
@@ -704,7 +706,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
         //   : hasUtm
         //   ? "Лендинг Сансара"
         //   : "Сайт Сансара",
-        getTranslatorSansara(
+        getTranslatorSansaraNew(
           appl.sourceUtm,
           appl.campaignUtm,
           appl.termUtm,
@@ -1076,10 +1078,6 @@ export async function generateExcel6(applications: constructionApplications[]) {
       appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
         ? "лендинг"
         : "наш сайт",
-    // appl.translator? appl.translator
-    //   :  appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
-    //   ? "лендинг"
-    //   : "наш сайт",
     responsibleMain: appl.responsibleMain,
     status: appl.status ? appl.status : "",
     services: "",
@@ -1128,13 +1126,13 @@ export async function generateExcel6(applications: constructionApplications[]) {
     if (type !== "Заявка без типа") {
       const worksheet = workbook.addWorksheet(type);
       // Добавление заголовков столбцов
-      let columns = columnsSetsApplicationRansom[type === "Заявка" ? 0 : 1];
-      // Удаление колонок "campaignUtm" и "termUtm" на вкладках "Кампания" и "Звонок"
+      let columns = columnsSetsApplicationRansom[0];
+      // Удаление колонок на вкладкe Прием объекта Срочный Выкуп
       if (type === "Прием объекта Срочный Выкуп") {
         columns = columns.filter(
           (col) =>
-            col.field !== "campaignUtm" &&
-            col.field !== "termUtm" &&
+            // col.field !== "campaignUtm" &&
+            // col.field !== "termUtm" &&
             col.field !== "rejection" &&
             col.field !== "postMeetingStage" &&
             col.field !== "desc" &&

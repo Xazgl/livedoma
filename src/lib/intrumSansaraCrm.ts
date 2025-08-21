@@ -1,13 +1,14 @@
 import { Tilda } from "@prisma/client";
 import db from "../../prisma";
 import axios from "axios";
+import { getSourceForSansaraByUtm } from "@/shared/sansara/utils";
 
 interface Manager {
-    name: string;
-    id: string;
+  name: string;
+  id: string;
 }
 
-const managers : Manager[]  = [
+const managers: Manager[] = [
   { name: "Сторожук", id: "1385" },
   // { name: "Максимова Людмила", id: "332" },
   { name: "Бочарникова", id: "1767" },
@@ -28,33 +29,37 @@ const managers : Manager[]  = [
 
 const firstRoundManagers = ["190"];
 const secondRoundManagers = ["190", "1385", "353"];
-const fourthRoundManagers = managers.filter(
-  (manager) => 
-     !firstRoundManagers.includes(manager.id) &&
-     !secondRoundManagers.includes(manager.id) 
-).map((manager) => manager.id);
+const fourthRoundManagers = managers
+  .filter(
+    (manager) =>
+      !firstRoundManagers.includes(manager.id) &&
+      !secondRoundManagers.includes(manager.id)
+  )
+  .map((manager) => manager.id);
 
 async function getPreviousManagerId(index: number): Promise<string | null> {
   if (index < 2) {
     return null;
   }
-  
+
   const previousQueueItem = await db.managerSansaraQueue.findFirst({
     skip: index - 2,
     take: 1,
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
   });
 
   return previousQueueItem ? previousQueueItem.managerId : null;
 }
 
-async function getManagerWithLeastRequests(managerIds: string[]): Promise<string> {
+async function getManagerWithLeastRequests(
+  managerIds: string[]
+): Promise<string> {
   if (managerIds.length === 0) {
     throw new Error("No manager IDs provided.");
   }
 
   const managerRequestCounts = await db.managerSansaraQueue.groupBy({
-    by: ['managerId'],
+    by: ["managerId"],
     _count: {
       managerId: true,
     },
@@ -63,12 +68,18 @@ async function getManagerWithLeastRequests(managerIds: string[]): Promise<string
     },
   });
 
-  const managerCountMap: { [key: string]: number } = managerRequestCounts.reduce((acc: { [key: string]: number }, { managerId, _count }) => {
-    acc[managerId] = _count.managerId;
-    return acc;
-  }, {});
+  const managerCountMap: { [key: string]: number } =
+    managerRequestCounts.reduce(
+      (acc: { [key: string]: number }, { managerId, _count }) => {
+        acc[managerId] = _count.managerId;
+        return acc;
+      },
+      {}
+    );
 
-  return managerIds.sort((a, b) => (managerCountMap[a] || 0) - (managerCountMap[b] || 0))[0];
+  return managerIds.sort(
+    (a, b) => (managerCountMap[a] || 0) - (managerCountMap[b] || 0)
+  )[0];
 }
 
 export async function managerFindSansara(): Promise<string> {
@@ -83,18 +94,30 @@ export async function managerFindSansara(): Promise<string> {
     } else if (currentManagerIndex === 1) {
       const previousManagerId = await getPreviousManagerId(existingQueueCount);
       if (previousManagerId) {
-        const availableManagers = secondRoundManagers.filter(id => id !== previousManagerId);
-        selectedManagerId = await getManagerWithLeastRequests(availableManagers);
+        const availableManagers = secondRoundManagers.filter(
+          (id) => id !== previousManagerId
+        );
+        selectedManagerId = await getManagerWithLeastRequests(
+          availableManagers
+        );
       } else {
-        selectedManagerId = await getManagerWithLeastRequests(secondRoundManagers);
+        selectedManagerId = await getManagerWithLeastRequests(
+          secondRoundManagers
+        );
       }
     } else {
       const previousManagerId = await getPreviousManagerId(existingQueueCount);
       if (previousManagerId) {
-        const availableManagers = fourthRoundManagers.filter(id => id !== previousManagerId);
-        selectedManagerId = await getManagerWithLeastRequests(availableManagers);
+        const availableManagers = fourthRoundManagers.filter(
+          (id) => id !== previousManagerId
+        );
+        selectedManagerId = await getManagerWithLeastRequests(
+          availableManagers
+        );
       } else {
-        selectedManagerId = await getManagerWithLeastRequests(fourthRoundManagers);
+        selectedManagerId = await getManagerWithLeastRequests(
+          fourthRoundManagers
+        );
       }
     }
 
@@ -102,11 +125,13 @@ export async function managerFindSansara(): Promise<string> {
   } catch (error) {
     console.error("Error in managerFindSansara:", error);
     throw new Error("Unable to find a suitable manager.");
-  } 
+  }
 }
 
-
-export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean ) {
+export async function sendIntrumCrmTildaSansara(
+  message: Tilda,
+  double: boolean
+) {
   const doubleMessage = double;
   // Случайный выбор менеджера
   const randomManager = managers[Math.floor(Math.random() * managers.length)];
@@ -150,9 +175,7 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   if (doubleMessage) {
     params.append("params[request][employee_id]", "1693");
   } else {
-    params.append(
-      "params[request][employee_id]",""
-    ); 
+    params.append("params[request][employee_id]", "");
     // params.append(
     //   "params[request][employee_id]",
     //   message.managerId == "Ошибка в выборе менеджера"? managerIdRandom : message.managerId ? message.managerId : managerIdRandom
@@ -171,60 +194,70 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
   params.append(
     "params[request][fields][0][value]",
     doubleMessage ? "Дубль" : "Заявка с сайта"
-  ); 
+  );
 
   params.append("params[request][fields][1][id]", "1211"); // доп поле 2 Источник
   params.append(
-    "params[request][fields][1][value]", message.utm_source =='vk' || message.utm_source =='TG' ? 'Сайт Сансара' : message.utm_campaign || message.utm_content || message.utm_term || message.utm_source ? "Лендинг Сансара" : "Сайт Сансара" 
-  ); 
+    "params[request][fields][1][value]",
+    getSourceForSansaraByUtm(
+      message.utm_campaign,
+      message.utm_source,
+      message.utm_content,
+      message.utm_term
+    )
+    // message.utm_source =='vk' || message.utm_source =='TG' ? 'Сайт Сансара' : message.utm_campaign || message.utm_content || message.utm_term || message.utm_source ? "Лендинг Сансара" : "Сайт Сансара"
+  );
 
   params.append("params[request][fields][2][id]", "5147"); // доп поле 3 campaign
   params.append(
     "params[request][fields][2][value]",
     message.utm_campaign ? message.utm_campaign : ""
-  ); 
+  );
 
   params.append("params[request][fields][3][id]", "5148"); // доп поле 4  term
-  params.append( "params[request][fields][3][value]",
-     message.utm_term ? message.utm_term : ""
-  ); 
-
+  params.append(
+    "params[request][fields][3][value]",
+    message.utm_term ? message.utm_term : ""
+  );
 
   params.append("params[request][fields][11][id]", "5185"); // доп поле 11  source
-  params.append( "params[request][fields][11][value]",
-     message.utm_source ? message.utm_source : ""
-  ); 
+  params.append(
+    "params[request][fields][11][value]",
+    message.utm_source ? message.utm_source : ""
+  );
 
   params.append("params[request][fields][4][id]", "3724"); // доп поле  5  Тип недвижимости
-  params.append( "params[request][fields][4][value]", 'Новостройка'); 
+  params.append("params[request][fields][4][value]", "Новостройка");
 
-  params.append("params[request][fields][5][id]", "5060"); // доп поле  6  ЖК сансара? 
-  params.append("params[request][fields][5][value]", '1'); 
+  params.append("params[request][fields][5][id]", "5060"); // доп поле  6  ЖК сансара?
+  params.append("params[request][fields][5][value]", "1");
 
-  params.append("params[request][fields][6][id]", "5077"); // доп поле  7  Оспорить заявку 
-  params.append("params[request][fields][6][value]", '0'); 
+  params.append("params[request][fields][6][id]", "5077"); // доп поле  7  Оспорить заявку
+  params.append("params[request][fields][6][value]", "0");
 
   params.append("params[request][fields][7][id]", "5055"); // доп поле  8   Агент созвонился с покупателем? NEW
-  params.append("params[request][fields][7][value]", 'Нет'); 
+  params.append("params[request][fields][7][value]", "Нет");
 
   params.append("params[request][fields][8][id]", "5020"); // доп поле  9   Стадия работы с покупателем
-  params.append( "params[request][fields][8][value]", 'Указать стадию'); 
+  params.append("params[request][fields][8][value]", "Указать стадию");
 
   params.append("params[request][fields][9][id]", "5169"); // доп поле 10  prodinfo
-  params.append( "params[request][fields][9][value]",
-     message.prodinfo ? message.prodinfo : ""
-  ); 
-
+  params.append(
+    "params[request][fields][9][value]",
+    message.prodinfo ? message.prodinfo : ""
+  );
 
   params.append("params[request][fields][10][id]", "1404"); // доп поле 11 Дата следующего действия
-  params.append( "params[request][fields][10][value]",`${new Date().toISOString().split("T")[0]}`
-  ); 
+  params.append(
+    "params[request][fields][10][value]",
+    `${new Date().toISOString().split("T")[0]}`
+  );
 
   params.append("params[request][fields][13][id]", "5269"); // доп поле 12 Дата следующего действия
-  params.append( "params[request][fields][13][value]","1"); 
+  params.append("params[request][fields][13][value]", "1");
 
   params.append("params[request][fields][14][id]", "5420"); // доп поле 13 Дата следующего действия
-  params.append( "params[request][fields][14][value]","ЖК «Сансара»"); 
+  params.append("params[request][fields][14][value]", "ЖК «Сансара»");
 
   try {
     const postResponse = await axios.post(
@@ -244,8 +277,3 @@ export async function sendIntrumCrmTildaSansara( message: Tilda,double: boolean 
     });
   }
 }
-
-
-
-
-

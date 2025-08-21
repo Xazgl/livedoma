@@ -1,6 +1,7 @@
 import { ManagerQueue, Tilda, Wazzup } from "@prisma/client";
 import axios from "axios";
 import db from "../../prisma";
+import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 
 export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   //Создание заявки сразу с контактом
@@ -97,14 +98,15 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   if (doubleMessage) {
     params.append("params[request][employee_id]", "1693");
   } else {
-    params.append(
-      "params[request][employee_id]",
-      message.managerId == "Ошибка в выборе менеджера"
-        ? managerIdRandom
-        : message.managerId
-        ? message.managerId
-        : managerIdRandom
-    ); //id главного отв заявки
+    params.append("params[request][employee_id]", "44"); //id главного отв заявки
+    // params.append(
+    //   "params[request][employee_id]",
+    //   message.managerId == "Ошибка в выборе менеджера"
+    //     ? managerIdRandom
+    //     : message.managerId
+    //     ? message.managerId
+    //     : managerIdRandom
+    // ); //id главного отв заявки
   }
   //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
@@ -113,6 +115,8 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
   params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
   params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
+
+  params.append("params[request][additional_employee_id][6]", "1793"); //массив доп отв
 
   //доп поля заявки
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
@@ -212,6 +216,12 @@ export async function sendIntrumCrmTilda(
 
   // Создаем объект с параметрами
   const params = new URLSearchParams();
+  const source = getSourceForJDDByUtm(
+    message.utm_campaign,
+    message.utm_source,
+    message.utm_content,
+    message.utm_term
+  );
 
   params.append("apikey", "7917e0838a4d494b471ceb36d7e3a67b");
   params.append("params[customer][manager_id]", "0"); //ответственный id в контакте
@@ -246,14 +256,18 @@ export async function sendIntrumCrmTilda(
   if (doubleMessage) {
     params.append("params[request][employee_id]", "1693");
   } else {
-    params.append(
-      "params[request][employee_id]",
-      message.managerId == "Ошибка в выборе менеджера"
-        ? managerIdRandom
-        : message.managerId
-        ? message.managerId
-        : managerIdRandom
-    ); //id главного отв заявки
+    if (source === "Авито Таргет") {
+      params.append("params[request][employee_id]", "44"); //id главного отв заявки
+    } else {
+      params.append(
+        "params[request][employee_id]",
+        message.managerId == "Ошибка в выборе менеджера"
+          ? managerIdRandom
+          : message.managerId
+          ? message.managerId
+          : managerIdRandom
+      ); //id главного отв заявки
+    }
   }
   //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
@@ -262,6 +276,9 @@ export async function sendIntrumCrmTilda(
   params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
   params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
+  if (source === "Авито Таргет") {
+    params.append("params[request][additional_employee_id][6]", "1793"); //массив доп отв
+  }
   // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
 
   //доп поля заявки
@@ -274,16 +291,17 @@ export async function sendIntrumCrmTilda(
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append(
     "params[request][fields][1][value]",
-    message.utm_source == "sayt_GD"
-      ? "Сайт Живем Дома"
-      : message.utm_source == "vk" || message.utm_source == "TG"
-      ? "Наш сайт"
-      : message.utm_campaign ||
-        message.utm_content ||
-        message.utm_term ||
-        message.utm_source
-      ? "лендинг"
-      : "Наш сайт"
+    source
+    // message.utm_source == "sayt_GD"
+    //   ? "Сайт Живем Дома"
+    //   : message.utm_source == "vk" || message.utm_source == "TG"
+    //   ? "Наш сайт"
+    //   : message.utm_campaign ||
+    //     message.utm_content ||
+    //     message.utm_term ||
+    //     message.utm_source
+    //   ? "лендинг"
+    //   : "Наш сайт"
   ); //доп поле 2
 
   params.append("params[request][fields][2][id]", "5001"); // доп поле 3
