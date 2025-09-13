@@ -81,21 +81,24 @@ export async function sendIntrumCrVkJdd(
   if (doubleMessage) {
     params.append("params[request][employee_id]", "1693");
   } else {
-    params.append(
-      "params[request][employee_id]",
-      message.managerId == "Ошибка в выборе менеджера"
-        ? managerIdRandom
-        : message.managerId
-        ? message.managerId
-        : managerIdRandom
-    ); //id главного отв заявки
+    // params.append(
+    //   "params[request][employee_id]",
+    //   message.managerId == "Ошибка в выборе менеджера"
+    //     ? managerIdRandom
+    //     : message.managerId
+    //     ? message.managerId
+    //     : managerIdRandom
+    // );
+    params.append("params[request][employee_id]", "44"); //id главного отв заявки
   }
-  //колцентр 309 , 1584, 1693, 2588, 2146
+  //колцентр 309 , 1584, 1693, 2588, 2146 
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
   params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
+
+  params.append("params[request][additional_employee_id][4]", "2753");
 
   //доп поля заявки
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
@@ -184,6 +187,7 @@ export async function sendIntrumCrmVKSansara(
     { name: "Рубан", id: "1857" },
     { name: "Ткачева", id: "35" },
     { name: "Чеботарева", id: "1232" },
+    { name: "Канакова", id: "2803" },
     { name: "Меньшова", id: "230" },
   ];
 

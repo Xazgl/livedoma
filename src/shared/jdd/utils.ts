@@ -6,16 +6,21 @@ function yandexOrAvitoByUtmCampaignJdd(utm_campaign: string | null) {
       "105469680",
       "{mk}",
       "{мкстроительство}",
+      "{мкстроительство2}",
       "{stroy}",
       "{мск}",
       "{ep}",
       "{stroye}",
+      "{stroyE}",
       "{3sx}",
       "{мкдевелопмент}",
       "Poisk_SIP",
       "{re}",
       "{msk}",
       "{МКСстроительство}",
+      "{МКСтроительство}",
+      "{МКСтроительство2}",
+      "{МКстроительство2}",
       "{ESP}",
     ];
 
@@ -23,16 +28,22 @@ function yandexOrAvitoByUtmCampaignJdd(utm_campaign: string | null) {
     const sberUtm = ["rollap", "{rollap}"];
 
     if (campaign.includes("ruch_zg") || campaign.includes("ruch_nedviz")) {
-      return "Авито Таргет";
-    } else if (yandexKeywords.some((keyword) => campaign.includes(keyword))) {
-      return "Яндекс Директ";
-    } else if (rassulkaUtm.some((keyword) => campaign.includes(keyword))) {
+      return "Авито таргет";
+    } else if (
+      yandexKeywords.some((keyword) => campaign.includes(keyword.toLowerCase()))
+    ) {
+      return "Яндекс директ";
+    } else if (
+      rassulkaUtm.some((keyword) => campaign.includes(keyword.toLowerCase()))
+    ) {
       return "Рассылка";
     } else if (campaign.includes("KP_JDD") || campaign.includes("kp_jdd")) {
       return "Коммерческое предложение";
     } else if (campaign.includes("sayt_gd")) {
       return "Наш сайт";
-    } else if (sberUtm.includes("sayt_gd")) {
+    } else if (
+      sberUtm.some((keyword) => campaign.includes(keyword.toLowerCase()))
+    ) {
       return "Сбербанк";
     } else {
       return null;
@@ -56,8 +67,8 @@ export function getSourceForJDDByUtm(
   utm_content: string | null,
   utm_term: string | null
 ):
-  | "Яндекс Директ"
-  | "Авито Таргет"
+  | "Яндекс директ"
+  | "Авито таргет"
   | "Сайт Живем Дома"
   | "лендинг"
   | "Наш сайт"
@@ -65,6 +76,15 @@ export function getSourceForJDDByUtm(
   | "Коммерческое предложение"
   | "Сбербанк" {
   const campaignSource = yandexOrAvitoByUtmCampaignJdd(utm_campaign);
+  if (utm_source === "yandex") {
+    return "Яндекс директ";
+  }
+  if (utm_source === "avito") {
+    return "Авито таргет";
+  }
+  if (utm_source === "rassulka" || utm_source === "Rassulka") {
+    return "Рассылка";
+  }
   if (campaignSource) {
     return campaignSource;
   }
@@ -92,14 +112,23 @@ export function getTranslatorJdd(
   termUtm?: string | null,
   translator?: string | null
 ): string {
+  if (sourceUtm === "yandex") {
+    return "Яндекс директ";
+  }
+  if (sourceUtm === "avito") {
+    return "Авито таргет";
+  }
+  if (sourceUtm === "rassulka" || sourceUtm === "Rassulka") {
+    return "Рассылка";
+  }
+  if (campaignUtm == "(none)" || termUtm == "(none)") {
+    return "Наш сайт";
+  }
   if (campaignUtm) {
     const campaignSource = yandexOrAvitoByUtmCampaignJdd(campaignUtm);
     if (campaignSource) {
       return campaignSource;
     }
-  }
-  if (campaignUtm == "(none)" || termUtm == "(none)") {
-    return "Наш сайт";
   }
   if (
     translator &&

@@ -25,6 +25,7 @@ const managers: Manager[] = [
   { name: "Ткачева", id: "35" },
   { name: "Чеботарева", id: "1232" },
   { name: "Меньшова", id: "230" },
+  { name: "Канакова", id: "2803" },
 ];
 
 const firstRoundManagers = ["190"];

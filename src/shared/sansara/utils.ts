@@ -2,13 +2,29 @@ function yandexOrAvitoByUtmCampaign(utm_campaign: string | null) {
   if (utm_campaign) {
     const campaign = utm_campaign.toLowerCase();
     if (campaign.includes("nedviz") || campaign.includes("new_build")) {
-      return "Авито Таргет";
+      return "Авито таргет";
     } else if (
       campaign.includes("mk-all-oct") ||
+      campaign.includes("{mk-all-oct}") ||
       campaign.includes("transh") ||
-      campaign.includes("{mk-all-nov}")
+      campaign.includes("{transh}") ||
+      campaign.includes("{mk-all-nov}") ||
+      campaign.includes("{SEPK}") ||
+      campaign.includes("{sepk}") ||
+      campaign.includes("mk-all") ||
+      campaign.includes("{mk-all-test}") ||
+      campaign.includes("{PS}") ||
+      campaign.includes("{ps}")
     ) {
-      return "Яндекс Директ";
+      return "Яндекс директ";
+    } else if (campaign.includes("tg")) {
+      return "Telegram Сансара";
+    } else if (
+      campaign.includes("cian") ||
+      campaign.includes("cian1") ||
+      campaign.includes("cian2")
+    ) {
+      return "Реклама ЦИАН Сансара";
     } else {
       return null;
     }
@@ -30,10 +46,27 @@ export function getSourceForSansaraByUtm(
   utm_source: string | null,
   utm_content: string | null,
   utm_term: string | null
-): "Яндекс Директ" | "Авито Таргет" | "Сайт Сансара" | "Лендинг Сансара" {
-  const campaignSource = yandexOrAvitoByUtmCampaign(utm_campaign);
-  if (campaignSource) {
-    return campaignSource;
+):
+  | "Яндекс директ"
+  | "Авито таргет"
+  | "Сайт Сансара"
+  | "Лендинг Сансара"
+  | "Telegram Сансара"
+  | "Реклама ЦИАН Сансара" {
+  if (utm_campaign == "(none)" || utm_term == "(none)") {
+    return "Сайт Сансара";
+  }
+  if (utm_source === "yandex") {
+    return "Яндекс директ";
+  }
+  if (utm_source === "avito") {
+    return "Авито таргет";
+  }
+  if (utm_campaign) {
+    const campaignSource = yandexOrAvitoByUtmCampaign(utm_campaign);
+    if (campaignSource) {
+      return campaignSource;
+    }
   }
 
   return utm_source == "vk" || utm_source == "TG"
@@ -60,14 +93,22 @@ export function getTranslatorSansaraNew(
   if (translator?.toLowerCase().includes("билборд")) {
     return translator;
   }
+  if (campaignUtm == "(none)" || termUtm == "(none)") {
+    return "Сайт Сансара";
+  }
+  if (sourceUtm === "yandex") {
+    return "Яндекс директ";
+  }
+  if (sourceUtm === "avito") {
+    return "Авито таргет";
+  }
   if (campaignUtm) {
-    const campaignSource = yandexOrAvitoByUtmCampaign(campaignUtm);
+    const campaignSource = yandexOrAvitoByUtmCampaign(
+      campaignUtm.toLowerCase()
+    );
     if (campaignSource) {
       return campaignSource;
     }
-  }
-  if (campaignUtm == "(none)" || termUtm == "(none)") {
-    return "Сайт Сансара";
   }
   if (
     translator &&

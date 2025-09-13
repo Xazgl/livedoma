@@ -20,11 +20,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
       };
       const answer: MessagesResponse = await req.json();
       console.log(answer);
-      if (answer.messages ) {
+      if (answer.messages) {
         const messages: Message[] = answer.messages;
         const allContacts = await Promise.all(
           messages.map(async (message) => {
-            if (message.chatId && message.status === 'inbound') {
+            const chanelId = message.channelId;
+            const chanelNotMailing =
+              chanelId !== "c61e632e-b93a-4101-a9b9-31b72291db0a";
+            if (message.chatId && message.status === "inbound" && chanelNotMailing) {
               // const manager = await managerFind();
               const manager = await managerFindNew();
               console.log({ managerid: manager });
@@ -35,7 +38,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               const text = message.text ? message.text : "Нету";
 
               const projectType: ProjectType = await determineProjectType(text);
-              
+
               if (phone !== "Admin") {
                 try {
                   let double = await doubleFind(phone);
@@ -55,7 +58,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
                   });
 
                   if (double.within24Hours == false) {
-                    if (projectType == "ЖДД" || projectType == 'Не определено') {
+                    if (
+                      projectType == "ЖДД" ||
+                      projectType == "Не определено"
+                    ) {
                       crmAnswer = await sendIntrumCrm(
                         newContact,
                         double.isDuplicate
@@ -135,7 +141,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 );
               }
             } else {
-              console.log('Исходящие сообщение',message);
+              console.log(
+                "Исходящие сообщение или входящие c рассылки",
+                JSON.stringify(message)
+              );
             }
           })
         );

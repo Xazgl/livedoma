@@ -108,7 +108,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               });
 
               if (double.isDuplicate == false) {
-                await db.managerQueue.create({
+                await db.managerSansaraQueue.create({
                   data: {
                     managerId:
                       manager && manager !== ""
