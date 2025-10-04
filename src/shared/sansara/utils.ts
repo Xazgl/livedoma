@@ -14,7 +14,9 @@ function yandexOrAvitoByUtmCampaign(utm_campaign: string | null) {
       campaign.includes("mk-all") ||
       campaign.includes("{mk-all-test}") ||
       campaign.includes("{PS}") ||
-      campaign.includes("{ps}")
+      campaign.includes("{ps}") || 
+      campaign.includes("{EPKFIX}") || 
+      campaign.includes("{EPKklick}") 
     ) {
       return "Яндекс директ";
     } else if (campaign.includes("tg")) {

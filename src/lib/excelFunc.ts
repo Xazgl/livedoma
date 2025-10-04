@@ -700,18 +700,18 @@ export async function generateExcel5(applications: constructionApplications[]) {
     return {
       id: appl.id,
       idApplicationIntrum: appl.idApplicationIntrum,
-      translator:
+      translator:appl.translator  ?? "",
         // appl.translator && appl.translator !== "Marquiz Сансара"
         //   ? appl.translator
         //   : hasUtm
         //   ? "Лендинг Сансара"
         //   : "Сайт Сансара",
-        getTranslatorSansaraNew(
-          appl.sourceUtm,
-          appl.campaignUtm,
-          appl.termUtm,
-          appl.translator
-        ),
+        // getTranslatorSansaraNew(
+        //   appl.sourceUtm,
+        //   appl.campaignUtm,
+        //   appl.termUtm,
+        //   appl.translator
+        // ),
       responsibleMain: appl.responsibleMain,
       status: appl.status ? appl.status : "",
       services: "",

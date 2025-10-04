@@ -38,7 +38,7 @@ async function start() {
       }
     });
 
-    
+
 
     const data = response.data.data.list;
     console.log(data)
@@ -90,18 +90,18 @@ async function start() {
           },
           data: {
             idApplicationIntrum: application.id,
-            translator: existingSale.mangoUtm? existingSale.translator : getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
+            translator: existingSale.mangoUtm ? existingSale.translator : getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
             responsibleMain: responsibleMain,
             status: translateStatus(application.status),
-            postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
-                  (getField(application.fields, "5081") ?  getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),
+            postMeetingStage: getField(application.fields, "5020") == 'Бронь' || getField(application.fields, "5020") == 'Бесплатная бронь' || getField(application.fields, "5020") == 'Бронь с оплатой' || getField(application.fields, "5020") == 'ДДУ заключен' ?
+              (getField(application.fields, "5081") ? getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),
             desc: application.request_name,
             typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
             contactedClient: getField(application.fields, "5069"),
-            campaignUtm: existingSale.mangoUtm? existingSale.campaignUtm : getField(application.fields, "5147")? getField(application.fields, "5147") : 'нету',
-            sourceUtm: existingSale.mangoUtm? existingSale.sourceUtm: getField(application.fields, "5185")? getField(application.fields, "5185") : 'нету',
-            termUtm: existingSale.mangoUtm? existingSale.termUtm : getField(application.fields, "5148")? getField(application.fields, "5148") : 'нету',
-            prodinfo: getField(application.fields, "5169")?  getField(application.fields, "5169") :'нету',
+            campaignUtm: existingSale.mangoUtm ? existingSale.campaignUtm : getField(application.fields, "5147") ? getField(application.fields, "5147") : 'нету',
+            sourceUtm: existingSale.mangoUtm ? existingSale.sourceUtm : getField(application.fields, "5185") ? getField(application.fields, "5185") : 'нету',
+            termUtm: existingSale.mangoUtm ? existingSale.termUtm : getField(application.fields, "5148") ? getField(application.fields, "5148") : 'нету',
+            prodinfo: getField(application.fields, "5169") ? getField(application.fields, "5169") : 'нету',
             nextAction: getField(application.fields, "1404"),
             rejection: '',//отклонение работы с заявок
             //errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false, исправлена ошибка 
@@ -121,9 +121,11 @@ async function start() {
         return await db.constructionApplications.create({
           data: {
             idApplicationIntrum: application.id,
-            translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '', responsibleMain: responsibleMain, status: translateStatus(application.status),
-            postMeetingStage: getField(application.fields, "5020") == 'Бронь' ||  getField(application.fields, "5020") == 'Бесплатная бронь' ||  getField(application.fields, "5020") == 'Бронь с оплатой' ||   getField(application.fields, "5020") == 'ДДУ заключен'  ?
-                  (getField(application.fields, "5081") ?  getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),            
+            translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
+            responsibleMain: responsibleMain,
+            status: translateStatus(application.status),
+            postMeetingStage: getField(application.fields, "5020") == 'Бронь' || getField(application.fields, "5020") == 'Бесплатная бронь' || getField(application.fields, "5020") == 'Бронь с оплатой' || getField(application.fields, "5020") == 'ДДУ заключен' ?
+              (getField(application.fields, "5081") ? getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),
             desc: application.request_name,
             typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
             contactedClient: getField(application.fields, "5069"),

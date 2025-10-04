@@ -3,25 +3,12 @@ import { oldManagerFind } from "./intrumCrm";
 import { subDays } from "date-fns";
 
 /**
- * Распределение заявок по «дефицитному» алгоритму в окне последних PERIOD_DAYS дней.
- *
+ * Распределение заявок по «дефицитному» алгоритму в окне последних PERIOD_DAYS дней
  * Правила:
- *  - Никто не может получать две заявки подряд (если есть альтернатива).
- *  - Веса (квоты): Орлова (2753) ×3, Шепилов (44) ×2, остальные ×1.
- *  - Окно баланса: 7 дней (оптимально при 25–30 заявках/неделю).
- *  - Исключаемые типы: ["VK ЖДД", "Wazzup", "Marquiz Сансара", "whatsapp"].
- *
- * Алгоритм выбора:
- *  1) Считаем за окно T — всего назначений и cnt_i — по каждому менеджеру.
- *  2) Для каждого кандидата считаем его долю p_i = w_i / sumW.
- *  3) Считаем «дефицит после гипотетической выдачи следующей заявки»:
- *       nextDef_i = ((T + 1) * p_i) - (cnt_i + 1).
- *     Выбираем кандидата с максимальным nextDef_i.
- *  4) Тай-брейки: (a) более давнее последнее назначение за окно, (b) меньший cnt_i, (c) меньший id.
- *  5) Запрет «две подряд»: если последний получатель существует, исключаем его из кандидатов,
- *     но только если остаются другие кандидаты; иначе разрешаем (единственный случай).
- *
- * Возвращает: managerId (string). При ошибке — fallback oldManagerFind().
+ *  - Никто не может получать две заявки подряд (если есть альтернатива)
+ *  - Важность: Орлова (2753) ×3, Шепилов (44) ×2, остальные ×1
+ *  - Окно баланса: 7 дней (оптимально при 25–30 заявках/неделю)
+ *  - Исключаемые типы из рассчета: ["VK ЖДД", "Wazzup", "Marquiz Сансара", "whatsapp"]
  */
 export async function managerFindNew(): Promise<string> {
   try {
@@ -43,7 +30,7 @@ export async function managerFindNew(): Promise<string> {
       select: { manager_id: true },
     });
     if (!managers || managers.length === 0) {
-     return await oldManagerFind();
+     return await oldManagerFind() ?? '';
     }
 
     const allIds = managers.map((m) => String(m.manager_id));
@@ -98,7 +85,7 @@ export async function managerFindNew(): Promise<string> {
       if (withoutLast.length > 0) candidates = withoutLast;
     }
     if (candidates.length === 0) {
-      return await oldManagerFind();
+      return await oldManagerFind() ?? '';
     }
 
     // Сумма весов активных менеджеров (для долей)
@@ -149,10 +136,10 @@ export async function managerFindNew(): Promise<string> {
       }
     }
 
-    return bestId || (await oldManagerFind());
+    return bestId || (await oldManagerFind() ?? '');
   } catch (e) {
     console.error("Error in managerFindNew:", e);
-    return await oldManagerFind();
+    return await oldManagerFind() ?? '';
   }
 }
 

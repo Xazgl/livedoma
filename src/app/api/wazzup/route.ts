@@ -27,9 +27,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
             const chanelId = message.channelId;
             const chanelNotMailing =
               chanelId !== "c61e632e-b93a-4101-a9b9-31b72291db0a";
-            if (message.chatId && message.status === "inbound" && chanelNotMailing) {
-              // const manager = await managerFind();
-              const manager = await managerFindNew();
+            if (
+              message.chatId &&
+              message.status === "inbound" &&
+              chanelNotMailing
+            ) {
+              //  const manager = await managerFindNew();
+              const manager = "44";
               console.log({ managerid: manager });
               const name = message.contact.name ? message.contact.name : "Нету";
               // const phone = message.authorName;
@@ -51,7 +55,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                       typeSend: chatType,
                       sendCrm: false,
                       managerId:
-                        manager && manager !== ""
+                        manager 
                           ? manager
                           : "Ошибка в выборе менеджера",
                     },
@@ -93,10 +97,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
                       if (double.isDuplicate == false) {
                         await db.managerQueue.create({
                           data: {
-                            managerId:
-                              manager && manager !== ""
-                                ? manager
-                                : "Ошибка в выборе менеджера",
+                            managerId: manager
+                              ? manager
+                              : "Ошибка в выборе менеджера",
                             url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
                             type: "Wazzup",
                           },
@@ -115,7 +118,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                           utm_term: "",
                           sendCrm: false,
                           managerId:
-                            manager && manager !== ""
+                            manager
                               ? manager
                               : "Ошибка в выборе менеджера",
                         },

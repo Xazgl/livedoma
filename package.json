@@ -38,7 +38,9 @@
     "start9": "node inparse/send.js",
     "start10": "node prisma/wazzup.js",
     "start11": "node xmlTasks/test.js",
-    "seedManagers": "node prisma/seedManagers.js"
+    "seedManagers": "node prisma/seedManagers.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -93,7 +95,7 @@
   "devDependencies": {
     "@types/archiver": "^6.0.2",
     "@types/file-saver": "^2.0.7",
-    "@types/node": "^20.12.12",
+    "@types/node": "^20.19.14",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "latest",
     "@types/react-dom": "latest",
@@ -104,7 +106,9 @@
     "eslint-config-next": "^14.1.1",
     "postcss": "latest",
     "tailwindcss": "latest",
-    "typescript": "latest"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   },
   "optionalDependencies": {
     "@prisma/client": "^5.11.0",

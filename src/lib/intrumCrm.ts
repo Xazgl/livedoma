@@ -3,7 +3,7 @@ import axios from "axios";
 import db from "../../prisma";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 
-export default async function sendIntrumCrm(message: Wazzup, double: boolean) {
+export default async function sendIntrumCrm(message: Wazzup, double: boolean, wazzupFlag?:boolean) {
   //Создание заявки сразу с контактом
   const obj = {
     apikey: "7917e0838a4d494b471ceb36d7e3a67b",
