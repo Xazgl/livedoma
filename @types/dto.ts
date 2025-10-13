@@ -442,28 +442,42 @@ export type ResultsWazzupMesage = {
   status: string;
 };
 
-
 interface VKLeadFormAnswer {
-  key: string;          // "short_name_eng"
-  question: string;     // "Как вас зовут?"
+  key: string; // "short_name_eng"
+  question: string; // "Как вас зовут?"
   answer: string | string[]; // Ответ(ы) пользователя
 }
 
 interface VKLeadFormObject {
-  lead_id: number;      // Идентификатор заявки
-  group_id: number;     // ID сообщества
-  user_id: number;      // ID пользователя
-  form_id: number;      // ID формы
-  form_name: string;    // Название формы
-  ad_id?: number;       // Опционально: ID рекламного объявления
+  lead_id: number; // Идентификатор заявки
+  group_id: number; // ID сообщества
+  user_id: number; // ID пользователя
+  form_id: number; // ID формы
+  form_name: string; // Название формы
+  ad_id?: number; // Опционально: ID рекламного объявления
   answers: VKLeadFormAnswer[]; // Массив ответов
 }
 
 export interface VKLeadFormEvent {
-  group_id: number;     // ID сообщества
-  type: 'lead_forms_new'; // Тип события
-  event_id: string;     // Уникальный ID события
-  v: string;           // Версия API ("5.103")
+  group_id: number; // ID сообщества
+  type: "lead_forms_new"; // Тип события
+  event_id: string; // Уникальный ID события
+  v: string; // Версия API ("5.103")
   object: VKLeadFormObject;
-  secret?: string;      // Секретный ключ (для проверки)       
+  secret?: string; // Секретный ключ (для проверки)
 }
+
+export interface SurveyData {
+  [key: string]: string | number | boolean | undefined;
+  tranid?: string;
+  formid?: string;
+  formname?: string;
+}
+
+export type SansaraSource =
+  | "Яндекс директ"
+  | "Авито таргет"
+  | "Сайт Сансара"
+  | "Лендинг Сансара"
+  | "Telegram Сансара"
+  | "Реклама ЦИАН Сансара";

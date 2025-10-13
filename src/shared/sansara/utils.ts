@@ -1,31 +1,61 @@
+import { SansaraSource } from "../../../@types/dto";
+import {
+  avitoUtmCampaigns,
+  cianUtmCampaigns,
+  yandexUtmCampaigns,
+} from "./constant";
+
+/**
+ * Функция для проверки пустого значения
+ */
+const isEmptyValue = (value: string | null) => {
+  return (
+    !value || value === "(none)" || value === "нету" || value.trim() === ""
+  );
+};
+
+/**
+ * Функция для проверки пустый utm
+ */
+const isEmptyUtm = (
+  utm_campaign: string | null,
+  utm_source: string | null,
+  utm_content: string | null,
+  utm_term: string | null
+) => {
+  return (
+    isEmptyValue(utm_source) &&
+    isEmptyValue(utm_campaign) &&
+    isEmptyValue(utm_content) &&
+    isEmptyValue(utm_term)
+  );
+};
+
+/**
+ * Функция определения источника по utm_campaign
+ * @param utmArr - массив utm меток источника
+ * @param utm - текущая метка по которой будет искать совпадение
+ * @returns  boolean
+ */
+const findUtm = (utmArr: string[], utm: string) => {
+  return utmArr.some((utmItem) => utm.includes(utmItem.toLowerCase()));
+};
+
+/**
+ * Функция определения источника по utm_campaign
+ * @param utm_campaign - UTM метка campaign
+ * @returns Источник трафика
+ */
 function yandexOrAvitoByUtmCampaign(utm_campaign: string | null) {
   if (utm_campaign) {
     const campaign = utm_campaign.toLowerCase();
-    if (campaign.includes("nedviz") || campaign.includes("new_build")) {
+    if (findUtm(avitoUtmCampaigns, campaign)) {
       return "Авито таргет";
-    } else if (
-      campaign.includes("mk-all-oct") ||
-      campaign.includes("{mk-all-oct}") ||
-      campaign.includes("transh") ||
-      campaign.includes("{transh}") ||
-      campaign.includes("{mk-all-nov}") ||
-      campaign.includes("{SEPK}") ||
-      campaign.includes("{sepk}") ||
-      campaign.includes("mk-all") ||
-      campaign.includes("{mk-all-test}") ||
-      campaign.includes("{PS}") ||
-      campaign.includes("{ps}") || 
-      campaign.includes("{EPKFIX}") || 
-      campaign.includes("{EPKklick}") 
-    ) {
+    } else if (findUtm(yandexUtmCampaigns, campaign)) {
       return "Яндекс директ";
     } else if (campaign.includes("tg")) {
       return "Telegram Сансара";
-    } else if (
-      campaign.includes("cian") ||
-      campaign.includes("cian1") ||
-      campaign.includes("cian2")
-    ) {
+    } else if (findUtm(cianUtmCampaigns, campaign)) {
       return "Реклама ЦИАН Сансара";
     } else {
       return null;
@@ -48,32 +78,39 @@ export function getSourceForSansaraByUtm(
   utm_source: string | null,
   utm_content: string | null,
   utm_term: string | null
-):
-  | "Яндекс директ"
-  | "Авито таргет"
-  | "Сайт Сансара"
-  | "Лендинг Сансара"
-  | "Telegram Сансара"
-  | "Реклама ЦИАН Сансара" {
-  if (utm_campaign == "(none)" || utm_term == "(none)") {
+): SansaraSource {
+  //Если меток нету
+  if (isEmptyUtm(utm_campaign, utm_source, utm_content, utm_term)) {
     return "Сайт Сансара";
   }
-  if (utm_source === "yandex") {
-    return "Яндекс директ";
+  if (utm_source?.toLowerCase() === "tg") {
+    return "Telegram Сансара";
   }
-  if (utm_source === "avito") {
-    return "Авито таргет";
+
+  if (utm_source?.toLowerCase() === "vk") {
+    return "Сайт Сансара";
   }
-  if (utm_campaign) {
-    const campaignSource = yandexOrAvitoByUtmCampaign(utm_campaign);
-    if (campaignSource) {
-      return campaignSource;
+
+  if (utm_source?.toLowerCase().includes("cian")) {
+    return "Реклама ЦИАН Сансара";
+  }
+
+  if (
+    isEmptyValue(utm_campaign) &&
+    isEmptyValue(utm_content) &&
+    isEmptyValue(utm_term)
+  ) {
+    return "Сайт Сансара";
+  } else {
+    if (utm_campaign) {
+      const campaignSource = yandexOrAvitoByUtmCampaign(utm_campaign);
+      if (campaignSource) {
+        return campaignSource;
+      }
     }
   }
 
-  return utm_source == "vk" || utm_source == "TG"
-    ? "Сайт Сансара"
-    : utm_campaign || utm_content || utm_term || utm_source
+  return utm_campaign || utm_content || utm_term || utm_source
     ? "Лендинг Сансара"
     : "Сайт Сансара";
 }
