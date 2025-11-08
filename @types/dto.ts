@@ -481,3 +481,15 @@ export type SansaraSource =
   | "Лендинг Сансара"
   | "Telegram Сансара"
   | "Реклама ЦИАН Сансара";
+
+export type PhoneColumnRef =
+  | { byIndex: true; keyOrIndex: number }
+  | { byIndex: false; keyOrIndex: string };
+
+export type BodyImport = { phones: string[]; names?: (string | null)[] };
+
+export type ToastState = {
+  open: boolean;
+  message: string;
+  severity: "success" | "error";
+};

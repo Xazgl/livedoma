@@ -9,7 +9,7 @@ fi
  
 
 # Build the Docker image
-docker build -t $DOCKER_IMAGE .
+docker build --network host -t $DOCKER_IMAGE .
 
 # Check the status of the previous command
 if [ $? -eq 0 ]; then

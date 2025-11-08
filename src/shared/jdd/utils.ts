@@ -1,31 +1,33 @@
+const yandexKeywords = [
+  "{tol_ko_sip}",
+  "105469680",
+  "{mk}",
+  "{мкстроительство}",
+  "{мкстроительство2}",
+  "{stroy}",
+  "{мск}",
+  "{ep}",
+  "{stroye}",
+  "{stroyE}",
+  "{3sx}",
+  "{мкдевелопмент}",
+  "Poisk_SIP",
+  "{re}",
+  "{msk}",
+  "{МКСстроительство}",
+  "{МКСтроительство}",
+  "{МКСтроительство2}",
+  "{МКстроительство2}",
+  "{ESP}",
+];
+
+const rassulkaUtm = ["Rassulka", "rassulka"];
+const sberUtm = ["rollap", "{rollap}"];
+const website = ["sayt_gd", "Spasibo_JD", "sayt_gd"];
+
 function yandexOrAvitoByUtmCampaignJdd(utm_campaign: string | null) {
   if (utm_campaign) {
     const campaign = utm_campaign.toLowerCase();
-    const yandexKeywords = [
-      "{tol_ko_sip}",
-      "105469680",
-      "{mk}",
-      "{мкстроительство}",
-      "{мкстроительство2}",
-      "{stroy}",
-      "{мск}",
-      "{ep}",
-      "{stroye}",
-      "{stroyE}",
-      "{3sx}",
-      "{мкдевелопмент}",
-      "Poisk_SIP",
-      "{re}",
-      "{msk}",
-      "{МКСстроительство}",
-      "{МКСтроительство}",
-      "{МКСтроительство2}",
-      "{МКстроительство2}",
-      "{ESP}",
-    ];
-
-    const rassulkaUtm = ["Rassulka", "rassulka"];
-    const sberUtm = ["rollap", "{rollap}"];
 
     if (campaign.includes("ruch_zg") || campaign.includes("ruch_nedviz")) {
       return "Авито таргет";
@@ -39,12 +41,16 @@ function yandexOrAvitoByUtmCampaignJdd(utm_campaign: string | null) {
       return "Рассылка";
     } else if (campaign.includes("KP_JDD") || campaign.includes("kp_jdd")) {
       return "Коммерческое предложение";
-    } else if (campaign.includes("sayt_gd")) {
-      return "Наш сайт";
+    } else if (
+      website.some((keyword) => campaign.includes(keyword.toLowerCase()))
+    ) {
+      return "Сайт Живем Дома";
     } else if (
       sberUtm.some((keyword) => campaign.includes(keyword.toLowerCase()))
     ) {
       return "Сбербанк";
+    } else if (campaign.includes("buklet")) {
+      return "Буклеты";
     } else {
       return null;
     }
@@ -74,7 +80,9 @@ export function getSourceForJDDByUtm(
   | "Наш сайт"
   | "Рассылка"
   | "Коммерческое предложение"
-  | "Сбербанк" {
+  | "Сбербанк"
+  | "Буклеты"
+  | "Сайт Живем Дома" {
   const campaignSource = yandexOrAvitoByUtmCampaignJdd(utm_campaign);
   if (utm_source === "yandex") {
     return "Яндекс директ";
@@ -85,6 +93,13 @@ export function getSourceForJDDByUtm(
   if (utm_source === "rassulka" || utm_source === "Rassulka") {
     return "Рассылка";
   }
+  if (website.some((keyword) => utm_source?.includes(keyword.toLowerCase()))) {
+    return "Сайт Живем Дома";
+  }
+  if (utm_source?.includes("buklet")) {
+    return "Буклеты";
+  }
+
   if (campaignSource) {
     return campaignSource;
   }
@@ -120,6 +135,9 @@ export function getTranslatorJdd(
   }
   if (sourceUtm === "rassulka" || sourceUtm === "Rassulka") {
     return "Рассылка";
+  }
+  if (website.some((keyword) => sourceUtm?.includes(keyword.toLowerCase()))) {
+    return "Сайт Живем Дома";
   }
   if (campaignUtm == "(none)" || termUtm == "(none)") {
     return "Наш сайт";

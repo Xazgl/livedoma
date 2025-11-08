@@ -168,43 +168,6 @@ export async function generateExcel2(applications: constructionApplications[]) {
     return manager ? manager.name : "";
   }
 
-  // Функция для проверки источника
-  function getTranslator(
-    sourceUtm?: string | null,
-    campaignUtm?: string | null,
-    termUtm?: string | null,
-    translator?: string | null
-  ): string {
-    if (campaignUtm == "(none)" || termUtm == "(none)") {
-      return "Наш сайт";
-    }
-    if (
-      translator &&
-      translator !== "WhatsApp" &&
-      translator !== "Авито" &&
-      translator !== "ДомКлик" &&
-      translator !== "Яндекс Услуги" &&
-      translator !== "Циан" &&
-      translator !== "рекомендация" &&
-      translator !== "Сбербанк" &&
-      translator !== "Вконтакте" &&
-      translator !== "Буклеты" &&
-      translator !== "таблички у домов" &&
-      translator !== "Вконтакте реклама"
-    ) {
-      if (sourceUtm == "TG" || sourceUtm == "vk" || sourceUtm == "sayt_GD") {
-        return "Наш сайт";
-      } else {
-        return (sourceUtm && sourceUtm !== "нету") ||
-          (campaignUtm && campaignUtm !== "нету") ||
-          (termUtm && termUtm !== "нету")
-          ? "лендинг"
-          : "Наш сайт";
-      }
-    }
-    return translator ?? "";
-  }
-
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
     idApplicationIntrum: appl.idApplicationIntrum,
@@ -267,7 +230,11 @@ export async function generateExcel2(applications: constructionApplications[]) {
   // Фильтрация данных по типу заявки
   let applicationsByType: Record<string, constructionApplicationsExcel[]> = {};
   applicationsNew.forEach((application) => {
-    const type = application.typeApplication || "Заявка без типа";
+    const typeApplication =
+      application.typeApplication === "Заявка с VK"
+        ? "Заявка"
+        : application.typeApplication;
+    const type = typeApplication || "Заявка без типа";
     if (
       application.services === "Бытовка" ||
       application.services === "Производство"

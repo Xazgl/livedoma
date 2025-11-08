@@ -5,6 +5,7 @@ import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { managerFindNew } from "@/lib/jdd_queue";
+import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -63,8 +64,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
         try {
           let double = await doubleFind(phone);
           console.log(double);
-          // const manager = await managerFind();
-          const manager = await managerFindNew();
+          let manager = await managerFindNew();
+          const source = getSourceForJDDByUtm(
+            utm_campaign,
+            utm_source,
+            utm_content,
+            utm_term
+          );
+          if (source === "Авито таргет") {
+            manager='44'
+          }
+
           console.log(manager);
           const newContact = await db.tilda.create({
             data: {

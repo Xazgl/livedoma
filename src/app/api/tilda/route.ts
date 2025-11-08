@@ -5,6 +5,7 @@ import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { managerFindNew } from "@/lib/jdd_queue";
+import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -22,8 +23,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
       //@ts-ignore
       if (answer.test == null) {
-        // const manager = await managerFind();
-        const manager = await managerFindNew();
         const name = answer.Name
           ? answer.Name
           : answer.name
@@ -36,8 +35,18 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const utm_content = answer.utm_content ? answer.utm_content : "";
         const utm_term = answer.utm_term ? answer.utm_term : "";
         const utm_source = answer.utm_source ? answer.utm_source : "";
-        const formName  =  answer?.formname ? answer?.formname.trim() : "";
+        const formName = answer?.formname ? answer?.formname.trim() : "";
 
+        let manager = await managerFindNew();
+        const source = getSourceForJDDByUtm(
+          utm_campaign,
+          utm_source,
+          utm_content,
+          utm_term
+        );
+        if (source === "Авито таргет") {
+          manager = "44";
+        }
 
         try {
           let double = await doubleFind(phone);

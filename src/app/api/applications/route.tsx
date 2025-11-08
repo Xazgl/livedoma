@@ -12,21 +12,13 @@ export async function GET(
   const table = searchParams.get("table");
   let applications = [];
 
+
+  // нормализует границы периода
+  const toDate = (s?: string | null) => new Date((s ?? "2022-01-30") as string);
+  const start = toDate(date); // включительно
+  const endExclusive = new Date(toDate(dateEnd).getTime() + 24 * 60 * 60 * 1000); // следующий день (исключительно)
+
   try {
-   
-    // const applicationsExcel = await db.constructionApplications.findMany({
-    //   where: {
-    //     createdAt: {
-    //       lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-    //       gte: new Date(date ? date : "2022-01-30"),
-    //     },
-    //   },
-    //   orderBy: {
-    //     createdAt: 'asc'
-    //   }
-    // });
-
-
     const applicationsExcel = await db.constructionApplications.findMany({
       where: {
         createdAtCrm: {
@@ -43,16 +35,12 @@ export async function GET(
     if (table) {
       applications = await db.constructionApplications.findMany({
         where: {
-          // createdAt: {
-          //    lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-          //   gte: new Date(date ? date : "2022-01-30"),
-          // }, 
           typeApplicationCrm:'ЖДД',
           createdAtCrm: {
             lte: dateEnd? dateEnd : "2022-01-30",
             gte: date ? date : "2022-01-30",
           },
-          translator: table === '1' ? { in: ['Наш сайт', 'лендинг'] } : 'WhatsApp'
+          translator: table === '1' ? { in: ['Наш сайт', 'лендинг', 'Вконтакте'] } : 'WhatsApp'
         },
         orderBy: {
           createdAt: 'asc'
@@ -62,10 +50,6 @@ export async function GET(
     } else {
       applications = await db.constructionApplications.findMany({
         where: {
-          // createdAt: {
-          //   lte: new Date(dateEnd? dateEnd : "2022-01-30"),
-          //   gte: new Date(date ? date : "2022-01-30"),
-          // },
           typeApplicationCrm:'ЖДД',
           createdAtCrm: {
             lte: dateEnd? dateEnd : "2022-01-30",
@@ -89,3 +73,5 @@ export async function GET(
     });
   }
 }
+
+

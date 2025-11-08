@@ -256,9 +256,9 @@ export async function sendIntrumCrmTilda(
   if (doubleMessage) {
     params.append("params[request][employee_id]", "1693");
   } else {
-    if (source === "Авито таргет") {
-      params.append("params[request][employee_id]", "44"); //id главного отв заявки
-    } else {
+    // if (source === "Авито таргет") {
+    //   params.append("params[request][employee_id]", "44"); //id главного отв заявки
+    // } else {
       params.append(
         "params[request][employee_id]",
         message.managerId == "Ошибка в выборе менеджера"
@@ -267,7 +267,7 @@ export async function sendIntrumCrmTilda(
           ? message.managerId
           : managerIdRandom
       ); //id главного отв заявки
-    }
+    // }
   }
   //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв

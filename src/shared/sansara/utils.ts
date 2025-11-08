@@ -52,7 +52,7 @@ function yandexOrAvitoByUtmCampaign(utm_campaign: string | null) {
     if (findUtm(avitoUtmCampaigns, campaign)) {
       return "Авито таргет";
     } else if (findUtm(yandexUtmCampaigns, campaign)) {
-      return "Яндекс директ";
+      return "Яндекс директ"; 
     } else if (campaign.includes("tg")) {
       return "Telegram Сансара";
     } else if (findUtm(cianUtmCampaigns, campaign)) {

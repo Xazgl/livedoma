@@ -17,8 +17,13 @@ export async function managerFindNew(): Promise<string> {
 
     // Веса: Орлова×3, Шепилов×2, остальные×1
     const WEIGHTS: Record<string, number> = {
-      "2753": 3, // Орлова
-      "44": 2, // Шепилов
+      // "2753": 3, // Орлова
+      //  "44": 2, // Шепилов
+
+      //TODO:временное решение
+      "353": 2, // Бородина
+      "1140": 2, // Трофимов
+      "332": 2, //	Максимова
     };
     const weightOf = (id: string) => WEIGHTS[id] ?? 1;
 

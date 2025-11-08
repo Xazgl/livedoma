@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import {  MarquizRansom, crmAnswer } from "../../../../@types/dto";
+import { Marquiz, crmAnswer } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { sendIntrumCrmTildaRansom } from "@/lib/intrumRansomCrm";
-import { managerFindNew } from "@/lib/jdd_queue";
+import { managerFindNovodvinskaya, sendIntrumCrmTildaNovodvinskaya } from "@/lib/intrumNovodvinskayaCrm";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -17,7 +16,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
       };
 
-      const answer: MarquizRansom= await req.json();
+      const answer: Marquiz = await req.json();
       console.log(answer);
 
       //@ts-ignore
@@ -30,6 +29,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         let utm_campaign = "";
         let utm_content = "";
         let utm_term = "";
+        let utm_source = "";
 
         if (answer.extra.utm) {
           utm_medium = answer.extra.utm.medium ? answer.extra.utm.medium : "";
@@ -40,10 +40,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
             ? answer.extra.utm.content
             : "";
           utm_term = answer.extra.utm.term ? answer.extra.utm.term : "";
+          utm_source = answer.extra.utm.source ? answer.extra.utm.source : "";
         }
 
         // Функция для формирования строки
-        function formatQuestionsAndAnswers(answer: MarquizRansom) {
+        function formatQuestionsAndAnswers(answer: Marquiz) {
           let resultString = "";
           answer.answers.forEach((answer) => {
             // Добавление вопроса и ответа к результату
@@ -56,24 +57,26 @@ export async function POST(req: NextRequest, res: NextResponse) {
           return resultString;
         }
         const textAnswers = formatQuestionsAndAnswers(answer);
+        console.log(textAnswers);
 
         try {
           let double = await doubleFind(phone);
+          console.log(double);
+          const manager = await managerFindNovodvinskaya();
 
-          // const manager = await managerFind();
-          const manager = await managerFindNew();
-          
+          console.log(manager);
           const newContact = await db.tilda.create({
             data: {
               name: name,
               phone: phone,
               timeForClientCall: clientCallTime,
               formid: formid,
-              typeSend: "Marquiz Срочный Выкуп",
+              typeSend: "Marquiz Новодвинская",
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,
               utm_content: utm_content,
               utm_term: utm_term,
+              utm_source: utm_source,
               sendCrm: false,
               answers: textAnswers,
               managerId:
@@ -84,7 +87,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           });
 
           if (double.within24Hours == false) {
-            crmAnswer = await sendIntrumCrmTildaRansom(
+            crmAnswer = await sendIntrumCrmTildaNovodvinskaya(
               newContact,
               double.isDuplicate
             );
@@ -102,18 +105,33 @@ export async function POST(req: NextRequest, res: NextResponse) {
               });
 
               if (double.isDuplicate == false) {
-                await db.managerRansomQueue.create({
+                await db.managerQueue.create({
                   data: {
                     managerId:
                       manager && manager !== ""
                         ? manager
                         : "Ошибка в выборе менеджера",
                     url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                    type: "Marquiz Срочный Выкуп",
+                    type: "Marquiz Новодвинская",
                   },
                 });
               }
+
+              const queue = await db.wazzup.create({
+                data: {
+                  name: "",
+                  phone: "",
+                  text: "",
+                  typeSend: "Очередь",
+                  sendCrm: false,
+                  managerId:
+                    manager && manager !== ""
+                      ? manager
+                      : "Ошибка в выборе менеджера",
+                },
+              });
             }
+
             return NextResponse.json(
               { crmStatus: crmAnswer, contacts: newContact },
               { status: 200 }

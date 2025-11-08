@@ -3,7 +3,7 @@ import checkSession from "@/lib/checkCookie";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 import { AuthForm } from "@/app/component/admin/auth/Auth";
-import { WazzupMessages } from "@/app/component/admin/mailing/WazzupMessages";
+import UsersForMailingUploader from "@/app/component/admin/mailing/UsersForMailingUploader";
 
 export const dynamic = "force-dynamic";
 
@@ -38,7 +38,8 @@ export default async function Home() {
   return (
     <>
       {login ? (
-        <WazzupMessages />
+        // <WazzupMessages />
+        <UsersForMailingUploader />
       ) : (
         <div className="flex w-full h-[100vh] items-center justify-center">
           <AuthForm />

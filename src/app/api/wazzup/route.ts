@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Message, MessagesResponse, crmAnswer } from "../../../../@types/dto";
-import sendIntrumCrm, { managerFind } from "@/lib/intrumCrm";
+import sendIntrumCrm from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizeWazzupNumber } from "@/lib/phoneMask";
 import { determineProjectType, ProjectType } from "@/lib/wazzup";
 import sendIntrumCrmWazzupJD from "@/lib/intrumCrmWazzupJd";
-import { managerFindNew } from "@/lib/jdd_queue";
+import sendIntrumCrmWazzupSansara from "@/lib/intrumCrmWazzupSansara";
+// import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -25,23 +26,33 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const allContacts = await Promise.all(
           messages.map(async (message) => {
             const chanelId = message.channelId;
-            const chanelNotMailing =
-              chanelId !== "c61e632e-b93a-4101-a9b9-31b72291db0a";
-            if (
-              message.chatId &&
-              message.status === "inbound" &&
-              chanelNotMailing
-            ) {
+            const isMailingChannel =
+              chanelId === "c61e632e-b93a-4101-a9b9-31b72291db0a";
+
+            if (message.chatId && message.status === "inbound") {
               //  const manager = await managerFindNew();
               const manager = "44";
-              console.log({ managerid: manager });
               const name = message.contact.name ? message.contact.name : "Нету";
               // const phone = message.authorName;
               const phone = await normalizeWazzupNumber(message.chatId);
+              const phoneInUsersMailing = await db.usersForMailing.findFirst({
+                where: {
+                  phoneNumber: phone,
+                  deleteAt: { gt: new Date() },
+                },
+                select: { id: true },
+              });
+
+              if (!phoneInUsersMailing && isMailingChannel) {
+                return;
+              }
+
               const chatType = message.chatType ? message.chatType : "Нету";
               const text = message.text ? message.text : "Нету";
 
-              const projectType: ProjectType = await determineProjectType(text);
+              const projectType: ProjectType = isMailingChannel
+                ? "Сансара"
+                : await determineProjectType(text);
 
               if (phone !== "Admin") {
                 try {
@@ -54,10 +65,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
                       text: text,
                       typeSend: chatType,
                       sendCrm: false,
-                      managerId:
-                        manager 
-                          ? manager
-                          : "Ошибка в выборе менеджера",
+                      managerId: manager
+                        ? manager
+                        : "Ошибка в выборе менеджера",
                     },
                   });
 
@@ -75,6 +85,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
                     if (projectType == "ЖД") {
                       crmAnswer = await sendIntrumCrmWazzupJD(
+                        newContact,
+                        double.isDuplicate
+                      );
+                      console.log(crmAnswer);
+                    }
+
+                    if (projectType == "Сансара") {
+                      crmAnswer = await sendIntrumCrmWazzupSansara(
                         newContact,
                         double.isDuplicate
                       );
@@ -117,10 +135,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
                           utm_content: "",
                           utm_term: "",
                           sendCrm: false,
-                          managerId:
-                            manager
-                              ? manager
-                              : "Ошибка в выборе менеджера",
+                          managerId: manager
+                            ? manager
+                            : "Ошибка в выборе менеджера",
                         },
                       });
                     }
