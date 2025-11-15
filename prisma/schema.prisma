@@ -466,11 +466,11 @@ model VkApplication {
   timeManager String?
   ok_manager  Boolean? @default(false)
   status      String?
+  vkMailId    String? @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 model UsersForMailing {
   id          String   @id @default(cuid())

@@ -108,4 +108,6 @@ RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insuran
 RUN (crontab -u $(whoami) -l; echo "*/90 * * * * /usr/local/bin/node /app/inparse/index.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/inparse/send.js" ) | crontab -u $(whoami) -
 
+RUN (crontab -u $(whoami) -l; echo "*/10 * * * * /usr/local/bin/node /app/applications/yandex-mail/yandex-start-prod.js" ) | crontab -u $(whoami) -
+
 EXPOSE 3000
