@@ -27,8 +27,6 @@ async function start() {
   params.append("params[date][to]", formattedDateCurrent);
   params.append("params[fields][0][id]", "5420");
   params.append("params[fields][0][value]", 'ЖК «Дом на Новодвинской»');
-  // params.append("params[fields][0][id]", "5316");
-  // params.append("params[fields][0][value]", '1');
 
   try {
     const response = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/applications/filter',

@@ -18,9 +18,7 @@ async function startBatch(fromDate, toDate) {
     params.append("params[date][from]", fromDate);
     params.append("params[date][to]", toDate);
     params.append("params[fields][0][id]", "5420");
-    params.append("params[fields][0][value]", 'ЖК «Сансара»');
-    // params.append("params[fields][0][id]", "5060");
-    // params.append("params[fields][0][value]", '1');
+    params.append("params[fields][0][value]", 'ЖК «Победа парк»');
 
     try {
         const response = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/applications/filter', params, {
@@ -71,20 +69,20 @@ async function startBatch(fromDate, toDate) {
                     },
                     data: {
                         idApplicationIntrum: application.id,
-                        translator: getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
+                        translator: existingSale.mangoUtm ? existingSale.translator : getField(application.fields, "1211") ? getField(application.fields, "1211") : '',
                         responsibleMain: responsibleMain,
                         status: translateStatus(application.status),
                         postMeetingStage: getField(application.fields, "5020") == 'Бронь' || getField(application.fields, "5020") == 'Бесплатная бронь' || getField(application.fields, "5020") == 'Бронь с оплатой' || getField(application.fields, "5020") == 'ДДУ заключен' ?
                             (getField(application.fields, "5081") ? getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),
                         desc: application.request_name,
-                        typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
+                        typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Победе",
                         contactedClient: getField(application.fields, "5069"),
                         campaignUtm: existingSale.mangoUtm ? existingSale.campaignUtm : getField(application.fields, "5147") ? getField(application.fields, "5147") : 'нету',
                         sourceUtm: existingSale.mangoUtm ? existingSale.sourceUtm : getField(application.fields, "5185") ? getField(application.fields, "5185") : 'нету',
                         termUtm: existingSale.mangoUtm ? existingSale.termUtm : getField(application.fields, "5148") ? getField(application.fields, "5148") : 'нету',
                         prodinfo: getField(application.fields, "5169") ? getField(application.fields, "5169") : 'нету',
                         nextAction: getField(application.fields, "1404"),
-                        rejection: '',//отклонение работы с заявок
+                        rejection: '',//отклонение работы с заявок 
                         datecallCenter: getField(application.fields, "5068"),
                         timecallCenter: getField(application.fields, "5067"),
                         timesaletCenter: getField(application.fields, "5071"),
@@ -92,7 +90,7 @@ async function startBatch(fromDate, toDate) {
                         phone: phone,
                         url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
                         comment: await commentArr(application.id),
-                        typeApplicationCrm: "Сансара",
+                        typeApplicationCrm: "Победа",
                         createdAtCrm: application.date_create,
                         createdAt: new Date(`${application.date_create}`)
                     },
@@ -105,23 +103,19 @@ async function startBatch(fromDate, toDate) {
                         postMeetingStage: getField(application.fields, "5020") == 'Бронь' || getField(application.fields, "5020") == 'Бесплатная бронь' || getField(application.fields, "5020") == 'Бронь с оплатой' || getField(application.fields, "5020") == 'ДДУ заключен' ?
                             (getField(application.fields, "5081") ? getField(application.fields, "5020") + `  ${getField(application.fields, "5081")}` : getField(application.fields, "5020")) : getField(application.fields, "5020"),
                         desc: application.request_name,
-                        typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Сансаре",
+                        typeApplication: getField(application.fields, "1091") ? getField(application.fields, "1091") : "Показ объекта по Победе",
                         contactedClient: getField(application.fields, "5069"),
+                        campaignUtm: 'нету',
+                        termUtm: 'нету',
                         nextAction: getField(application.fields, "1404"),
-                        sourceUtm: getField(application.fields, "5185") ? getField(application.fields, "5185") : 'нету',
-                        prodinfo: getField(application.fields, "5169") ? getField(application.fields, "5169") : 'нету',
-                        campaignUtm: getField(application.fields, "5147") ? getField(application.fields, "5147") : 'нету',
-                        termUtm: getField(application.fields, "5148") ? getField(application.fields, "5148") : 'нету',
                         rejection: '',//отклонение работы с заявок
-                        //errorReejctionDone: getField(application.fields, "4993") !== 0 ? true : false, исправлена ошибка 
                         datecallCenter: getField(application.fields, "5068"),
                         timecallCenter: getField(application.fields, "5067"),
                         timesaletCenter: getField(application.fields, "5071"),
                         dateFirstContact: getField(application.fields, "5072"),
                         phone: phone,
-                        url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
                         comment: await commentArr(application.id),
-                        typeApplicationCrm: "Сансара",
+                        typeApplicationCrm: "Победа",
                         createdAtCrm: application.date_create,
                         createdAt: new Date(`${application.date_create}`)
                     },

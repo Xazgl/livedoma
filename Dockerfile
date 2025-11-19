@@ -96,12 +96,23 @@ RUN (crontab -u $(whoami) -l; echo "0 */13 * * * /usr/local/bin/node /app/applic
 RUN (crontab -u $(whoami) -l; echo "0 */10 * * * /usr/local/bin/node /app/applications/updateSansara.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */9 * * * /usr/local/bin/node /app/applications/update.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/indexSansara.js" ) | crontab -u $(whoami) -
+
 RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/indexNovodvinskaya.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */11 * * * /usr/local/bin/node /app/applications/updateNovodvinskaya.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */14 * * * /usr/local/bin/node /app/applications/deleteOldNovodvinskaya.js" ) | crontab -u $(whoami) -
+
+    
 RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/applications/indexVictory.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */12 * * * /usr/local/bin/node /app/applications/updateVictory.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */15 * * * /usr/local/bin/node /app/applications/deleteOldVictory.js" ) | crontab -u $(whoami) -
+
 RUN (crontab -u $(whoami) -l; echo "0 */5 * * * /usr/local/bin/node /app/applications/indexFive.js" ) | crontab -u $(whoami) -
 
 
 RUN (crontab -u $(whoami) -l; echo "0 */6 * * * /usr/local/bin/node /app/applications/indexRansom.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */13 * * * /usr/local/bin/node /app/applications/updateRansom.js" ) | crontab -u $(whoami) -
+RUN (crontab -u $(whoami) -l; echo "0 */17 * * * /usr/local/bin/node /app/applications/deleteOldRansom.js" ) | crontab -u $(whoami) -
+
 
 RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insurance/index.js" ) | crontab -u $(whoami) -
 

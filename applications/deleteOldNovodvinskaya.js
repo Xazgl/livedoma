@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const db = new PrismaClient();
 
 /**
- * Удаляющий батч: берёт заявки  в CRM с publish=0 по Сансаре и удаляем из БД
+ * Удаляющий батч: берёт заявки  в CRM с publish=0 по Новодвинской и удаляем из БД
  */
 async function startBatchDelete(fromDate, toDate) {
     const params = new URLSearchParams();
@@ -15,7 +15,7 @@ async function startBatchDelete(fromDate, toDate) {
     params.append("params[date][from]", fromDate);
     params.append("params[date][to]", toDate);
     params.append("params[fields][0][id]", "5420");
-    params.append("params[fields][0][value]", 'ЖК «Сансара»');
+    params.append("params[fields][0][value]", 'ЖК «Дом на Новодвинской»');
 
     try {
         const response = await axios.post(
@@ -29,7 +29,7 @@ async function startBatchDelete(fromDate, toDate) {
 
         for (const application of data) {
             const existing = await db.constructionApplications.findFirst({
-                where: { idApplicationIntrum: application.id, typeApplicationCrm: 'Сансара' },
+                where: { idApplicationIntrum: application.id, typeApplicationCrm: 'Новодвинская' },
             });
 
             if (existing) {
