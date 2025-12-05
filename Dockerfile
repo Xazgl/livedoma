@@ -113,6 +113,8 @@ RUN (crontab -u $(whoami) -l; echo "0 */6 * * * /usr/local/bin/node /app/applica
 RUN (crontab -u $(whoami) -l; echo "0 */13 * * * /usr/local/bin/node /app/applications/updateRansom.js" ) | crontab -u $(whoami) -
 RUN (crontab -u $(whoami) -l; echo "0 */17 * * * /usr/local/bin/node /app/applications/deleteOldRansom.js" ) | crontab -u $(whoami) -
 
+RUN (crontab -u $(whoami) -l; echo "0 */18 * * * /usr/local/bin/node /app/applications/deleteOldMailing.js" ) | crontab -u $(whoami) -
+
 
 RUN (crontab -u $(whoami) -l; echo "0 */3 * * * /usr/local/bin/node /app/insurance/index.js" ) | crontab -u $(whoami) -
 

@@ -64,17 +64,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         try {
           let double = await doubleFind(phone);
           console.log(double);
-          let manager = await managerFindNew();
-          const source = getSourceForJDDByUtm(
-            utm_campaign,
-            utm_source,
-            utm_content,
-            utm_term
-          );
-          if (source === "Авито таргет") {
-            manager = "44";
-          }
-          ;
+          // let manager = await managerFindNew();
+          let manager = '391'
           console.log(manager);
           const newContact = await db.tilda.create({
             data: {

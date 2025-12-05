@@ -19,17 +19,19 @@ const yandexKeywords = [
   "{МКСтроительство2}",
   "{МКстроительство2}",
   "{ESP}",
+  'dom_zg',
+  'mk_dom',
 ];
 
 const rassulkaUtm = ["Rassulka", "rassulka"];
 const sberUtm = ["rollap", "{rollap}"];
 const website = ["sayt_gd", "Spasibo_JD", "sayt_gd"];
+const avito =['stroy_sip', 'dom_nedviz','dom_zg','ruch_zg','ruch_nedviz']
 
 function yandexOrAvitoByUtmCampaignJdd(utm_campaign: string | null) {
   if (utm_campaign) {
     const campaign = utm_campaign.toLowerCase();
-
-    if (campaign.includes("ruch_zg") || campaign.includes("ruch_nedviz")) {
+    if (avito.some((keyword) => campaign.includes(keyword.toLowerCase()))) {
       return "Авито таргет";
     } else if (
       yandexKeywords.some((keyword) => campaign.includes(keyword.toLowerCase()))
