@@ -6,6 +6,7 @@ import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { managerFindNew } from "@/lib/jdd_queue";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
+import { isRepairForm } from "./utils";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -70,6 +71,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
             },
           });
 
+          const isRepair = isRepairForm(formName, newContact);
+          if (isRepair) {
+            manager = "2988";
+          }
+
           if (double.within24Hours == false) {
             crmAnswer = await sendIntrumCrmTilda(
               newContact,
@@ -78,7 +84,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             );
 
             if (crmAnswer.status == "success") {
-              const updateStatus = await db.tilda.update({
+              await db.tilda.update({
                 where: {
                   id: newContact.id,
                 },
@@ -89,7 +95,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 },
               });
 
-              if (double.isDuplicate == false) {
+              if (double.isDuplicate == false && manager !== "2988") {
                 await db.managerQueue.create({
                   data: {
                     managerId:
@@ -102,7 +108,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 });
               }
 
-              const queue = await db.wazzup.create({
+              await db.wazzup.create({
                 data: {
                   name: "",
                   phone: "",

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Marquiz, crmAnswer } from "../../../../@types/dto";
-import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { managerFindNew } from "@/lib/jdd_queue";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -65,7 +64,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         try {
           let double = await doubleFind(phone);
           console.log(double);
-          let manager = await managerFindNew();
+          // let manager = await managerFindNew();
+          let manager = "2988";
           const source = getSourceForJDDByUtm(
             utm_campaign,
             utm_source,
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             );
 
             if (crmAnswer.status == "success") {
-              const updateStatus = await db.tilda.update({
+              await db.tilda.update({
                 where: {
                   id: newContact.id,
                 },
@@ -116,20 +116,20 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 },
               });
 
-              if (double.isDuplicate == false) {
-                await db.managerQueue.create({
-                  data: {
-                    managerId:
-                      manager && manager !== ""
-                        ? manager
-                        : "Ошибка в выборе менеджера",
-                    url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                    type: "Marquiz",
-                  },
-                });
-              }
+              // if (double.isDuplicate == false) {
+              //   await db.managerQueue.create({
+              //     data: {
+              //       managerId:
+              //         manager && manager !== ""
+              //           ? manager
+              //           : "Ошибка в выборе менеджера",
+              //       url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+              //       type: "Marquiz",
+              //     },
+              //   });
+              // }
 
-              const queue = await db.wazzup.create({
+              await db.wazzup.create({
                 data: {
                   name: "",
                   phone: "",
