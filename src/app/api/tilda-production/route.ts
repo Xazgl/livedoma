@@ -4,6 +4,7 @@ import { Tilda, crmAnswer } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { sendIntrumCrmProduction } from "@/lib/intrumCrmProduction";
+import { productionManager } from "@/shared/constant/manager-constant/constant";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const utm_source = answer.utm_source ? answer.utm_source : "";
         const formName = answer?.formname ? answer?.formname.trim() : "";
 
-        const manager = "391";
+        const manager = productionManager;
         try {
           let double = await doubleFind(phone);
 

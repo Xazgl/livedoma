@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Marquiz, crmAnswer } from "../../../../@types/dto";
-import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { managerFindNew } from "@/lib/jdd_queue";
-import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
+import { productionManager } from "@/shared/constant/manager-constant/constant";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -65,7 +64,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           let double = await doubleFind(phone);
           console.log(double);
           // let manager = await managerFindNew();
-          let manager = '391'
+          let manager = productionManager;
           console.log(manager);
           const newContact = await db.tilda.create({
             data: {
@@ -107,20 +106,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 },
               });
 
-              if (double.isDuplicate == false) {
-                await db.managerQueue.create({
-                  data: {
-                    managerId:
-                      manager && manager !== ""
-                        ? manager
-                        : "Ошибка в выборе менеджера",
-                    url: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
-                    type: "Marquiz",
-                  },
-                });
-              }
-
-              const queue = await db.wazzup.create({
+              await db.wazzup.create({
                 data: {
                   name: "",
                   phone: "",
