@@ -384,6 +384,41 @@ export type RequestDataApplication = {
   };
 };
 
+export type constructionApplicationsExcelNew = {
+  id: string;
+  idApplicationIntrum: string;
+  translator: string; //Источник
+  responsibleMain: string | Promise<any>; //Главный отвественный
+  status: string; //статус
+  services: string;
+  postMeetingStage: string; //стадия после встречи
+  desc: string; //описание
+  mailing: string;
+  typeApplication: string; //тип заявки
+  contactedClient: string; //специалист связался с клиентом
+  campaignUtm: string;
+  termUtm: string;
+  prodinfo: string;
+  nextAction: string | Date; //Дата следующего действия по заявки
+
+  rejection: string; //Отклонения работы с заявкой
+  errorReejctionDone: string; // Ошибка исправлена?
+
+  datecallCenter: string; //Дата обработки заявки колл центром
+  timecallCenter: string | number | null; // Время обработки КЦ
+  okCallCenter: string;
+  timesaletCenter: string | number | null; // время обработки ОП
+  okSaleCenter: string;
+
+  dateFirstContact: string; // Дата первого контакта
+
+  phone: string;
+  url: string;
+  comment: string[];
+
+  createdAtCrm: string;
+  createdAt: string;
+};
 export type constructionApplicationsExcel = {
   id: string;
   idApplicationIntrum: string;
@@ -486,10 +521,45 @@ export type PhoneColumnRef =
   | { byIndex: true; keyOrIndex: number }
   | { byIndex: false; keyOrIndex: string };
 
-export type BodyImport = { phones: string[]; names?: (string | null)[] };
+export type BodyImport = { phones: PhoneWithType []; names?: (string | null)[] };
 
 export type ToastState = {
   open: boolean;
   message: string;
   severity: "success" | "error";
 };
+
+
+export interface PhoneWithType {
+  phoneNumber: string;
+  name?: string;
+  type?: string;
+}
+
+export interface IntrumCustomer {
+  id: string;
+  group_id: string;
+  name: string;
+  surname?: string;
+  secondname?: string;
+  manager_id?: string;
+  email?: { mail: string; comment?: string }[];
+  phone?: { phone: string; comment?: string }[];
+  address?: string;
+  create_date?: string;
+  comment?: string;
+  marktype?: string;
+  nattype?: string;
+  customer_activity_type?: string;
+  customer_activity_date?: string;
+  customer_creator_id?: string;
+  markname?: string;
+  fields?: Record<
+    string,
+    { id: string; datatype: string; value: string }
+  >;
+  employee_id?: string;
+  additional_manager_id?: string[];
+  additional_employee_id?: string[];
+}
+

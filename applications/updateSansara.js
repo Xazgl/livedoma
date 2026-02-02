@@ -5,6 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 const { AxiosError } = require("axios");
 const { foundName } = require("./lib");
 const { findPhone } = require("./lib");
+const { formatDateFromCrm } = require("./lib");
 const { commentArr } = require("./funcComment");
 
 const db = new PrismaClient();
@@ -93,6 +94,8 @@ async function startBatch(fromDate, toDate) {
                         url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
                         comment: await commentArr(application.id),
                         typeApplicationCrm: "Сансара",
+                        mailing: String(getField(application.fields, "5612")) === '1',
+                        mailingCreatedAtCrm: formatDateFromCrm(getField(application.fields, "5614")),
                         createdAtCrm: application.date_create,
                         createdAt: new Date(`${application.date_create}`)
                     },
@@ -122,6 +125,8 @@ async function startBatch(fromDate, toDate) {
                         url: getField(application.fields, "5075") ? getField(application.fields, "5075") : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${application.id}#request`,
                         comment: await commentArr(application.id),
                         typeApplicationCrm: "Сансара",
+                        mailing: String(getField(application.fields, "5612")) === '1',
+                        mailingCreatedAtCrm: formatDateFromCrm(getField(application.fields, "5614")),
                         createdAtCrm: application.date_create,
                         createdAt: new Date(`${application.date_create}`)
                     },

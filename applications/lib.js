@@ -96,10 +96,10 @@ async function foundName(id) {
           const person = response.data.data[id];
           return person.surname ? person.surname : person.name;
         } else {
-          console.error(`Данные не найдены для id ${id}, запрос ${response.data.data}. Запускаем 2 попытку`);       
+          console.error(`Данные не найдены для id ${id}, запрос ${response.data.data}. Запускаем 2 попытку`);
           //Таймаут перед повторным запросом
           await new Promise(resolve => setTimeout(resolve, 100000));
-          
+
           const responseTwo = await axios.post('http://jivemdoma.intrumnet.com:81/sharedapi/worker/filter',
             params, {
             headers: {
@@ -107,7 +107,7 @@ async function foundName(id) {
             }
           });
 
-          if (responseTwo.data && responseTwo.data.data && responseTwo.data.data[id] ) {
+          if (responseTwo.data && responseTwo.data.data && responseTwo.data.data[id]) {
             const person = response.data.data[id];
             return person.surname ? person.surname : person.name;
           } else {
@@ -116,7 +116,7 @@ async function foundName(id) {
         }
       } catch (error) {
         console.error(`Ошибка при выполнении запроса у ${id}:`, error);
-        throw error; 
+        throw error;
       }
     }
   } else {
@@ -150,7 +150,18 @@ async function findPhone(customer_id) {
   }
 }
 
+function formatDateFromCrm(dateStr) {
+  if (!dateStr) {
+    return "";
+  }
+  const [date] = dateStr.split(" ");
+  const [year, month, day] = date.split("-");
+  return `${day}.${month}.${year}`;
+}
+
+
 module.exports = {
   foundName: foundName,
-  findPhone: findPhone
+  findPhone: findPhone,
+  formatDateFromCrm: formatDateFromCrm
 };

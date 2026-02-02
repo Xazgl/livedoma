@@ -1,14 +1,30 @@
 import * as XLSX from "xlsx";
-import { PhoneColumnRef } from "../../../../../@types/dto";
+import { PhoneColumnRef, PhoneWithType } from "../../../../../@types/dto";
 
 /**
  * Нормализует телефон, оставляя только цифры и символ «+».
  * @param input Исходная строка с номером
  * @returns Нормализованный номер
  */
-export function normalizePhone(input: string): string {
-  return input.replace(/[^\d+]/g, "");
+export function normalizePhone(input: any): string {
+  const str = input != null ? String(input) : "";
+  let cleaned = str.replace(/[^\d]/g, "");
+  
+  if (cleaned.length === 10) {
+    return "+7" + cleaned;
+  }
+  if (cleaned.length === 11 && cleaned.startsWith("8")) {
+    return "+7" + cleaned.slice(1);
+  }
+  if (cleaned.startsWith("7") && cleaned.length === 11) {
+    return "+" + cleaned;
+  }
+  if (cleaned.startsWith("+7")) {
+    return cleaned;
+  }
+  return "+" + cleaned;
 }
+
 
 /**
  * Ищет колонку с телефонами по правилам:
@@ -42,12 +58,12 @@ export function findPhoneColumn(headers: any[]): PhoneColumnRef | null {
 
 /**
  * Извлекает массив телефонов из файла Excel/CSV.
- * Требует наличия колонки "phone" или заголовка, содержащего "телефон".
+ * Требует наличия колонки "phone" или заголовка, содержащего "телефон" и колонку тип заявки с типом.
  * @param file Файл Excel/CSV
  * @returns Массив нормализованных телефонных номеров
  * @throws Если колонка не найдена или файл пуст
  */
-export async function extractPhonesFromFile(file: File): Promise<string[]> {
+export async function extractPhonesFromFile(file: File): Promise<PhoneWithType[]> {
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer);
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -56,34 +72,35 @@ export async function extractPhonesFromFile(file: File): Promise<string[]> {
   const headers: any[] = asMatrix[0] || [];
   if (!headers.length) throw new Error("Пустой файл или нет заголовков.");
 
-  const columnRef = findPhoneColumn(headers);
-  let phones: string[] = [];
+  const phoneCol = findPhoneColumn(headers);
+  const typeColIndex = headers.findIndex(
+    (h) => typeof h === "string" && h.toLowerCase().includes("тип заявки")
+  );
 
-  if (columnRef && columnRef.byIndex) {
-    phones = asMatrix
-      .slice(1)
-      .map((row) => (row ? row[columnRef.keyOrIndex as number] : undefined))
-      .map((v) => (v == null ? "" : String(v).trim()))
-      .filter(Boolean);
-  } else {
-    const asObjects = XLSX.utils.sheet_to_json<Record<string, any>>(sheet, {
-      defval: "",
+  let result: PhoneWithType[] = [];
+
+  for (let i = 1; i < asMatrix.length; i++) {
+    const row = asMatrix[i];
+    if (!row) continue;
+
+    const phoneRaw =
+      phoneCol && phoneCol.byIndex
+        ? row[phoneCol.keyOrIndex as number]
+        : undefined;
+    const typeRaw = typeColIndex >= 0 ? row[typeColIndex] : undefined;
+
+    const phoneNumber = normalizePhone(phoneRaw ?? "");
+    if (!phoneNumber) continue;
+
+    result.push({
+      phoneNumber,
+      type: typeRaw ? String(typeRaw).trim() : undefined,
     });
-    if (!asObjects.length) throw new Error("Пустой файл.");
-    const keys = Object.keys(asObjects[0]);
-    const fallbackRef = findPhoneColumn(keys);
-    if (!fallbackRef) {
-      throw new Error('Не найдена колонка "phone" или содержащая "телефон".');
-    }
-    const key = fallbackRef.keyOrIndex as string;
-    phones = asObjects
-      .map((row) => (row?.[key] == null ? "" : String(row[key]).trim()))
-      .filter(Boolean);
   }
 
-  const normalized = phones.map(normalizePhone).filter(Boolean);
-  if (!normalized.length) {
-    throw new Error("В колонке с телефонами не найдено ни одного номера.");
+  if (!result.length) {
+    throw new Error("Не найдено ни одного валидного телефона.");
   }
-  return normalized;
+
+  return result;
 }

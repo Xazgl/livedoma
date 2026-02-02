@@ -3,7 +3,12 @@ import axios from "axios";
 import db from "../../prisma";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 
-export default async function sendIntrumCrm(message: Wazzup, double: boolean, wazzupFlag?:boolean) {
+export default async function sendIntrumCrm(
+  message: Wazzup,
+  double: boolean,
+  wazzupFlag?: boolean,
+  isMailingChannel?: boolean
+) {
   //Создание заявки сразу с контактом
   const obj = {
     apikey: "7917e0838a4d494b471ceb36d7e3a67b",
@@ -122,7 +127,7 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean, wa
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
   params.append(
     "params[request][fields][0][value]",
-    doubleMessage ? "Дубль" : "WhatsApp"
+    doubleMessage ? "Дубль" : isMailingChannel ? "Рассылка" : "WhatsApp"
   ); //доп поле 1
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
   params.append("params[request][fields][1][value]", "WhatsApp"); //доп поле 2
@@ -138,6 +143,12 @@ export default async function sendIntrumCrm(message: Wazzup, double: boolean, wa
 
   params.append("params[request][fields][4][id]", "4992"); // доп поле 5
   params.append("params[request][fields][4][value]", "Заявка не проверена"); //доп поле 5
+
+  params.append("params[request][fields][6][id]", "5613"); // доп поле 5
+  params.append(
+    "params[request][fields][6][value]",
+    isMailingChannel ? "1" : "0"
+  ); //доп поле 5
 
   try {
     const postResponse = await axios.post(
@@ -259,14 +270,14 @@ export async function sendIntrumCrmTilda(
     // if (source === "Авито таргет") {
     //   params.append("params[request][employee_id]", "44"); //id главного отв заявки
     // } else {
-      params.append(
-        "params[request][employee_id]",
-        message.managerId == "Ошибка в выборе менеджера"
-          ? managerIdRandom
-          : message.managerId
-          ? message.managerId
-          : managerIdRandom
-      ); //id главного отв заявки
+    params.append(
+      "params[request][employee_id]",
+      message.managerId == "Ошибка в выборе менеджера"
+        ? managerIdRandom
+        : message.managerId
+        ? message.managerId
+        : managerIdRandom
+    ); //id главного отв заявки
     // }
   }
   //колцентр 309 , 1584, 1693, 2588, 2146

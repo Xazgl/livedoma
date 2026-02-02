@@ -13,10 +13,9 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import DescriptionIcon from "@mui/icons-material/Description";
-import { extractPhonesFromFile } from "./utils";
+import { extractPhonesFromFile } from "./utils"; 
 import { useTheme } from "../../provider/ThemeProvider";
 import { ToastState } from "../../../../../@types/dto";
-
 
 export default function UsersForMailingUploader() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -51,14 +50,13 @@ export default function UsersForMailingUploader() {
     }
     setIsLoading(true);
     try {
-      const phones = await extractPhonesFromFile(selectedFile);
-      const response = await axios.post("/api/import-users", { phones });
+      const phonesWithType = await extractPhonesFromFile(selectedFile);
+      const response = await axios.post("/api/import-users", {
+        phones: phonesWithType,
+      });
       const created = response.data?.inserted ?? 0;
       const updated = response.data?.updated ?? 0;
-      showToast(
-        `Импорт завершён: добавлено ${created}`,
-        "success"
-      );
+      showToast(`Импорт завершён: добавлено ${created}`, "success");
       setSelectedFile(null);
       const input = document.getElementById(
         "users-file"

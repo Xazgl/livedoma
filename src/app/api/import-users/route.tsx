@@ -1,26 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../prisma";
 import { BodyImport } from "../../../../@types/dto";
+import { buildPhonePairs } from "./utils";
 
 const twoWeeksFromNow = () => new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-
-/** Приводит номер к формату +7XXXXXXXXXX (если возможно), иначе возвращает пустую строку */
-function normalizeToRuE164(input: unknown): string {
-  const digits = String(input ?? "").replace(/\D/g, "");
-
-  if (/^7\d{10}$/.test(digits)) return `+${digits}`;
-  if (/^8\d{10}$/.test(digits)) return `+7${digits.slice(1)}`;
-  if (/^\d{10}$/.test(digits) && digits.startsWith("9")) return `+7${digits}`;
-  if (/^\+7\d{10}$/.test(String(input))) return String(input);
-
-  return "";
-}
-
-/** Проверяет формат строго как +7XXXXXXXXXX */
-function isRuE164(phone: string): boolean {
-  return /^\+7\d{10}$/.test(phone);
-}
-
 
 export async function POST(req: NextRequest) {
   const body = (await req.json()) as BodyImport | null;
@@ -31,48 +14,82 @@ export async function POST(req: NextRequest) {
 
   const names = Array.isArray(body.names) ? body.names : [];
 
-  const pairs = body.phones
-    .map((p, i) => ({
-      phoneNumber: normalizeToRuE164(p),
-      name: names[i] ?? null,
-    }))
-    .filter((x) => isRuE164(x.phoneNumber));
+  const pairs = buildPhonePairs(body.phones, names);
 
   if (!pairs.length) {
     return NextResponse.json(
-      { message: "no valid +7 phones" },
+      { message: "нет номеров формата +7 " },
       { status: 400 }
     );
   }
 
+  // Убирает дубли внутри файла
   const seen = new Set<string>();
   const unique = pairs.filter(({ phoneNumber }) =>
     seen.has(phoneNumber) ? false : (seen.add(phoneNumber), true)
   );
 
-  const createRes = await prisma.usersForMailing.createMany({
-    data: unique.map(({ phoneNumber, name }) => ({
-      phoneNumber,
-      name,
-      deleteAt: twoWeeksFromNow(),
-    })),
-    skipDuplicates: true,
+  const deleteAt = twoWeeksFromNow();
+  const phoneNumbers = unique.map((x) => x.phoneNumber);
+
+  // Находит, какие номера уже есть в базе
+  const existing = await prisma.usersForMailing.findMany({
+    where: { phoneNumber: { in: phoneNumbers } },
+    select: { phoneNumber: true },
   });
 
-  const inserted = createRes.count ?? 0;
-  const duplicates = unique.length - inserted;
-  const updated = 0; 
+  const existingSet = new Set(existing.map((e) => e.phoneNumber));
 
+  const toUpdate = unique.filter((p) => existingSet.has(p.phoneNumber));
+  const toCreate = unique.filter((p) => !existingSet.has(p.phoneNumber));
+
+  // Создаёт новые
+  let inserted = 0;
+  if (toCreate.length) {
+    const createRes = await prisma.usersForMailing.createMany({
+      data: toCreate.map(({ phoneNumber, name, type }) => ({
+        phoneNumber,
+        name,
+        type,
+        deleteAt,
+      })),
+      skipDuplicates: true,
+    });
+    inserted = createRes.count ?? 0;
+  }
+
+  // Обновляем deleteAt (и, если нужно, name и type)
+  let updated = 0;
+  if (toUpdate.length) {
+    await Promise.all(
+      toUpdate.map(({ phoneNumber, name, type }) =>
+        prisma.usersForMailing.update({
+          where: { phoneNumber },
+          data: {
+            deleteAt,
+            ...(name ? { name } : {}),
+            ...(type ? { type } : {}),
+          },
+        })
+      )
+    );
+    updated = toUpdate.length;
+  }
+
+  // Дубликаты
+  const duplicates = unique.length - inserted - updated;
+
+  //  все записи по этим номерам (и новые, и обновлённые)
   const saved = await prisma.usersForMailing.findMany({
-    where: { phoneNumber: { in: unique.map((x) => x.phoneNumber) } },
+    where: { phoneNumber: { in: phoneNumbers } },
     orderBy: { createdAt: "desc" },
   });
 
   return NextResponse.json(
     {
-      inserted,
-      updated,
-      duplicates,
+      inserted, // сколько реально новых создано
+      updated, // сколько существующих обновлено (продлили deleteAt)
+      duplicates, // сколько "потеряли" из-за дублей внутри файла
       totalReceived: body.phones.length,
       valid: pairs.length,
       unique: unique.length,
@@ -81,6 +98,3 @@ export async function POST(req: NextRequest) {
     { status: 200 }
   );
 }
-
-
-

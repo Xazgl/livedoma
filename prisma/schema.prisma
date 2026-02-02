@@ -321,6 +321,9 @@ model constructionApplications {
 
   createdAtCrm String?
 
+  mailing   Boolean? @default(false)
+  mailingCreatedAtCrm  String?
+
   typeApplicationCrm String  @default("ЖДД") // Тип заявки ЖДД или Сансара 
   services           String? @default("") // услуги
 
@@ -476,6 +479,7 @@ model UsersForMailing {
   id          String   @id @default(cuid())
   phoneNumber String   @unique
   name        String?
+  type        String?
   deleteAt    DateTime
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

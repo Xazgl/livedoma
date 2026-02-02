@@ -3,7 +3,8 @@ import axios from "axios";
 
 export default async function sendIntrumCrmWazzupJD(
   message: Wazzup,
-  double: boolean
+  double: boolean,
+  isMailingChannel?: boolean
 ) {
   const doubleMessage = double;
 
@@ -76,7 +77,10 @@ export default async function sendIntrumCrmWazzupJD(
     doubleMessage ? "Дубль" : "WhatsApp"
   ); //доп поле 1
   params.append("params[request][fields][1][id]", "1765"); // доп поле 2
-  params.append("params[request][fields][1][value]", "Наш сайт"); //доп поле 2
+  params.append(
+    "params[request][fields][1][value]",
+    isMailingChannel ? "WhatsApp рассылка" : "Наш сайт"
+  ); //доп поле 2
 
   params.append("params[request][fields][2][id]", "1766"); // доп поле 3
   params.append("params[request][fields][2][value]", formattedDate); //доп поле 3
@@ -89,7 +93,6 @@ export default async function sendIntrumCrmWazzupJD(
 
   params.append("params[request][fields][8][id]", "5272"); // доп поле 5
   params.append("params[request][fields][8][value]", "1"); //доп поле 5
-
 
   // params.append("params[request][fields][4][id]", "5079"); // доп поле 5
   // params.append("params[request][fields][4][value]", "Не заполнено"); //доп поле 5

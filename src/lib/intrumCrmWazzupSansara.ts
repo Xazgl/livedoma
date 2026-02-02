@@ -3,7 +3,8 @@ import axios from "axios";
 
 export default async function sendIntrumCrmWazzupSansara(
   message: Wazzup,
-  double: boolean
+  double: boolean,
+  isMailingChannel: boolean
 ) {
   const doubleMessage = double;
 
@@ -53,8 +54,10 @@ export default async function sendIntrumCrmWazzupSansara(
     doubleMessage ? "Дубль" : "Заявка с рассылки WhatsApp"
   );
 
+  const translator = isMailingChannel ? "Рассылка WhatsApp" : "WhatsApp";
+
   params.append("params[request][fields][1][id]", "1211"); //  Источник
-  params.append("params[request][fields][1][value]", "WhatsApp");
+  params.append("params[request][fields][1][value]", translator);
 
   params.append("params[request][fields][2][id]", "3724"); //   Тип недвижимости
   params.append("params[request][fields][2][value]", "Новостройка");

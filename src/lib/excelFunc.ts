@@ -17,8 +17,6 @@ import {
   formatDateTime,
   formatDateTimeToDDMMYYYYHHMMSS,
 } from "./dateStr";
-import { comment } from "postcss";
-import { getTranslatorSansaraNew } from "@/shared/sansara/utils";
 import { getTranslatorJdd } from "@/shared/jdd/utils";
 
 export async function generateExcel(transactions: Sales[]) {
@@ -184,7 +182,9 @@ export async function generateExcel2(applications: constructionApplications[]) {
     services: appl.services ? appl.services : "Строительство",
     postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
     desc: appl.desc ? appl.desc : "",
-    typeApplication: appl.typeApplication ? appl.typeApplication : "",
+    typeApplication: appl.typeApplication ?? "Заявка без типа",
+    mailing: appl.mailing ? "Да" : "Нет",
+    mailingCreatedAtCrm: appl?.mailingCreatedAtCrm ?? "",
     contactedClient: appl.contactedClient ? appl.contactedClient : "",
     sourceUtm: appl.sourceUtm ? appl.sourceUtm : "",
     campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
@@ -265,6 +265,11 @@ export async function generateExcel2(applications: constructionApplications[]) {
       //       col.field !== "sourceUtm"
       //   );
       // }
+
+      // Удаление колонки рассылка и всех вкладок кроме вац апп и заявка
+      if (type !== "Заявка" && type !== "WhatsApp") {
+        columns = columns.filter((col) => col.field !== "mailing");
+      }
 
       // if (type === "Звонок") {
       //   columns = columns.filter((col) => col.field !== "sourceUtm");
@@ -619,73 +624,20 @@ export async function generateExcel3(transactions: Sales[]) {
 export async function generateExcel5(applications: constructionApplications[]) {
   const workbook = new ExcelJS.Workbook();
 
-  function getTranslatorSansara(
-    sourceUtm?: string | null,
-    campaignUtm?: string | null,
-    termUtm?: string | null,
-    translator?: string | null
-  ): string {
-    if (translator?.toLowerCase().includes("билборд")) {
-      return translator;
-    }
-    if (campaignUtm == "(none)" || termUtm == "(none)") {
-      return "Сайт Сансара";
-    }
-    if (
-      translator &&
-      translator !== "WhatsApp" &&
-      translator !== "Avito" &&
-      translator !== "Дом Клик" &&
-      translator !== "yandex" &&
-      translator !== "Циан" &&
-      translator !== "VK" &&
-      translator !== "Забор" &&
-      translator !== "Telegram Сансара" &&
-      translator !== "Мир квартир" &&
-      translator !== "М2 ВТБ" &&
-      translator !== "jivem-doma.ru" &&
-      translator !== "Сайт Сансара"
-    ) {
-      if (sourceUtm == "TG" || sourceUtm == "vk") {
-        return "Сайт Сансара";
-      } else {
-        return (sourceUtm && sourceUtm !== "нету") ||
-          (campaignUtm && campaignUtm !== "нету") ||
-          (termUtm && termUtm !== "нету")
-          ? "Лендинг Сансара"
-          : "Сайт Сансара";
-      }
-    }
-    return translator ? translator : "";
-  }
-
   const applicationsNew = applications.map((appl) => {
-    const hasUtm =
-      appl.campaignUtm || appl.termUtm || appl.sourceUtm || appl.prodinfo
-        ? true
-        : false;
     return {
       id: appl.id,
       idApplicationIntrum: appl.idApplicationIntrum,
       translator:
         appl.translator === "Радио Сансара" ? "Радио" : appl.translator ?? "",
-      // appl.translator && appl.translator !== "Marquiz Сансара"
-      //   ? appl.translator
-      //   : hasUtm
-      //   ? "Лендинг Сансара"
-      //   : "Сайт Сансара",
-      // getTranslatorSansaraNew(
-      //   appl.sourceUtm,
-      //   appl.campaignUtm,
-      //   appl.termUtm,
-      //   appl.translator
-      // ),
       responsibleMain: appl.responsibleMain,
       status: appl.status ? appl.status : "",
       services: "",
       postMeetingStage: appl.postMeetingStage ? appl.postMeetingStage : "",
       desc: appl.desc ? appl.desc : "",
       typeApplication: appl.typeApplication ? appl.typeApplication : "",
+      mailing: appl?.mailing ? "Да" : "Нет",
+      mailingCreatedAtCrm: appl?.mailingCreatedAtCrm ?? "",
       contactedClient: appl.contactedClient == "1" ? "Да" : "Нет",
       campaignUtm: appl.campaignUtm ? appl.campaignUtm : "",
       termUtm: appl.termUtm ? appl.termUtm : "",
@@ -840,7 +792,7 @@ export async function generateExcel5(applications: constructionApplications[]) {
 
   // Создание вкладок Excel для каждого типа заявки
   Object.entries(applicationsByType).forEach(([type, data]) => {
-    if (type !== "Заявка без типа") {
+    if (type !== "Заявка без типа" && type !== "Заявка с рассылки WhatsApp") {
       const worksheet = workbook.addWorksheet(type);
 
       // Добавление заголовков столбцов

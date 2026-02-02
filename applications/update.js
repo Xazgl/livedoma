@@ -5,6 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 const { AxiosError } = require("axios");
 const { foundName } = require("../report/lib");
 const { findPhone } = require("./lib");
+const { formatDateFromCrm } = require("./lib");
 const { commentArr } = require("./funcComment");
 
 const db = new PrismaClient();
@@ -84,6 +85,8 @@ async function startBatch(fromDate, toDate) {
                         url: getField(application.fields, "5032"),
                         comment: await commentArr(application.id),
                         typeApplicationCrm: "ЖДД",
+                        mailing: String(getField(application.fields, "5613")) === '1',
+                        mailingCreatedAtCrm: formatDateFromCrm(getField(application.fields, "5615")),
                         createdAtCrm: application.date_create,
                         createdAt: new Date(`${application.date_create}`)
                     },
@@ -114,6 +117,8 @@ async function startBatch(fromDate, toDate) {
                         url: getField(application.fields, "5032"),
                         comment: await commentArr(application.id),
                         typeApplicationCrm: "ЖДД",
+                        mailing: String(getField(application.fields, "5613")) === '1',
+                        mailingCreatedAtCrm: formatDateFromCrm(getField(application.fields, "5615")),
                         createdAtCrm: application.date_create,
                         createdAt: new Date(`${application.date_create}`)
                     },

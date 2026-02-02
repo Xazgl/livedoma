@@ -7,6 +7,7 @@ import { normalizeWazzupNumber } from "@/lib/phoneMask";
 import { determineProjectType, ProjectType } from "@/lib/wazzup";
 import sendIntrumCrmWazzupJD from "@/lib/intrumCrmWazzupJd";
 import sendIntrumCrmWazzupSansara from "@/lib/intrumCrmWazzupSansara";
+import createIntrumTask from "@/lib/createTasks";
 // import { managerFindNew } from "@/lib/jdd_queue";
 
 export async function POST(req: NextRequest, res: NextResponse) {
@@ -38,20 +39,24 @@ export async function POST(req: NextRequest, res: NextResponse) {
               const phoneInUsersMailing = await db.usersForMailing.findFirst({
                 where: {
                   phoneNumber: phone,
-                  deleteAt: { gt: new Date() },
                 },
-                select: { id: true },
+                select: { id: true, type: true },
               });
 
-              if (!phoneInUsersMailing && isMailingChannel) {
-                return;
+              if (!phoneInUsersMailing?.id && isMailingChannel) {
+                return new Response(
+                  "'Запрос не может быть выполнен номер с канала рассылки без списка'",
+                  { status: 400 }
+                );
               }
 
               const chatType = message.chatType ? message.chatType : "Нету";
               const text = message.text ? message.text : "Нету";
 
+              const type = phoneInUsersMailing?.type as ProjectType;
+
               const projectType: ProjectType = isMailingChannel
-                ? "Сансара"
+                ? type
                 : await determineProjectType(text);
 
               if (phone !== "Admin") {
@@ -73,31 +78,42 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
                   if (double.within24Hours == false) {
                     if (
-                      projectType == "ЖДД" ||
-                      projectType == "Не определено"
+                      (projectType == "ЖДД" ||
+                        projectType == "Не определено") &&
+                      !isMailingChannel
                     ) {
                       crmAnswer = await sendIntrumCrm(
                         newContact,
-                        double.isDuplicate
+                        double.isDuplicate,
+                        isMailingChannel
                       );
                       console.log(crmAnswer);
                     }
 
-                    if (projectType == "ЖД") {
+                    if (projectType == "ЖД" && !isMailingChannel) {
                       crmAnswer = await sendIntrumCrmWazzupJD(
                         newContact,
-                        double.isDuplicate
+                        double.isDuplicate,
+                        isMailingChannel
                       );
                       console.log(crmAnswer);
                     }
 
-                    if (projectType == "Сансара") {
+                    if (projectType == "Сансара" && !isMailingChannel) {
                       crmAnswer = await sendIntrumCrmWazzupSansara(
                         newContact,
-                        double.isDuplicate
+                        double.isDuplicate,
+                        isMailingChannel
                       );
                       console.log(crmAnswer);
                     }
+
+                    if (isMailingChannel) {
+                      crmAnswer = await createIntrumTask(newContact, projectType);
+                    }
+                    const url = isMailingChannel
+                      ? `https://jivemdoma.intrumnet.com/crm/tools/#task_${crmAnswer.data.request.toString()}`
+                      : `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`;
 
                     if (crmAnswer.status == "success") {
                       console.log(crmAnswer);
@@ -108,11 +124,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
                         data: {
                           sendCrm: true,
                           intrumId: crmAnswer.data.request.toString(),
-                          intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
+                          intrumUrl: url,
                         },
                       });
 
-                      if (double.isDuplicate == false) {
+                      if (double.isDuplicate == false && !isMailingChannel) {
                         await db.managerQueue.create({
                           data: {
                             managerId: manager

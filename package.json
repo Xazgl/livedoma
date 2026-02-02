@@ -24,6 +24,7 @@
     "start5": "node applications/index.js",
     "mango": "node applications/mango.js",
     "mangoSansara": "node applications/mangoSansara.js",
+    "test5": "node applications/test5.js",
     "magoJddSendCrm": "node applications/sendMangoUtmInCrm.js",
     "sendMangoSansaraUtmInCrm": "node applications/sendMangoSansaraUtmInCrm.js",
     "start12": "node applications/indexSansara.js",
