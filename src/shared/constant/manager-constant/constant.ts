@@ -1,1 +1,4 @@
-export const productionManager = '44'
+export const sharedConstantManagers = {
+    repairManager:'2988',
+    productionManager : '44'
+}

@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
 import { Tilda, crmAnswer } from "../../../../@types/dto";
-import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { managerFindNew } from "@/lib/jdd_queue";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 import { isRepairForm } from "./utils";
+import { sharedConstantManagers } from "@/shared/constant/manager-constant/constant";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -73,7 +74,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
           const isRepair = isRepairForm(formName, newContact);
           if (isRepair) {
-            manager = "2988";
+            manager = sharedConstantManagers.repairManager;
           }
 
           if (double.within24Hours == false) {
@@ -95,7 +96,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 },
               });
 
-              if (double.isDuplicate == false && manager !== "2988") {
+              if (
+                double.isDuplicate == false &&
+                manager !== sharedConstantManagers.repairManager
+              ) {
                 await db.managerQueue.create({
                   data: {
                     managerId:

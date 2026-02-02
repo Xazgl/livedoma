@@ -5,6 +5,7 @@ import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
+import { sharedConstantManagers } from "@/shared/constant/manager-constant/constant";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -65,7 +66,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           let double = await doubleFind(phone);
           console.log(double);
           // let manager = await managerFindNew();
-          let manager = "2988";
+          let manager = sharedConstantManagers.repairManager;
           const source = getSourceForJDDByUtm(
             utm_campaign,
             utm_source,
