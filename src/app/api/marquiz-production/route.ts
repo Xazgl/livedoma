@@ -4,7 +4,7 @@ import { Marquiz, crmAnswer } from "../../../../@types/dto";
 import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { productionManager } from "@/shared/constant/manager-constant/constant";
+import { sharedConstantManagers } from "@/shared/constant/manager-constant/constant";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           let double = await doubleFind(phone);
           console.log(double);
           // let manager = await managerFindNew();
-          let manager = productionManager;
+          let manager = sharedConstantManagers.productionManager;
           console.log(manager);
           const newContact = await db.tilda.create({
             data: {
