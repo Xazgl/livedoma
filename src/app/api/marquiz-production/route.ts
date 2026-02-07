@@ -4,7 +4,7 @@ import { Marquiz, crmAnswer } from "../../../../@types/dto";
 import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { sharedConstantManagers } from "@/shared/constant/manager-constant/constant";
+import { getNextProductionManager, saveProductionQueue } from "@/shared/production";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -63,16 +63,17 @@ export async function POST(req: NextRequest, res: NextResponse) {
         try {
           let double = await doubleFind(phone);
           console.log(double);
-          // let manager = await managerFindNew();
-          let manager = sharedConstantManagers.productionManager;
+          let manager = await getNextProductionManager()
           console.log(manager);
+
+          const typeSend = "Marquiz Производство"
           const newContact = await db.tilda.create({
             data: {
               name: name,
               phone: phone,
               timeForClientCall: clientCallTime,
               formid: formid,
-              typeSend: "Marquiz Производство",
+              typeSend: typeSend,
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,
               utm_content: utm_content,
@@ -95,7 +96,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             );
 
             if (crmAnswer.status == "success") {
-              const updateStatus = await db.tilda.update({
+               await db.tilda.update({
                 where: {
                   id: newContact.id,
                 },
@@ -106,19 +107,13 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 },
               });
 
-              await db.wazzup.create({
-                data: {
-                  name: "",
-                  phone: "",
-                  text: "",
-                  typeSend: "Очередь",
-                  sendCrm: false,
-                  managerId:
-                    manager && manager !== ""
-                      ? manager
-                      : "Ошибка в выборе менеджера",
-                },
-              });
+              if (double.isDuplicate == false) {
+                await saveProductionQueue({
+                  managerId: manager,
+                  requestId: crmAnswer.data.request,
+                  type: typeSend,
+                });
+              }
             }
 
             return NextResponse.json(

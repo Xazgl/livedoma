@@ -4,7 +4,10 @@ import { Tilda, crmAnswer } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { sendIntrumCrmProduction } from "@/lib/intrumCrmProduction";
-import { sharedConstantManagers } from "@/shared/constant/manager-constant/constant";
+import {
+  getNextProductionManager,
+  saveProductionQueue,
+} from "@/shared/production";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -18,7 +21,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       };
 
       const answer: Tilda = await req.json();
-      console.log('production', answer);
 
       //@ts-ignore
       if (answer.test == null) {
@@ -36,16 +38,18 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const utm_source = answer.utm_source ? answer.utm_source : "";
         const formName = answer?.formname ? answer?.formname.trim() : "";
 
-        const manager = sharedConstantManagers.productionManager;
+        const manager = await getNextProductionManager();
+
         try {
           let double = await doubleFind(phone);
+          const typeSend = "Tilda Производство";
 
           const newContact = await db.tilda.create({
             data: {
               name: name,
               phone: phone,
               formid: formid,
-              typeSend: "Tilda",
+              typeSend: typeSend,
               utm_source: utm_source,
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,
@@ -55,8 +59,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
               managerId: manager,
             },
           });
-
-          console.log('production newContact', newContact);
 
           if (double.within24Hours == false) {
             crmAnswer = await sendIntrumCrmProduction(
@@ -76,6 +78,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
                   intrumUrl: `https://jivemdoma.intrumnet.com/crm/tools/exec/request/${crmAnswer.data.request.toString()}#request`,
                 },
               });
+
+              if (double.isDuplicate == false) {
+                await saveProductionQueue({
+                  managerId: manager,
+                  requestId: crmAnswer.data.request,
+                  type: typeSend,
+                });
+              }
             }
             return NextResponse.json(
               { crmStatus: crmAnswer, contacts: newContact },
