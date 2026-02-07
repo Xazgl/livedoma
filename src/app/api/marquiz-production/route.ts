@@ -1,21 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Marquiz, crmAnswer } from "../../../../@types/dto";
+import { Marquiz } from "../../../../@types/dto";
 import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { getNextProductionManager, saveProductionQueue } from "@/shared/production";
+import {
+  getNextProductionManager,
+  saveProductionQueue,
+} from "@/shared/production";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Marquiz = await req.json();
       console.log(answer);
@@ -63,10 +61,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
         try {
           let double = await doubleFind(phone);
           console.log(double);
-          let manager = await getNextProductionManager()
+          let manager = await getNextProductionManager();
           console.log(manager);
 
-          const typeSend = "Marquiz Производство"
+          const typeSend = "Marquiz Производство";
           const newContact = await db.tilda.create({
             data: {
               name: name,
@@ -96,7 +94,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             );
 
             if (crmAnswer.status == "success") {
-               await db.tilda.update({
+              await db.tilda.update({
                 where: {
                   id: newContact.id,
                 },

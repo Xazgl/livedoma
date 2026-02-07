@@ -8,17 +8,12 @@ import { managerFindNew } from "@/lib/jdd_queue";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
 import { isRepairForm } from "./utils";
 import { sharedConstantManagers } from "@/shared/constant/manager-constant/constant";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Tilda = await req.json();
       console.log(answer);

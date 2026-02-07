@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import {  MarquizRansom, crmAnswer } from "../../../../@types/dto";
+import { MarquizRansom } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { sendIntrumCrmTildaRansom } from "@/lib/intrumRansomCrm";
 import { managerFindNew } from "@/lib/jdd_queue";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
-      const answer: MarquizRansom= await req.json();
+      const answer: MarquizRansom = await req.json();
       console.log(answer);
 
       //@ts-ignore
@@ -62,7 +57,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
           // const manager = await managerFind();
           const manager = await managerFindNew();
-          
+
           const newContact = await db.tilda.create({
             data: {
               name: name,

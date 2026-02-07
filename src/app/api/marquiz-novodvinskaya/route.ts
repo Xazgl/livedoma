@@ -1,20 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Marquiz, crmAnswer } from "../../../../@types/dto";
+import { Marquiz  } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { managerFindNovodvinskaya, sendIntrumCrmTildaNovodvinskaya } from "@/lib/intrumNovodvinskayaCrm";
+import {
+  managerFindNovodvinskaya,
+  sendIntrumCrmTildaNovodvinskaya,
+} from "@/lib/intrumNovodvinskayaCrm";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Marquiz = await req.json();
       console.log(answer);

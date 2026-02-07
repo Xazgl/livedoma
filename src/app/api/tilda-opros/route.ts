@@ -1,17 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Tilda, crmAnswer } from "../../../../@types/dto";
+import { Tilda } from "../../../../@types/dto";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Tilda = await req.json();
       console.log(answer);
@@ -20,7 +15,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       if (answer.test == null) {
         const { tranid, formid, formname, ...surveyData } = answer;
 
-        const name = JSON.stringify(surveyData) ?? 'нету';
+        const name = JSON.stringify(surveyData) ?? "нету";
         const utm_medium = answer.utm_medium ? answer.utm_medium : "";
         const utm_campaign = answer.utm_campaign ? answer.utm_campaign : "";
         const utm_content = answer.utm_content ? answer.utm_content : "";
@@ -31,7 +26,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           const newContact = await db.tilda.create({
             data: {
               name: name,
-              phone: 'нету у формы',
+              phone: "нету у формы",
               formid: formid,
               typeSend: "Tilda Опрос ОП",
               utm_source: utm_source,
@@ -42,7 +37,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
               sendCrm: false,
               managerId: "У этих заявок нету",
             },
-            
           });
 
           return NextResponse.json(

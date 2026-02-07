@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Tilda, crmAnswer } from "../../../../@types/dto";
+import { Tilda } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import {
   managerFindSansara,
   sendIntrumCrmTildaSansara,
 } from "@/lib/intrumSansaraCrm";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Tilda = await req.json();
       console.log(answer);

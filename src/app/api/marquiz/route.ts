@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Marquiz, crmAnswer } from "../../../../@types/dto";
-import { managerFind, sendIntrumCrmTilda } from "@/lib/intrumCrm";
+import { Marquiz } from "../../../../@types/dto";
+import { sendIntrumCrmTilda } from "@/lib/intrumCrm";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { managerFindNew } from "@/lib/jdd_queue";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Marquiz = await req.json();
       console.log(answer);
@@ -72,7 +67,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             utm_term
           );
           if (source === "Авито таргет") {
-            manager='44'
+            manager = "44";
           }
 
           console.log(manager);

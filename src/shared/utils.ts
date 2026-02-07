@@ -1,3 +1,5 @@
+import { crmAnswer } from "../../@types/dto";
+
 /**
  * Возвращает значение, соответствующее теме (тёмной или светлой).
  * @param {string} theme - Текущая тема, например "dark" или "light".
@@ -26,4 +28,19 @@ export const isImage = (url: string): boolean => {
 };
 
 
+
+
+/**
+ * Создает дефолтный ответ CRM
+ * Используется как начальное состояние перед отправкой
+ */
+export function createDefaultCrmAnswer(): crmAnswer {
+  return {
+    status: 'no',
+    data: {
+      customer: '',
+      request: '',
+    },
+  };
+}
 

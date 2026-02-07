@@ -1,20 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Tilda, crmAnswer } from "../../../../@types/dto";
+import { Tilda } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { managerFindRansom, sendIntrumCrmTildaRansom } from "@/lib/intrumRansomCrm";
+import {
+  managerFindRansom,
+  sendIntrumCrmTildaRansom,
+} from "@/lib/intrumRansomCrm";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Tilda = await req.json();
       console.log(answer);
@@ -27,7 +25,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
           : answer.name
           ? answer.name
           : "Нету";
-        const phone = answer.Phone? await normalizePhoneNumber(answer.Phone) : answer.phone? await normalizePhoneNumber(answer.phone) : '';
+        const phone = answer.Phone
+          ? await normalizePhoneNumber(answer.Phone)
+          : answer.phone
+          ? await normalizePhoneNumber(answer.phone)
+          : "";
         const formid = answer.formid ? answer.formid : "Нету";
         const utm_medium = answer.utm_medium ? answer.utm_medium : "";
         const utm_campaign = answer.utm_campaign ? answer.utm_campaign : "";

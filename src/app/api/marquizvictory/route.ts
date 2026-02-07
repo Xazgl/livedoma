@@ -1,21 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Marquiz, crmAnswer } from "../../../../@types/dto";
+import { Marquiz } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { managerFindSansara } from "@/lib/intrumSansaraCrm";
 import { sendIntrumCrmTildaVictory } from "@/lib/intrumVictoryCrm";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Marquiz = await req.json();
       console.log(answer);
@@ -23,7 +18,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
       //@ts-ignore
       if (answer) {
         const name = answer.contacts.name;
-        const phone = answer.contacts.phone? await normalizePhoneNumber(answer.contacts.phone) : '';
+        const phone = answer.contacts.phone
+          ? await normalizePhoneNumber(answer.contacts.phone)
+          : "";
         const clientCallTime = answer.contacts.text;
         const formid = answer.form.id ? answer.form.id : "Нету";
         let utm_medium = "";
@@ -43,8 +40,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             : "";
           utm_term = answer.extra.utm.term ? answer.extra.utm.term : "";
           utm_source = answer.extra.utm.source ? answer.extra.utm.source : "";
-          prodinfo = answer.extra.utm.prodinfo ?  answer.extra.utm.prodinfo : "";
-
+          prodinfo = answer.extra.utm.prodinfo ? answer.extra.utm.prodinfo : "";
         }
 
         // Функция для формирования строки
@@ -82,16 +78,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
               prodinfo: prodinfo,
               sendCrm: false,
               answers: textAnswers,
-              managerId:
-                manager 
-                // && manager !== ""
-                  ? manager
-                  : "Ошибка в выборе менеджера",
+              managerId: manager
+                ? // && manager !== ""
+                  manager
+                : "Ошибка в выборе менеджера",
             },
           });
 
           if (double.within24Hours == false) {
-            crmAnswer = await  sendIntrumCrmTildaVictory(
+            crmAnswer = await sendIntrumCrmTildaVictory(
               newContact,
               double.isDuplicate
             );

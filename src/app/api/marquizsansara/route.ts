@@ -1,20 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../prisma";
-import { Marquiz, crmAnswer } from "../../../../@types/dto";
+import { Marquiz  } from "../../../../@types/dto";
 import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
-import { managerFindSansara, sendIntrumCrmTildaSansara } from "@/lib/intrumSansaraCrm";
+import {
+  managerFindSansara,
+  sendIntrumCrmTildaSansara,
+} from "@/lib/intrumSansaraCrm";
+import { createDefaultCrmAnswer } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
     try {
-      let crmAnswer: crmAnswer = {
-        status: "no",
-        data: {
-          customer: "",
-          request: "",
-        },
-      };
+      let crmAnswer = createDefaultCrmAnswer();
 
       const answer: Marquiz = await req.json();
       console.log(answer);
@@ -42,8 +40,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             : "";
           utm_term = answer.extra.utm.term ? answer.extra.utm.term : "";
           utm_source = answer.extra.utm.source ? answer.extra.utm.source : "";
-          prodinfo = answer.extra.utm.prodinfo ?  answer.extra.utm.prodinfo : "";
-
+          prodinfo = answer.extra.utm.prodinfo ? answer.extra.utm.prodinfo : "";
         }
 
         // Функция для формирования строки
@@ -90,7 +87,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
           });
 
           if (double.within24Hours == false) {
-            crmAnswer = await  sendIntrumCrmTildaSansara(
+            crmAnswer = await sendIntrumCrmTildaSansara(
               newContact,
               double.isDuplicate
             );
