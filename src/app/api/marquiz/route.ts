@@ -6,7 +6,7 @@ import { doubleFind } from "@/lib/doubleFind";
 import { normalizePhoneNumber } from "@/lib/phoneMask";
 import { managerFindNew } from "@/lib/jdd_queue";
 import { getSourceForJDDByUtm } from "@/shared/jdd/utils";
-import { createDefaultCrmAnswer } from "@/shared";
+import { createDefaultCrmAnswer, formatQuestionsAndAnswers } from "@/shared";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method == "POST") {
@@ -40,19 +40,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
           utm_source = answer.extra.utm.source ? answer.extra.utm.source : "";
         }
 
-        // Функция для формирования строки
-        function formatQuestionsAndAnswers(answer: Marquiz) {
-          let resultString = "";
-          answer.answers.forEach((answer) => {
-            // Добавление вопроса и ответа к результату
-            resultString += `${answer.q} '${answer.a}'`;
-            // Добавление пробела после каждой связки вопроса и ответа
-            resultString += ", ";
-          });
-          // Удаление лишнего пробела в конце строки
-          resultString = resultString.trim();
-          return resultString;
-        }
         const textAnswers = formatQuestionsAndAnswers(answer);
         console.log(textAnswers);
 

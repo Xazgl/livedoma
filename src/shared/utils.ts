@@ -1,4 +1,4 @@
-import { crmAnswer } from "../../@types/dto";
+import { crmAnswer, MarquizRansom } from "../../@types/dto";
 
 /**
  * Возвращает значение, соответствующее теме (тёмной или светлой).
@@ -27,20 +27,35 @@ export const isImage = (url: string): boolean => {
   );
 };
 
-
-
-
 /**
  * Создает дефолтный ответ CRM
  * Используется как начальное состояние перед отправкой
  */
 export function createDefaultCrmAnswer(): crmAnswer {
   return {
-    status: 'no',
+    status: "no",
     data: {
-      customer: '',
-      request: '',
+      customer: "",
+      request: "",
     },
   };
 }
 
+
+/**
+ * Формирует строку из вопросов и ответов Marquiz
+ * @param {Marquiz | MarquizRansomAnswer} answer - объект с массивом вопросов и ответов
+ * @returns {string} строка вида "Вопрос1 'Ответ1', Вопрос2 'Ответ2', ..."
+ */
+export function formatQuestionsAndAnswers(answer: MarquizRansom) {
+  let resultString = "";
+  answer.answers.forEach((answer) => {
+    // Добавление вопроса и ответа к результату
+    resultString += `${answer.q} '${answer.a}'`;
+    // Добавление пробела после каждой связки вопроса и ответа
+    resultString += ", ";
+  });
+  // Удаление лишнего пробела в конце строки
+  resultString = resultString.trim();
+  return resultString;
+}
