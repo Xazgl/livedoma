@@ -144,8 +144,8 @@ async function startBatch(fromDate, toDate) {
 async function start() {
     const currentDate = new Date();
     let toDate = currentDate;
-    const batchSize = 30; // Количество дней в одном батче
-    const totalBatches = 25; // Общее количество батчей
+    const batchSize = 15; // Количество дней в одном батче
+    const totalBatches = 50; // Общее количество батчей
 
     for (let i = 0; i < totalBatches; i++) {
         const fromDate = new Date(toDate.getTime() - (batchSize * 24 * 60 * 60 * 1000));

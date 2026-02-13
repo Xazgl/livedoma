@@ -66,7 +66,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               phone: phone,
               timeForClientCall: clientCallTime,
               formid: formid,
-              typeSend: "Marquiz",
+              typeSend: "Marquiz Ремонт",
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,
               utm_content: utm_content,

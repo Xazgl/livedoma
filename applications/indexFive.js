@@ -12,7 +12,7 @@ const db = new PrismaClient()
 
 async function start() {
   const currentDate = new Date(); // Получаем дату
-  const prevDay = new Date(currentDate.getTime() - (31 * 24 * 60 * 60 * 1000)); 
+  const prevDay = new Date(currentDate.getTime() - (20 * 24 * 60 * 60 * 1000)); 
   const formattedPrevDate = prevDay.toISOString().split('T')[0]; 
 
   const day = new Date(currentDate.getTime());
