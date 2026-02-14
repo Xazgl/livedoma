@@ -38,15 +38,16 @@ export const parseSurveyData = (applications: Tilda[]) => {
     try {
       const surveyData = app.name ? (JSON.parse(app.name) as SurveyData) : {};
 
-      // Создаеn плоский объект для DataGrid
+      // Создает плоский объект для DataGrid
       const flatData: any = {
         id: app.id,
-        db_id: app.id, // ID из базы данных
+        db_id: app.id,
         created_at: app.createdAt
           ? new Date(app.createdAt).toLocaleDateString("ru-RU")
           : "",
         formid: app.formid,
         phone: app.phone,
+        typeSend: app.typeSend, 
         ...surveyData,
       };
 

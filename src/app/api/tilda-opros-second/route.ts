@@ -28,7 +28,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
               name: name,
               phone: "нету у формы",
               formid: formid,
-              typeSend: "Tilda Опрос ОП часть 1",
+              typeSend: "Tilda Опрос ОП часть 2",
               utm_source: utm_source,
               utm_medium: utm_medium,
               utm_campaign: utm_campaign,

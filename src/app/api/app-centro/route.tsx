@@ -14,16 +14,22 @@ export async function GET(
   try {
     const applications = await db.tilda.findMany({
       where: {
-        typeSend: "Tilda Опрос ОП",
+        typeSend: {
+          in: [
+            "Tilda Опрос ОП часть 1",
+            "Tilda Опрос ОП часть 2"
+          ],
+        },
         createdAt: {
           gte: startDate,
           lte: endDate,
         },
       },
-        orderBy: {
-          createdAt: "asc",
-        },
+      orderBy: {
+        createdAt: "asc",
+      },
     });
+    
 
     return NextResponse.json({
       applicationsExcel: applications,
