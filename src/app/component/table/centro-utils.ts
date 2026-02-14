@@ -27,7 +27,7 @@ export const createColumns = (data: any[]) => {
   return Array.from(allKeys).map((key) => ({
     field: key,
     headerName: formatHeaderName(key),
-    width: 200,
+    minWidth: 150,
     flex: 1,
   }));
 };

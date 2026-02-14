@@ -9,6 +9,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Tilda } from "@prisma/client";
+import "./styles.css";
+import { ruRU } from "./translate";
+
 
 export type GenericTableProps<T> = {
   fetchUrl: string;
@@ -69,7 +72,8 @@ export function GenericTable<T>({
   const columns = createColumns(applicationsArr);
 
   return (
-    <section className="flex flex-col w-full h-full">
+    // <section className="flex flex-col">
+    <section className='shared-admin-table'>
       <div className="flex md:items-start w-full bg-white mt-5 text-black">
         <div className="flex flex-col items-center md:items-start w-full h-full md:w-[300px] gap-5 p-4">
           <h3 className="text-[12px] p-[0px]">Выберите даты от и до</h3>
@@ -101,14 +105,16 @@ export function GenericTable<T>({
         </div>
       </div>
 
-      <div className="flex flex-col w-full bg-white h-full mt-[10px] md:mt-[5px]">
+      <div className="flex flex-col w-full bg-white h-full ">
         <DataGrid
           sx={{ height: "100%" }}
           //@ts-ignore
           rows={applicationsArr}
+          rowHeight={80}  
           columns={columns}
           initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
           pageSizeOptions={[applicationsArr.length]}
+          localeText={ruRU} 
           disableRowSelectionOnClick
         />
       </div>
