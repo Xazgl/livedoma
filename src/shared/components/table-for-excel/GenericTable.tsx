@@ -104,6 +104,7 @@ export function GenericTable<T>({
       <div className="flex flex-col w-full bg-white h-full mt-[10px] md:mt-[5px]">
         <DataGrid
           sx={{ height: "100%" }}
+          //@ts-ignore
           rows={applicationsArr}
           columns={columns}
           initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
