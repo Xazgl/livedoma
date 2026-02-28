@@ -75,11 +75,8 @@ COPY smartagent ./smartagent
 RUN npx prisma generate
 
 ENV NODE_ENV=production
-# RUN echo "* * * * * /usr/local/bin/node /app/xmlTasks/index.js" >> /etc/crontab
-# RUN (crontab -u $(whoami) -l; echo "0 */10 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResizeMobile.js" ) | crontab -u $(whoami) -
-RUN (crontab -u $(whoami) -l; echo "0 */2 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
-RUN (crontab -u $(whoami) -l; echo "*/80 * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
-# RUN (crontab -u $(whoami) -l; echo "0 */4 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
+# RUN (crontab -u $(whoami) -l; echo "0 */2 * * * /usr/local/bin/node /app/xmlTasks/indexforDownloadResize.js" ) | crontab -u $(whoami) -
+# RUN (crontab -u $(whoami) -l; echo "*/80 * * * * /usr/local/bin/node /app/xmlTasks/index.js" ) | crontab -u $(whoami) -
 
 RUN (crontab -u $(whoami) -l; echo "0 */7 * * * /usr/local/bin/node /app/skillspace/index.js" ) | crontab -u $(whoami) -
 
