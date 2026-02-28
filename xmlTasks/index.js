@@ -80,7 +80,6 @@ async function start() {
                     id_intrum: adObject.Id[0],
                 }
             })
-            //  console.log(JSON.stringify(adObject.RoomType[0].Option[0]))
 
             function funcState(input) {
                 const cityRoots = [

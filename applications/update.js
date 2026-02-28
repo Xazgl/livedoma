@@ -67,6 +67,7 @@ async function startBatch(fromDate, toDate) {
                         translator: getField(application.fields, "4056") ? getField(application.fields, "4056") : '',
                         responsibleMain: await foundName(application.employee_id) !== '0' || await foundName(application.employee_id) !== 0 ? application.employee_id.toString() : '',
                         status: translateStatus(application.status),
+                        services: getField(application.fields, "5291") ? getField(application.fields, "5291") : 'Строительство',
                         postMeetingStage: getField(application.fields, "4058"),
                         desc: application.request_name,
                         typeApplication: getField(application.fields, "4059"),

@@ -18,6 +18,7 @@ import {
   formatDateTimeToDDMMYYYYHHMMSS,
 } from "./dateStr";
 import { getTranslatorJdd } from "@/shared/jdd/utils";
+import { sharedCrmManagers } from "@/shared/constant/manager-constant/constant";
 
 export async function generateExcel(transactions: Sales[]) {
   const workbook = new ExcelJS.Workbook();
@@ -139,27 +140,7 @@ export async function generateExcel(transactions: Sales[]) {
 export async function generateExcel2(applications: constructionApplications[]) {
   const workbook = new ExcelJS.Workbook();
 
-  const managers = [
-    { name: "Политов", id: "391" },
-    { name: "Максимова", id: "332" },
-    { name: "Исаева", id: "39" },
-    { name: "Трофимов Николай", id: "1140" },
-    { name: "Трубачева", id: "1460" },
-    { name: "Бородина", id: "353" },
-    { name: "Выходцева", id: "1944" },
-    { name: "Петрухин*", id: "2417" },
-    { name: "Ломакин*", id: "2447" },
-    { name: "Татарикова", id: "2502" },
-    { name: "Питаева", id: "2535" },
-    { name: "Орлова", id: "2753" },
-    { name: "Чумаченко", id: "1659" },
-    { name: "Бусырев", id: "77" },
-    { name: "Кабулова София", id: "2536" },
-    { name: "Глущенко", id: "1681" },
-    { name: "Кузьмин", id: "4" },
-    { name: "Чумаченко", id: "1659" },
-    { name: "Шепилов", id: "44" },
-  ];
+  const managers = sharedCrmManagers;
 
   function findManager(id: string) {
     const manager = managers.find((manager) => manager.id === id);
@@ -169,12 +150,7 @@ export async function generateExcel2(applications: constructionApplications[]) {
   const applicationsNew = applications.map((appl) => ({
     id: appl.id,
     idApplicationIntrum: appl.idApplicationIntrum,
-    translator: getTranslatorJdd(
-      appl.sourceUtm,
-      appl.campaignUtm,
-      appl.termUtm,
-      appl.translator
-    ),
+    translator:  appl.translator || appl.sourceUtm || "Наш сайт",
     responsibleMain: appl.responsibleMain
       ? findManager(appl.responsibleMain)
       : "",
