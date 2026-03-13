@@ -87,7 +87,7 @@ export default async function sendIntrumCrm(
   const params = new URLSearchParams();
 
   params.append("apikey", "7917e0838a4d494b471ceb36d7e3a67b");
-  params.append("params[customer][manager_id]", "0"); //ответственный id в контакте
+  params.append("params[customer][manager_id]", "44"); //ответственный id в контакте
   params.append("params[customer][name]", message.name ? message.name : ""); // Имя клиента в контакте
   params.append(`params[customer][phone][]`, message.phone); // Телефон в контакте
   params.append(`params[customer][marktype]`, "8"); // Тип контакта покупатель
@@ -104,20 +104,12 @@ export default async function sendIntrumCrm(
     params.append("params[request][employee_id]", "1693");
   } else {
     params.append("params[request][employee_id]", "44"); //id главного отв заявки
-    // params.append(
-    //   "params[request][employee_id]",
-    //   message.managerId == "Ошибка в выборе менеджера"
-    //     ? managerIdRandom
-    //     : message.managerId
-    //     ? message.managerId
-    //     : managerIdRandom
-    // ); //id главного отв заявки
   }
-  //колцентр 309 , 1584, 1693, 2588, 2146
+
+  //колцентр 309 , 1584, 1693, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
-  params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
   params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
 
@@ -234,8 +226,15 @@ export async function sendIntrumCrmTilda(
     message.utm_term
   );
 
+  const managerForCustomer =
+    message.managerId == "Ошибка в выборе менеджера"
+      ? managerIdRandom
+      : message.managerId
+      ? message.managerId
+      : managerIdRandom;
+
   params.append("apikey", "7917e0838a4d494b471ceb36d7e3a67b");
-  params.append("params[customer][manager_id]", "0"); //ответственный id в контакте
+  params.append("params[customer][manager_id]",managerForCustomer); //ответственный id в контакте
   params.append("params[customer][name]", message.name ? message.name : ""); // Имя клиента в контакте
   params.append(`params[customer][phone][]`, message.phone); // Телефон в контакте
   params.append(`params[customer][marktype]`, "8"); // Тип контакта покупатель
@@ -258,28 +257,15 @@ export async function sendIntrumCrmTilda(
     ); //статус сделки
   } else {
     params.append(
-      "params[request][request_name]",
-      message.answers ? message.answers : title
-      // message.answers ? message.answers : "Заявка на строительство"
-    ); //статус сделки
+      "params[request][request_name]",  message.answers ? message.answers : title ); //статус сделки
   }
 
   if (doubleMessage) {
     params.append("params[request][employee_id]", "1693");
   } else {
-    // if (source === "Авито таргет") {
-    //   params.append("params[request][employee_id]", "44"); //id главного отв заявки
-    // } else {
-    params.append(
-      "params[request][employee_id]",
-      message.managerId == "Ошибка в выборе менеджера"
-        ? managerIdRandom
-        : message.managerId
-        ? message.managerId
-        : managerIdRandom
-    ); //id главного отв заявки
-    // }
+    params.append( "params[request][employee_id]", managerForCustomer ); //id главного отв заявки
   }
+
   //колцентр 309 , 1584, 1693, 2588, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
@@ -290,7 +276,6 @@ export async function sendIntrumCrmTilda(
   if (source === "Авито таргет") {
     params.append("params[request][additional_employee_id][6]", "2753"); //массив доп отв
   }
-  // params.append("params[request][additional_employee_id][4]", "2146"); //массив доп отв
 
   //доп поля заявки
   params.append("params[request][fields][0][id]", "4059"); // доп поле 1
@@ -300,20 +285,7 @@ export async function sendIntrumCrmTilda(
   ); //доп поле 1
 
   params.append("params[request][fields][1][id]", "4056"); // доп поле 2
-  params.append(
-    "params[request][fields][1][value]",
-    source
-    // message.utm_source == "sayt_GD"
-    //   ? "Сайт Живем Дома"
-    //   : message.utm_source == "vk" || message.utm_source == "TG"
-    //   ? "Наш сайт"
-    //   : message.utm_campaign ||
-    //     message.utm_content ||
-    //     message.utm_term ||
-    //     message.utm_source
-    //   ? "лендинг"
-    //   : "Наш сайт"
-  ); //доп поле 2
+  params.append("params[request][fields][1][value]", source ); //доп поле 2
 
   params.append("params[request][fields][2][id]", "5001"); // доп поле 3
   params.append(

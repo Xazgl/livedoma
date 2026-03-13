@@ -78,4 +78,5 @@ export const sharedCrmManagers = [
   { name: "Саранова", id: "1853" },
   { name: "Бубнова", id: "2533" },
   { name: "Канакова", id: "2803" },
+  { name: "Завьялова", id: "2916" },
 ];

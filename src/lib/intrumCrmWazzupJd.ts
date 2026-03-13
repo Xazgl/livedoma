@@ -36,7 +36,7 @@ export default async function sendIntrumCrmWazzupJD(
   const params = new URLSearchParams();
 
   params.append("apikey", "7917e0838a4d494b471ceb36d7e3a67b");
-  params.append("params[customer][manager_id]", "0"); //ответственный id в контакте
+  params.append("params[customer][manager_id]", "1676"); //ответственный id в контакте
   params.append("params[customer][name]", message.name ? message.name : ""); // Имя клиента в контакте
   params.append(`params[customer][phone][]`, message.phone); // Телефон в контакте
   params.append(`params[customer][marktype]`, "8"); // Тип контакта покупатель
@@ -52,21 +52,13 @@ export default async function sendIntrumCrmWazzupJD(
   if (doubleMessage) {
     params.append("params[request][employee_id]", "1693");
   } else {
-    params.append(
-      "params[request][employee_id]",
-      "1676"
-      // message.managerId == "Ошибка в выборе менеджера"
-      //   ? managerIdRandom
-      //   : message.managerId
-      //   ? message.managerId
-      //   : managerIdRandom
-    ); //id главного отв заявки
+    params.append( "params[request][employee_id]", "1676" ); //id главного отв заявки
   }
-  //колцентр 309 , 1584, 1693, 2588, 2146
+
+  //колцентр 309 , 1584, 1693, 2146
   params.append("params[request][additional_employee_id][0]", "309"); //массив доп отв
   params.append("params[request][additional_employee_id][1]", "1584"); //массив доп отв
   params.append("params[request][additional_employee_id][2]", "1693"); //массив доп отв
-  params.append("params[request][additional_employee_id][3]", "2588"); //массив доп отв
   params.append("params[request][additional_employee_id][4]", "2535"); //массив доп отв
   params.append("params[request][additional_employee_id][5]", "2536"); //массив доп отв
 

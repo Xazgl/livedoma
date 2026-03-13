@@ -127,7 +127,7 @@ export async function sendIntrumCrmTildaRansom(
   const params = new URLSearchParams();
 
   params.append("apikey", "9a75fc323d968db797ec0ab848572aad");
-  params.append("params[customer][manager_id]", "0"); //ответственный id в контакте
+  params.append("params[customer][manager_id]", "1693"); //ответственный id в контакте
   params.append("params[customer][name]", message.name ? message.name : ""); // Имя клиента в контакте
   params.append(`params[customer][phone][]`, message.phone); // Телефон в контакте
   params.append(`params[customer][marktype]`, "8"); // Тип контакта покупатель
