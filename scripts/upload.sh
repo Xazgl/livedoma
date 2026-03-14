@@ -6,7 +6,7 @@ if [ ! -f docker-compose.prod.yml ]; then
 fi
 
 # Create the /home/livedoma/ directory on the remote host livedoma if it doesn't exist
-ssh livedoma "mkdir -p /home/livedoma"
+ssh livedoma-new "mkdir -p /home/livedoma"
 
 # Upload the docker-compose.prod.yml file to the remote host livedoma
 # Check if no diff between last commit and current state of docker-compose.prod.yml in working directory
@@ -22,10 +22,10 @@ ssh livedoma "mkdir -p /home/livedoma"
 scp .env.prod livedoma:/home/livedoma/
 
 # Set file permissions on the remote host livedoma
-ssh livedoma "chmod 600 /home/livedoma/.env.prod"
+ssh livedoma-new "chmod 600 /home/livedoma/.env.prod"
 
 # Upload nginx folder to the remote host livedoma
 # scp -r nginx livedoma:/home/livedoma/
 
 # Restart the Docker containers on the remote host livedoma
-ssh livedoma "cd /home/livedoma/ && docker compose -f docker-compose.prod.yml up -d"
+ssh livedoma-new "cd /home/livedoma/ && docker compose -f docker-compose.prod.yml up -d"
